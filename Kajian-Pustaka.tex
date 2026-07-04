@@ -1,0 +1,227 @@
+\chapter{KAJIAN PUSTAKA}
+\usetikzlibrary{positioning, arrows.meta, shapes, matrix}
+
+\section{Tinjauan Pustaka}
+
+Bagian ini menguraikan ringkasan hasil kajian literatur dari penelitian-penelitian terdahulu yang relevan dengan topik pelacakan dokumen, \textit{Proof of Delivery} (POD), dan penerapan model klasifikasi keputusan. Tinjauan ini digunakan untuk mengidentifikasi posisi penelitian dan merumuskan celah penelitian (\textit{research gap}) yang akan diselesaikan melalui perancangan sistem pelacakan \textit{invoice} dengan komparasi algoritma prioritas. Perbandingan penelitian terdahulu secara ringkas disajikan pada Tabel \ref{tab:penelitian_terdahulu}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Perbandingan Penelitian Terdahulu}
+    \label{tab:penelitian_terdahulu}
+    \renewcommand{\arraystretch}{1.25}
+    \small
+    \begin{tabularx}{\textwidth}{|c|X|X|X|X|}
+        \hline
+        \textbf{No} & \textbf{Peneliti \& Tahun} & \textbf{Fokus Penelitian} & \textbf{Metode/Algoritma} & \textbf{Keterbatasan} \\
+        \hline
+        1 & Sunindyo dkk. (2014) \cite{10.1007/978-3-642-55032-4_33} & Pelacakan dokumen administrasi e-government. & Model \textit{document tracking}. & Belum membahas prioritas dokumen dan komparasi model keputusan. \\
+        \hline
+        2 & Acedo dkk. (2025) \cite{gemma} & Pelacakan dokumen berbasis web. & Aplikasi web dan QR-Code. & Belum mendukung keputusan prioritas berbasis pengetahuan operasional. \\
+        \hline
+        3 & Marysheva dkk. (2024) \cite{marrysheva} & Pemodelan aliran dokumen. & Struktur pohon keputusan. & Belum spesifik pada \textit{invoice}, POD, dan komparasi \textit{Rule-Based}-C4.5. \\
+        \hline
+        4 & Gunadhya (2021) \cite{gunadhya_rajawali_logistik_2021} & Perbaikan sistem POD logistik. & Analisis sistem POD. & Belum menghubungkan POD dengan prioritas pengiriman \textit{invoice}. \\
+        \hline
+        5 & Siahaan dan Doni (2025) \cite{Siahaan_Doni_2025} & Faktor keterlambatan pengiriman paket. & Algoritma C4.5. & Tidak membahas perubahan aturan bisnis dan pembanding berbasis pengetahuan. \\
+        \hline
+        6 & Firmansyah dan Yulianto (2021) \cite{firmansyah} & Prediksi pembayaran \textit{invoice}. & \textit{Decision Tree}. & Tidak membahas pelacakan pengiriman, POD, dan prioritas operasional. \\
+        \hline
+        7 & Utami dan Arifyanto (2025) \cite{dyahikbal} & Prediksi keterlambatan penagihan. & \textit{Machine learning}. & Belum membahas formalisasi aturan pengiriman dan validasi POD. \\
+        \hline
+        8 & Diwandari dkk. (2023) \cite{Diwandari_Sela_Syahputra_Parama_Septiarini_2023} & Klasifikasi data operasional. & \textit{Decision Tree}/C4.5. & Belum dibandingkan dengan model \textit{Rule-Based} berbasis aturan eksplisit. \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Berdasarkan Tabel \ref{tab:penelitian_terdahulu}, terlihat bahwa penelitian mengenai pelacakan dokumen cenderung berfokus pada peningkatan transparansi aliran dokumen, pencarian status, dan efisiensi proses administrasi. Sementara itu, penelitian mengenai POD menekankan pentingnya bukti penerimaan sebagai validasi pengiriman, sedangkan penelitian berbasis C4.5 atau \textit{Decision Tree} umumnya menonjolkan kemampuan model dalam mengekstrak pola dari data historis dan menghasilkan aturan keputusan yang dapat diinterpretasikan. Tren tersebut menunjukkan bahwa masing-masing pendekatan memiliki kontribusi yang kuat, tetapi masih banyak penelitian yang membahasnya secara terpisah. Pelacakan dokumen belum selalu dikaitkan dengan pengambilan keputusan prioritas, sedangkan model klasifikasi belum selalu mempertimbangkan aturan bisnis yang kaku dan spesifik pada tiap pelanggan.
+
+Posisi penelitian ini berada pada integrasi ketiga aspek tersebut, yaitu pelacakan \textit{invoice}, dokumentasi POD, dan evaluasi model keputusan prioritas. Celah utama yang diangkat adalah keterbatasan model \textit{data-driven} seperti C4.5 yang bergantung pada pola data historis dan berpotensi rentan ketika aturan pelanggan berubah atau ketika aturan tertentu jarang muncul dalam data. Untuk menutupi kelemahan tersebut, penelitian ini mengomparasikan C4.5 dengan model \textit{knowledge-driven} berbasis \textit{Rule-Based} yang merepresentasikan aturan operasional pelanggan secara eksplisit. Komparasi tersebut ditempatkan dalam satu arsitektur sistem web pelacakan \textit{invoice} yang terintegrasi dengan POD, sehingga penelitian ini tidak hanya menghasilkan model klasifikasi, tetapi juga kerangka sistem yang mendukung pencatatan, validasi, dan pengambilan keputusan prioritas secara lebih konsisten.
+
+\section{Landasan Teori}
+
+\subsection{Manajemen Invoice dalam Ekosistem B2B}
+
+Dalam ekosistem \textit{business-to-business} (B2B), \textit{invoice} tidak hanya berfungsi sebagai dokumen penagihan, tetapi juga sebagai simpul administrasi yang menghubungkan proses penjualan, pengiriman, verifikasi pelanggan, pencatatan piutang, dan penerimaan pembayaran. Berbeda dengan transaksi ritel yang umumnya selesai pada saat pembayaran, transaksi B2B memiliki siklus yang lebih panjang karena pembayaran sering bergantung pada kelengkapan dokumen dan pemenuhan prosedur administratif pelanggan. Oleh sebab itu, keterlambatan pengiriman \textit{invoice} dapat berdampak langsung terhadap keterlambatan verifikasi, tertundanya proses pembayaran, dan terganggunya proyeksi arus kas perusahaan.
+
+Manajemen \textit{invoice} yang baik menuntut adanya ketertelusuran status dokumen sejak \textit{invoice} diterbitkan, dikirimkan, diterima oleh pelanggan, hingga siap diproses untuk pembayaran. Ketertelusuran tersebut penting karena setiap pelanggan dapat memiliki aturan administratif yang berbeda, misalnya batas \textit{cut-off}, jadwal penerimaan dokumen, hari operasional penerimaan, serta persyaratan dokumen pendukung. Apabila aturan tersebut tidak dikendalikan secara sistematis, staf administrasi harus mengandalkan ingatan, pengalaman, dan catatan manual untuk menentukan dokumen mana yang perlu diprioritaskan. Dalam konteks ini, sistem informasi administrasi dibutuhkan bukan hanya untuk menyimpan data \textit{invoice}, melainkan juga untuk memastikan bahwa status, riwayat, dan bukti pengiriman dapat diakses secara cepat dan konsisten.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        invoiceflow/.style={rectangle, draw=black, rounded corners, align=center, text width=2.2cm, minimum height=0.9cm, fill=blue!10, font=\small},
+        flowarrow/.style={-{Stealth[length=2.5mm]}, thick}
+    ]
+        \node[invoiceflow] (issue) {Penerbitan\\Invoice};
+        \node[invoiceflow, right=0.35cm of issue] (delivery) {Pengiriman};
+        \node[invoiceflow, right=0.35cm of delivery] (pod) {Penerimaan\\(POD)};
+        \node[invoiceflow, right=0.35cm of pod] (verify) {Verifikasi};
+        \node[invoiceflow, right=0.35cm of verify] (payment) {Pembayaran};
+
+        \draw[flowarrow] (issue) -- (delivery);
+        \draw[flowarrow] (delivery) -- (pod);
+        \draw[flowarrow] (pod) -- (verify);
+        \draw[flowarrow] (verify) -- (payment);
+    \end{tikzpicture}
+    \caption{Ilustrasi Siklus Manajemen Invoice dan POD dalam Transaksi B2B}
+    \label{fig:siklus_invoice_pod_b2b}
+\end{figure}
+
+\subsection{Sistem Pelacakan Dokumen Berbasis Web}
+
+Sistem pelacakan dokumen atau \textit{document tracking system} merupakan sistem informasi yang dirancang untuk memantau aliran dokumen pada suatu proses bisnis. Mekanisme dasarnya adalah merekam identitas dokumen, aktor yang menangani dokumen, waktu perubahan status, lokasi atau tahapan proses, serta aktivitas yang dilakukan terhadap dokumen tersebut. Dengan mekanisme ini, dokumen tidak lagi diperlakukan sebagai arsip pasif, tetapi sebagai objek proses yang memiliki riwayat pergerakan dan dapat diaudit. Sunindyo dkk. menekankan bahwa teknologi pelacakan dokumen dapat meningkatkan efisiensi proses administrasi karena sistem mampu memperjelas alur kerja, mendukung pengukuran proses, dan mengurangi ketidakpastian posisi dokumen dalam organisasi \cite{10.1007/978-3-642-55032-4_33}.
+
+Pada implementasi berbasis web, pelacakan dokumen memperoleh keunggulan tambahan karena informasi dapat diakses oleh banyak pengguna sesuai hak aksesnya tanpa bergantung pada perangkat atau lokasi tertentu. Acedo dkk. menunjukkan bahwa sistem pelacakan dokumen berbasis web yang memanfaatkan teknologi identifikasi seperti QR-Code dapat mempercepat pencarian dokumen, memperkuat transparansi status, dan mendukung kepatuhan terhadap standar layanan administrasi \cite{gemma}. Dalam sudut pandang proses bisnis, sistem berbasis web juga memudahkan pembaruan status secara real-time atau hampir real-time, sehingga setiap perubahan pada dokumen dapat diketahui oleh pihak yang berkepentingan.
+
+Selain berfungsi sebagai alat pemantauan, sistem pelacakan dokumen juga dapat menjadi dasar pengambilan keputusan. Marysheva dkk. membahas implementasi aliran dokumen dengan pendekatan pohon keputusan, yang menunjukkan bahwa aliran dokumen dapat dianalisis berdasarkan aturan dan kondisi tertentu agar proses penanganannya lebih terstruktur \cite{marrysheva}. Hal ini relevan dengan pelacakan \textit{invoice} karena status dokumen saja belum cukup untuk menyelesaikan masalah operasional. Sistem juga perlu membantu menentukan tindakan berikutnya, misalnya apakah \textit{invoice} harus segera dikirim, menunggu kelengkapan POD, atau mengikuti jadwal penerimaan pelanggan tertentu.
+
+\subsection{Konsep Proof of Delivery (POD)}
+
+\textit{Proof of Delivery} (POD) merupakan bukti bahwa barang atau dokumen telah diterima oleh pihak tujuan. Dalam proses administrasi penagihan, POD memiliki fungsi validasi fisik karena membuktikan bahwa pengiriman benar-benar terjadi dan diterima oleh pelanggan atau pihak yang berwenang. Gunadhya menunjukkan bahwa perbaikan sistem POD penting untuk meningkatkan keandalan layanan, memperjelas bukti penyelesaian pengiriman, dan mengurangi ketidakpastian dalam proses operasional \cite{gunadhya_rajawali_logistik_2021}. Dengan demikian, POD tidak hanya bernilai sebagai lampiran administratif, tetapi juga sebagai bukti yang menghubungkan aktivitas pengiriman dengan proses verifikasi tagihan.
+
+Integrasi POD dengan sistem pelacakan \textit{invoice} menjadi penting karena status \textit{invoice} dan bukti penerimaannya saling melengkapi. Status pengiriman menjelaskan posisi atau tahapan dokumen, sedangkan POD memvalidasi bahwa tahapan penerimaan telah terjadi. Jika POD disimpan terpisah dari sistem pelacakan, staf administrasi harus melakukan penelusuran tambahan untuk membuktikan bahwa dokumen telah diterima. Kondisi tersebut dapat memperlambat respons terhadap pertanyaan pelanggan, melemahkan audit internal, dan menghambat proses eskalasi ketika terjadi sengketa dokumen. Oleh karena itu, sistem yang baik perlu mengaitkan data \textit{invoice}, status pengiriman, dan POD dalam satu riwayat yang konsisten.
+
+\subsection{Akuisisi dan Formalisasi Pengetahuan}
+
+Rekayasa pengetahuan atau \textit{knowledge engineering} merupakan proses memperoleh, menyusun, dan merepresentasikan pengetahuan agar dapat digunakan oleh sistem komputer. Dalam konteks operasional administrasi, pengetahuan sering tidak sepenuhnya terdokumentasi dalam prosedur formal. Sebagian pengetahuan berada dalam bentuk \textit{tacit knowledge}, yaitu pemahaman tersirat yang diperoleh staf melalui pengalaman menangani pelanggan, menghadapi pengecualian proses, atau menafsirkan aturan administrasi yang berubah-ubah. Contohnya adalah kebiasaan staf dalam menentukan prioritas pengiriman \textit{invoice} berdasarkan kombinasi antara tanggal \textit{invoice}, batas \textit{cut-off}, jadwal penerimaan pelanggan, dan risiko keterlambatan pembayaran.
+
+Akuisisi pengetahuan bertujuan mengumpulkan pengetahuan tersebut dari berbagai sumber, seperti regulasi pelanggan, data historis \textit{invoice}, dokumen operasional, dan wawancara dengan staf berpengalaman. Setelah pengetahuan dikumpulkan, proses formalisasi dilakukan untuk mengubah pengetahuan tersirat menjadi \textit{explicit knowledge} yang dapat diperiksa, dijelaskan, dan diterapkan oleh sistem. Bentuk formalisasi dapat berupa atribut keputusan, aturan operasional, pedoman pelabelan, atau struktur logika yang menghubungkan kondisi dengan keputusan. Tahapan ini penting karena sistem tidak dapat mengolah intuisi staf secara langsung; sistem membutuhkan representasi yang eksplisit, konsisten, dan dapat diuji.
+
+Dalam penelitian ini, formalisasi pengetahuan menjadi landasan untuk menyusun aturan prioritas dan \textit{ground truth} pada proses evaluasi. Dengan kata lain, pengalaman staf tidak hanya dijadikan informasi pendukung, tetapi diterjemahkan menjadi aturan dan label yang dapat dibandingkan dengan hasil model klasifikasi. Pendekatan ini penting karena keputusan operasional pada pengiriman \textit{invoice} sering dipengaruhi oleh aturan pelanggan yang kaku, tetapi penerapannya di lapangan dapat bervariasi antarstaf apabila tidak diformalkan.
+
+\subsection{Pendekatan Rule-Based System}
+
+\textit{Rule-Based System} merupakan pendekatan berbasis pengetahuan atau \textit{knowledge-driven} yang merepresentasikan keputusan dalam bentuk aturan eksplisit. Arsitektur dasarnya terdiri atas basis pengetahuan, mesin inferensi, dan fakta atau data masukan. Basis pengetahuan menyimpan aturan bisnis dalam bentuk logika \textit{IF-THEN}. Mesin inferensi membaca fakta yang tersedia, mencocokkannya dengan kondisi pada aturan, kemudian menghasilkan keputusan sesuai konsekuensi aturan yang terpenuhi. Dalam konteks prioritas pengiriman \textit{invoice}, fakta dapat berupa jenis pelanggan, tanggal penerimaan \textit{invoice}, jadwal penerimaan dokumen, nilai \textit{cut-off}, status POD, dan hari operasional pelanggan.
+
+Keunggulan utama pendekatan \textit{Rule-Based} adalah transparansi. Setiap keputusan dapat ditelusuri kembali ke aturan yang digunakan, sehingga staf administrasi dan pengambil keputusan dapat memahami mengapa suatu \textit{invoice} diklasifikasikan sebagai prioritas tertentu. Transparansi ini penting untuk mengamankan \textit{business rules} pelanggan yang bersifat kaku dan spesifik. Misalnya, apabila pelanggan hanya menerima dokumen pada hari tertentu atau memiliki batas \textit{cut-off} yang tidak boleh dilanggar, aturan tersebut dapat ditulis secara eksplisit sehingga sistem tidak bergantung pada pola historis semata. Dengan demikian, pendekatan \textit{Rule-Based} sesuai untuk domain yang memiliki regulasi operasional jelas, membutuhkan jejak keputusan, dan menuntut konsistensi penerapan aturan.
+
+Namun, pendekatan \textit{Rule-Based} juga memiliki keterbatasan. Kualitas keputusan sangat bergantung pada kelengkapan aturan yang diformalkan. Jika terdapat kondisi operasional baru yang belum masuk ke basis pengetahuan, sistem dapat gagal memberikan keputusan yang sesuai. Oleh karena itu, \textit{Rule-Based System} perlu dibandingkan dengan pendekatan berbasis data untuk melihat sejauh mana aturan eksplisit mampu merepresentasikan pola keputusan yang muncul pada data historis.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        rbblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.9cm, minimum height=1cm, fill=green!10, font=\small},
+        inputblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.9cm, minimum height=1cm, fill=blue!10, font=\small},
+        engineblock/.style={rectangle, draw=black, rounded corners, align=center, text width=3.4cm, minimum height=1.1cm, fill=orange!15, font=\small},
+        outputblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.4cm, minimum height=1cm, fill=yellow!20, font=\small},
+        rbarrow/.style={-{Stealth[length=2.5mm]}, thick}
+    ]
+        \node[rbblock] (knowledge) {Basis Pengetahuan\\(Aturan)};
+        \node[inputblock, below=1.1cm of knowledge] (facts) {Fakta/Data Input};
+        \node[engineblock, right=1.2cm of knowledge, yshift=-0.55cm] (engine) {Mesin Inferensi\\(\textit{Inference Engine})};
+        \node[outputblock, right=1.2cm of engine] (decision) {Keputusan};
+
+        \draw[rbarrow] (knowledge.east) -- (engine.west);
+        \draw[rbarrow] (facts.east) -- (engine.west);
+        \draw[rbarrow] (engine.east) -- (decision.west);
+    \end{tikzpicture}
+    \caption{Arsitektur Umum Sistem Berbasis Aturan (Rule-Based System)}
+    \label{fig:arsitektur_rule_based}
+\end{figure}
+
+\subsection{Konsep Dasar Klasifikasi Data-Driven}
+
+Klasifikasi berbasis data atau \textit{data-driven classification} merupakan pendekatan yang mempelajari hubungan antara atribut masukan dan kelas keluaran berdasarkan data historis yang telah memiliki label. Dalam paradigma \textit{supervised learning}, setiap data latih terdiri atas pasangan atribut dan label. Algoritma kemudian mencari pola yang dapat membedakan satu kelas dari kelas lainnya, sehingga pola tersebut dapat digunakan untuk memprediksi kelas pada data baru. Berbeda dengan pendekatan \textit{Rule-Based} yang memulai proses dari aturan pakar, pendekatan \textit{data-driven} memulai proses dari data dan membangun model berdasarkan keteraturan yang ditemukan pada data tersebut.
+
+Dalam konteks prioritas pengiriman \textit{invoice}, data historis dapat memuat atribut seperti pelanggan, tanggal penerimaan \textit{invoice}, jadwal penerimaan dokumen, jenis \textit{cut-off}, status POD, dan label prioritas. Algoritma klasifikasi mempelajari kombinasi atribut yang sering mengarah pada prioritas tertentu. Pendekatan ini penting karena data historis dapat menyimpan pola yang tidak selalu mudah dijelaskan secara manual. Akan tetapi, model berbasis data juga memiliki risiko, terutama apabila data historis tidak lengkap, tidak seimbang, atau tidak lagi sesuai dengan perubahan aturan pelanggan. Oleh sebab itu, hasil model data-driven perlu dievaluasi dan dibandingkan dengan pendekatan berbasis pengetahuan.
+
+\subsection{Mekanisme Algoritma C4.5}
+
+\textit{Decision Tree} C4.5 merupakan algoritma klasifikasi yang membangun pohon keputusan secara bertahap dengan memilih atribut yang paling informatif sebagai node pemisah. Setiap node merepresentasikan pengujian terhadap suatu atribut, setiap cabang merepresentasikan nilai atau rentang atribut, dan setiap daun merepresentasikan kelas keputusan. Rim dan Nazifah menjelaskan bahwa C4.5 digunakan karena mampu menghasilkan model yang interpretatif dan menggunakan ukuran pemilihan atribut yang mempertimbangkan kualitas pemisahan data \cite{Rim2020,nazifah_2023}. Mekanisme ini menjadikan C4.5 sesuai untuk domain operasional yang membutuhkan hasil klasifikasi sekaligus penjelasan logis terhadap keputusan.
+
+Tahap awal dalam C4.5 adalah menghitung ketidakmurnian data menggunakan \textit{entropy}. Entropy mengukur tingkat ketidakpastian kelas dalam suatu himpunan data. Jika seluruh data berada pada satu kelas, nilai entropy menjadi rendah. Sebaliknya, jika data tersebar merata pada banyak kelas, nilai entropy menjadi tinggi. Untuk himpunan data $S$ dengan $c$ kelas, entropy didefinisikan sebagai berikut.
+
+\begin{equation}
+    Entropy(S) = - \sum_{i=1}^{c} p_i \log_2(p_i)
+\end{equation}
+
+Keterangan $p_i$ menyatakan proporsi data pada kelas ke-$i$ terhadap keseluruhan data dalam himpunan $S$. Setelah entropy awal diketahui, algoritma menghitung \textit{Information Gain} untuk setiap atribut. Information Gain menunjukkan seberapa besar penurunan ketidakpastian setelah data dipisahkan berdasarkan atribut tertentu. Untuk atribut $A$ dengan himpunan nilai $Values(A)$, Information Gain dirumuskan sebagai berikut.
+
+\begin{equation}
+    Gain(S,A) = Entropy(S) - \sum_{v \in Values(A)} \frac{|S_v|}{|S|} Entropy(S_v)
+\end{equation}
+
+Keterangan $S_v$ menyatakan subset data pada $S$ yang memiliki nilai $v$ untuk atribut $A$. Atribut dengan nilai Information Gain tinggi dianggap mampu memisahkan kelas dengan baik. Namun, penggunaan Information Gain saja dapat menimbulkan bias terhadap atribut yang memiliki kardinalitas tinggi, yaitu atribut dengan banyak nilai unik. Atribut seperti nomor dokumen atau identitas unik dapat menghasilkan pemisahan yang tampak sangat baik, tetapi tidak selalu memiliki kemampuan generalisasi. Untuk mengatasi bias tersebut, C4.5 menggunakan \textit{Split Information} dan \textit{Gain Ratio}.
+
+\begin{equation}
+    SplitInfo(S,A) = - \sum_{v \in Values(A)} \frac{|S_v|}{|S|} \log_2 \left( \frac{|S_v|}{|S|} \right)
+\end{equation}
+
+\begin{equation}
+    GainRatio(S,A) = \frac{Gain(S,A)}{SplitInfo(S,A)}
+\end{equation}
+
+\textit{Split Information} mengukur seberapa luas dan seimbang pembagian data yang dihasilkan oleh suatu atribut, sedangkan \textit{Gain Ratio} menormalisasi Information Gain terhadap nilai Split Information. Dengan normalisasi tersebut, C4.5 tidak semata-mata memilih atribut yang memecah data menjadi banyak bagian kecil, tetapi memilih atribut yang memberikan pemisahan kelas yang informatif dan lebih proporsional. Alasan inilah yang membuat Gain Ratio penting dalam penelitian yang memiliki atribut operasional beragam, karena beberapa atribut dapat memiliki jumlah kategori yang berbeda dan berpotensi memengaruhi objektivitas pemilihan node.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        treenode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=blue!10},
+        leafnode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=green!20},
+        treeedge/.style={-{Stealth[length=2.5mm]}, thick}
+    ]
+        \node[treenode] (root) {Atribut Akar};
+        \node[treenode, below left=1.5cm and 1.7cm of root] (internal) {Atribut Internal};
+        \node[leafnode, below right=1.5cm and 1.7cm of root] (leaf1) {Daun Keputusan\\(Kelas)};
+        \node[leafnode, below left=1.5cm and 0.7cm of internal] (leaf2) {Daun Keputusan\\(Kelas)};
+        \node[leafnode, below right=1.5cm and 0.7cm of internal] (leaf3) {Daun Keputusan\\(Kelas)};
+
+        \draw[treeedge] (root) -- node[above left] {Nilai 1} (internal);
+        \draw[treeedge] (root) -- node[above right] {Nilai 2} (leaf1);
+        \draw[treeedge] (internal) -- node[above left] {Nilai 1} (leaf2);
+        \draw[treeedge] (internal) -- node[above right] {Nilai 2} (leaf3);
+    \end{tikzpicture}
+    \caption{Struktur Dasar Pohon Keputusan}
+    \label{fig:struktur_dasar_pohon_keputusan}
+\end{figure}
+
+\subsection{Metrik Evaluasi Performa}
+
+Evaluasi performa model klasifikasi dilakukan untuk mengetahui seberapa baik model memprediksi kelas yang benar. Salah satu bentuk evaluasi dasar adalah \textit{confusion matrix}, yaitu tabel yang membandingkan hasil prediksi model dengan label aktual. Untuk klasifikasi biner, komponen utama \textit{confusion matrix} terdiri atas \textit{True Positive} (TP), \textit{True Negative} (TN), \textit{False Positive} (FP), dan \textit{False Negative} (FN). TP menunjukkan data positif yang diprediksi positif, TN menunjukkan data negatif yang diprediksi negatif, FP menunjukkan data negatif yang keliru diprediksi positif, sedangkan FN menunjukkan data positif yang keliru diprediksi negatif.
+
+\textit{Accuracy} mengukur proporsi seluruh prediksi yang benar terhadap total data. Metrik ini berguna untuk melihat performa umum model, tetapi dapat menyesatkan jika distribusi kelas tidak seimbang.
+
+\begin{equation}
+    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+\textit{Precision} mengukur ketepatan model ketika memberikan prediksi positif. Dalam konteks prioritas pengiriman, precision penting karena menunjukkan seberapa banyak dokumen yang diprediksi sebagai prioritas benar-benar termasuk kelas prioritas tersebut.
+
+\begin{equation}
+    Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+\textit{Recall} mengukur kemampuan model menemukan seluruh data positif yang seharusnya dikenali. Recall penting ketika kesalahan melewatkan dokumen prioritas berpotensi menimbulkan keterlambatan administrasi.
+
+\begin{equation}
+    Recall = \frac{TP}{TP + FN}
+\end{equation}
+
+\textit{F1-Score} merupakan rata-rata harmonik antara precision dan recall. Metrik ini digunakan ketika evaluasi perlu mempertimbangkan keseimbangan antara ketepatan prediksi positif dan kemampuan menemukan seluruh data positif.
+
+\begin{equation}
+    F1\text{-}Score = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+\end{equation}
+
+Penggunaan beberapa metrik secara bersamaan penting karena satu metrik saja tidak selalu cukup untuk menggambarkan kualitas model. Pada kasus prioritas pengiriman \textit{invoice}, model tidak hanya perlu akurat secara umum, tetapi juga harus mampu menghindari kesalahan yang berdampak pada keterlambatan pengiriman dokumen penting.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        every node/.style={font=\small},
+        cmcell/.style={draw=black, minimum width=3.2cm, minimum height=1.05cm, align=center},
+        cmgood/.style={cmcell, fill=green!18},
+        cmbad/.style={cmcell, fill=red!12},
+        cmhead/.style={cmcell, fill=gray!15, font=\small\bfseries}
+    ]
+        \matrix (cm) [matrix of nodes, row sep=-\pgflinewidth, column sep=-\pgflinewidth] {
+            |[cmhead]| {} & |[cmhead]| Prediksi Positif & |[cmhead]| Prediksi Negatif \\
+            |[cmhead]| Aktual Positif & |[cmgood]| True Positive (TP) & |[cmbad]| False Negative (FN) \\
+            |[cmhead]| Aktual Negatif & |[cmbad]| False Positive (FP) & |[cmgood]| True Negative (TN) \\
+        };
+        \node[font=\bfseries, above=0.35cm of cm-1-2] {Prediksi};
+        \node[font=\bfseries, rotate=90, left=0.35cm of cm-2-1] {Aktual};
+    \end{tikzpicture}
+    \caption{Matriks Kebingungan (Confusion Matrix) untuk Klasifikasi Biner}
+    \label{fig:confusion_matrix_biner}
+\end{figure}

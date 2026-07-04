@@ -1,0 +1,23 @@
+```latex
+\section{Penelitian Terdahulu}
+
+Tabel \ref{tab:related_work} membandingkan penelitian-penelitian terdahulu yang relevan dengan penelitian ini. Perbandingan dilakukan berdasarkan fokus penelitian, metode yang digunakan, serta keterbatasan masing-masing penelitian. Berdasarkan hasil kajian literatur, sebagian besar penelitian hanya berfokus pada satu aspek, seperti sistem pelacakan dokumen, \textit{Proof of Delivery} (POD), atau implementasi algoritma klasifikasi. Belum ditemukan penelitian yang mengintegrasikan pelacakan invoice, formalisasi pengetahuan operasional, \textit{expert labeling}, serta evaluasi komparatif antara pendekatan Rule-Based dan Decision Tree C4.5 dalam satu kerangka penelitian.
+
+\begin{table}[htbp] \caption{Comparison of Previous Studies} \label{tab:related_work} \centering \renewcommand{\arraystretch}{1.15} \resizebox{\columnwidth}{!}{ \begin{tabular}{lcccc} \hline \textbf{Study} & \textbf{Track} & \textbf{POD} & \textbf{RB} & \textbf{DT} \\ \hline Sunindyo (2014) & \checkmark & -- & -- & -- \\ Acedo (2025) & \checkmark & \checkmark & -- & -- \\ Gunadhya (2021) & -- & \checkmark & -- & -- \\ Firmansyah (2021) & -- & -- & -- & \checkmark \\ Siahaan (2025) & -- & -- & -- & \checkmark \\ Afifah (2024) & -- & -- & \checkmark & \checkmark \\ \textbf{This Research} & \checkmark & \checkmark & \checkmark & \checkmark \\ \hline \end{tabular} } \end{table}
+
+\subsection{Knowledge Formalization}
+
+Knowledge Formalization merupakan proses mengubah pengetahuan operasional yang sebelumnya masih bersifat \textit{tacit knowledge} menjadi representasi eksplisit yang dapat dipahami dan diproses oleh sistem komputer. Pada penelitian ini, pengetahuan diperoleh dari regulasi pelanggan, data historis invoice, dan pengalaman staf administrasi, kemudian diformalkan menjadi atribut operasional serta aturan keputusan yang digunakan sebagai dasar penyusunan pedoman \textit{expert labeling}. Dengan demikian, proses penentuan prioritas tidak lagi bergantung pada pengalaman individu, tetapi dapat direpresentasikan secara sistematis.
+
+\subsection{Rule-Based System}
+
+Rule-Based System merupakan pendekatan berbasis pengetahuan (\textit{knowledge-driven}) yang merepresentasikan keputusan dalam bentuk aturan \textit{if-then}. Pada penelitian ini, aturan dibangun berdasarkan hasil proses \textit{Knowledge Formalization} dan merepresentasikan cara staf administrasi menentukan prioritas pengiriman invoice. Pendekatan ini dipilih karena bersifat transparan, mudah dijelaskan, serta memungkinkan setiap keputusan ditelusuri kembali ke aturan yang digunakan.
+
+\subsection{Decision Tree C4.5}
+
+Decision Tree C4.5 merupakan algoritma klasifikasi yang membangun struktur pohon keputusan berdasarkan nilai \textit{information gain}. Algoritma ini dipilih karena mampu menghasilkan model yang mudah diinterpretasikan sekaligus menunjukkan atribut yang paling berpengaruh terhadap proses klasifikasi. Pada penelitian ini, Decision Tree C4.5 digunakan sebagai pendekatan berbasis data (\textit{data-driven}) untuk mempelajari pola keputusan berdasarkan dataset hasil \textit{expert labeling}. Hasil klasifikasi kemudian dibandingkan dengan model Rule-Based untuk mengevaluasi kemampuan kedua pendekatan dalam merepresentasikan keputusan operasional.
+
+\subsection{CRISP-DM}
+
+Penelitian ini mengadaptasi kerangka kerja CRISP-DM sebagai metodologi pengembangan model. Tahapan CRISP-DM disesuaikan dengan karakteristik penelitian, yaitu melalui proses \textit{Knowledge Acquisition}, \textit{Knowledge Formalization}, pembangunan dataset, \textit{expert labeling}, pemodelan menggunakan Rule-Based dan Decision Tree C4.5, serta evaluasi komparatif terhadap kedua pendekatan. Penyesuaian tersebut dilakukan agar metodologi tidak hanya berfokus pada pembangunan model klasifikasi, tetapi juga pada proses representasi pengetahuan operasional perusahaan.
+```
