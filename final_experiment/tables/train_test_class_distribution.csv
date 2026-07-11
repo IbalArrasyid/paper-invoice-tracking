@@ -1,0 +1,5 @@
+class,train_count,test_count
+HIGH,22,5
+MEDIUM,26,7
+NORMAL,36,9
+TOTAL,84,21

@@ -1,0 +1,4 @@
+feature,invoice_no,source_excel_row,issue,action
+next_receive_day_gap_decision_time,S202605-0030,31,Cannot derive because receive_day_code is missing or invalid.,Keep value as missing; exclude rows or impute only after expert/data-owner confirmation.
+next_receive_day_gap_decision_time,S202605-0757,60,Cannot derive because receive_day_code is missing or invalid.,Keep value as missing; exclude rows or impute only after expert/data-owner confirmation.
+next_receive_day_gap_decision_time,S202605-2098,99,Cannot derive because receive_day_code is missing or invalid.,Keep value as missing; exclude rows or impute only after expert/data-owner confirmation.

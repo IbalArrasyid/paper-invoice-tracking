@@ -1,155 +1,349 @@
-\chapter{METODOLOGI DAN PERANCANGAN SISTEM}
+\chapter{METODOLOGI PENELITIAN}
 
-\section{Kerangka Penelitian}
+\section{\textit{Proposed Method}}
 
-Penelitian ini disusun untuk merancang sistem pelacakan \textit{invoice} dan \textit{Proof of Delivery} (POD) berbasis web sekaligus mengevaluasi dua pendekatan penentuan prioritas pengiriman, yaitu \textit{Rule-Based System} sebagai pendekatan \textit{knowledge-driven} dan Decision Tree C4.5 sebagai pendekatan \textit{data-driven}. Kerangka penelitian dimulai dari identifikasi masalah operasional, dilanjutkan dengan pengumpulan data dan akuisisi pengetahuan dari aturan pelanggan serta pengalaman staf administrasi. Pengetahuan tersebut kemudian diformalkan menjadi atribut komputasional dan digunakan untuk membangun model keputusan. Hasil kedua model dievaluasi secara komparatif menggunakan metrik klasifikasi, kemudian dijadikan dasar dalam perancangan sistem web yang mengintegrasikan pelacakan status \textit{invoice}, penyimpanan POD, dan informasi prioritas pengiriman.
+Penelitian ini mengusulkan metodologi pengembangan sistem pelacakan \textit{invoice} dan \textit{Proof of Delivery} (POD) yang dipadukan dengan rekomendasi prioritas berbasis pengetahuan dan data. Fokus metodologi tidak hanya terletak pada pembangunan aplikasi, tetapi pada proses transformasi pengetahuan operasional menjadi model keputusan yang dapat diuji secara ilmiah. Oleh karena itu, penelitian ini membandingkan pendekatan \textit{knowledge-driven} melalui \textit{Rule-Based System} dan pendekatan \textit{data-driven} melalui Decision Tree C4.5.
 
 \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[
-        block/.style={rectangle, draw=black, fill=blue!10, text width=3.8cm, minimum height=1cm, align=center, rounded corners},
-        model/.style={rectangle, draw=black, fill=green!12, text width=3.8cm, minimum height=1cm, align=center, rounded corners},
+        block/.style={rectangle, draw=black, fill=blue!10, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
+        model/.style={rectangle, draw=black, fill=green!12, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
+        eval/.style={rectangle, draw=black, fill=orange!15, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
         arrow/.style={thick, ->, >=stealth}
     ]
-        \node[block] (problem) at (0,0) {Identifikasi Masalah};
-        \node[block] (data) at (0,-1.8) {Pengumpulan dan Akuisisi Data};
-        \node[model] (modeling) at (0,-3.6) {Pemodelan Keputusan\\\textit{Rule-Based} dan C4.5};
-        \node[block] (evaluation) at (0,-5.4) {Evaluasi Komparatif};
-        \node[block] (design) at (0,-7.2) {Perancangan Sistem Web};
-        \node[block] (implementation) at (0,-9.0) {Implementasi};
+        \node[block] (problem) at (0,0) {Identifikasi Masalah Operasional};
+        \node[block] (acquisition) at (0,-1.7) {\textit{Knowledge Acquisition}};
+        \node[block] (formalization) at (0,-3.4) {\textit{Knowledge Formalization}};
+        \node[block] (dataset) at (0,-5.1) {\textit{Dataset Construction}};
+        \node[block] (labeling) at (0,-6.8) {\textit{Guideline-Based Labeling} dan \textit{Ground Truth}};
+        \node[model] (rule) at (-3.4,-8.9) {\textit{Rule-Based System}\\(\textit{knowledge-driven})};
+        \node[model] (tree) at (3.4,-8.9) {Decision Tree C4.5\\(\textit{data-driven})};
+        \node[eval] (evaluation) at (0,-11.0) {Evaluasi Komparatif};
+        \node[block] (design) at (0,-12.7) {Perancangan Sistem};
 
-        \draw[arrow] (problem) -- (data);
-        \draw[arrow] (data) -- (modeling);
-        \draw[arrow] (modeling) -- (evaluation);
+        \draw[arrow] (problem) -- (acquisition);
+        \draw[arrow] (acquisition) -- (formalization);
+        \draw[arrow] (formalization) -- (dataset);
+        \draw[arrow] (dataset) -- (labeling);
+        \draw[arrow] (labeling) -- (rule);
+        \draw[arrow] (labeling) -- (tree);
+        \draw[arrow] (rule) |- (evaluation);
+        \draw[arrow] (tree) |- (evaluation);
         \draw[arrow] (evaluation) -- (design);
-        \draw[arrow] (design) -- (implementation);
     \end{tikzpicture}
     \caption{Kerangka penelitian}
     \label{fig:kerangka_penelitian}
 \end{figure}
 
-\section{Pengumpulan Data dan Akuisisi Pengetahuan}
+Kerangka penelitian pada Gambar \ref{fig:kerangka_penelitian} menunjukkan bahwa masukan utama penelitian berupa masalah keterlambatan dan ketidakterlacakan dokumen \textit{invoice}, regulasi penerimaan pelanggan, data historis \textit{invoice}, serta pengetahuan operasional administrasi. Proses penelitian dilakukan melalui akuisisi pengetahuan, formalisasi pengetahuan, pembentukan dataset, pelabelan berbasis pedoman, pemodelan keputusan, dan evaluasi komparatif. Keluaran dari metodologi ini adalah \textit{ground truth} prioritas, model \textit{Rule-Based}, model Decision Tree C4.5, hasil rancangan sistem, serta dasar evaluasi yang digunakan pada bab hasil dan pembahasan.
 
-Pengumpulan data dilakukan untuk memperoleh informasi operasional yang dibutuhkan dalam perancangan sistem dan pemodelan keputusan. Data yang digunakan berasal dari data historis \textit{invoice}, data master pelanggan, regulasi penerimaan dokumen, serta pengetahuan staf administrasi yang berpengalaman dalam menentukan prioritas pengiriman. Akuisisi pengetahuan dilakukan karena sebagian aturan kerja belum sepenuhnya terdokumentasi dalam bentuk formal, melainkan tersimpan sebagai \textit{tacit knowledge} yang digunakan staf ketika menafsirkan aturan pelanggan, batas \textit{cut-off}, dan jadwal penerimaan dokumen.
+\section{\textit{Knowledge Acquisition}}
 
-\subsection{Penentuan Fitur dan Atribut}
+\textit{Knowledge acquisition} dilakukan untuk memperoleh pengetahuan operasional yang menjadi dasar pembentukan model keputusan prioritas pengiriman \textit{invoice}. Masukan pada tahap ini terdiri atas regulasi pelanggan, data historis \textit{invoice}, dan pengetahuan operasional administrasi. Proses akuisisi dilakukan dengan mengidentifikasi aturan penerimaan dokumen, batas \textit{cut-off}, jadwal penerimaan, serta pertimbangan operasional yang digunakan staf ketika menentukan dokumen mana yang perlu diprioritaskan. Keluaran dari tahap ini adalah kumpulan pengetahuan awal yang masih bersifat tekstual, prosedural, dan sebagian masih berupa \textit{tacit knowledge}.
 
-Tahap penentuan fitur dilakukan melalui proses \textit{Knowledge Formalization}, yaitu mengubah pengetahuan operasional menjadi atribut yang dapat dihitung dan diproses oleh sistem. Data master pelanggan dan regulasi penerimaan dokumen dianalisis untuk menemukan variabel yang berpengaruh terhadap urgensi pengiriman \textit{invoice}. Proses ini penting karena aturan pelanggan yang bersifat tekstual atau prosedural perlu diterjemahkan menjadi bentuk komputasional agar dapat digunakan oleh model \textit{Rule-Based} maupun Decision Tree C4.5.
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Sumber pengetahuan operasional}
+    \label{tab:sumber_pengetahuan}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Sumber Pengetahuan} & \textbf{Bentuk Data} & \textbf{Peran dalam Penelitian} \\ \hline
+        Regulasi pelanggan & Aturan \textit{cut-off}, hari penerimaan, dan ketentuan penyerahan dokumen & Menjadi dasar identifikasi batas waktu dan jadwal penerimaan \textit{invoice}. \\ \hline
+        Data historis \textit{invoice} & Data pelanggan, tanggal penerimaan, tanggal pengiriman, dan informasi administratif \textit{invoice} & Menjadi dasar pembentukan dataset penelitian dan ekstraksi fitur operasional. \\ \hline
+        Pengetahuan operasional administrasi & Pertimbangan staf administrasi dalam menentukan urgensi pengiriman dokumen & Menjadi dasar penyusunan \textit{Operational Labeling Guideline} dan \textit{ground truth}. \\ \hline
+    \end{tabularx}
+\end{table}
 
-Fitur pertama adalah \texttt{days\_to\_cutoff}, yaitu selisih hari antara tanggal observasi atau tanggal penerimaan \textit{invoice} dengan batas \textit{cut-off} pelanggan. Nilai ini merepresentasikan kedekatan dokumen terhadap tenggat administratif. Semakin kecil nilai \texttt{days\_to\_cutoff}, semakin tinggi urgensi pengiriman karena keterlambatan melewati batas \textit{cut-off} dapat menunda proses pembayaran. Fitur kedua adalah \texttt{next\_receive\_day\_gap}, yaitu jarak hari menuju jadwal penerimaan dokumen berikutnya. Fitur ini dibentuk dari aturan hari penerimaan pelanggan, sehingga sistem dapat menilai apakah dokumen masih dapat dikirim pada jadwal terdekat atau perlu diprioritaskan sebelum kesempatan penerimaan berikutnya terlewat.
+Tahap ini menempatkan staf administrasi dan regulasi pelanggan sebagai sumber pengetahuan domain. Pengetahuan yang diperoleh belum langsung digunakan sebagai aturan keputusan, karena masih perlu diformalkan agar dapat direpresentasikan sebagai atribut dataset dan dipakai secara konsisten oleh dua pendekatan pemodelan yang dibandingkan.
 
-Fitur ketiga adalah \texttt{missed\_receive\_schedule}, yaitu indikator apakah \textit{invoice} telah melewati jadwal penerimaan dokumen pelanggan. Fitur ini bernilai kategorikal, misalnya \textit{Yes} ketika jadwal penerimaan telah terlewat dan \textit{No (On Schedule)} ketika dokumen masih berada dalam jadwal yang sesuai. Fitur keempat adalah \texttt{month\_end\_flag}, yaitu penanda apakah dokumen berada pada periode akhir bulan. Fitur ini penting karena akhir bulan sering berkaitan dengan penutupan administrasi, rekap penagihan, dan tekanan waktu terhadap proses verifikasi. Dengan empat fitur tersebut, aturan operasional yang semula tersebar pada regulasi pelanggan dan pengalaman staf dapat direpresentasikan sebagai data terstruktur.
+\section{\textit{Knowledge Formalization}}
 
-\subsection{Proses Expert Labeling}
+\textit{Knowledge formalization} merupakan tahap utama dalam penelitian ini karena mengubah pengetahuan operasional yang bersifat implisit menjadi representasi eksplisit. Pengetahuan seperti ``akhir bulan'', ``maksimal tanggal tertentu'', atau ``penerimaan hanya pada hari tertentu'' pada awalnya berbentuk bahasa alami dan belum dapat langsung diproses oleh model keputusan. Tahap formalisasi mengubah pengetahuan tersebut menjadi aturan bisnis, atribut operasional, dan fitur dataset.
 
-\textit{Expert labeling} dilakukan untuk membentuk \textit{ground truth} yang digunakan sebagai acuan evaluasi model. Proses ini melibatkan pakar administrasi yang memahami aturan penerimaan dokumen pelanggan, kebijakan \textit{cut-off}, serta konsekuensi keterlambatan pengiriman \textit{invoice}. Setiap data \textit{invoice} diberi label prioritas berdasarkan kombinasi atribut komputasional dan pertimbangan operasional yang telah diformalkan.
+\[
+\begin{array}{c}
+\text{Bahasa alami (natural language)}\\
+\downarrow\\
+\text{Aturan bisnis (business rule)}\\
+\downarrow\\
+\text{Atribut operasional}\\
+\downarrow\\
+\text{Fitur dataset}
+\end{array}
+\]
 
-Label prioritas dibagi menjadi tiga kelas, yaitu HIGH, MEDIUM, dan NORMAL. Label HIGH diberikan pada \textit{invoice} yang memiliki urgensi tinggi, misalnya karena mendekati batas \textit{cut-off}, telah melewati jadwal penerimaan, atau berada pada kondisi akhir bulan yang membutuhkan percepatan pengiriman. Label MEDIUM diberikan pada \textit{invoice} yang masih memiliki sisa waktu menuju \textit{cut-off}, tetapi tetap perlu dipantau agar tidak terlambat. Label NORMAL diberikan pada \textit{invoice} yang memiliki sisa waktu relatif longgar atau belum menunjukkan risiko administratif yang mendesak. Pembagian ini memungkinkan evaluasi model dilakukan terhadap standar keputusan yang disusun oleh pakar, bukan semata-mata terhadap asumsi algoritmik.
+Masukan pada tahap ini adalah pengetahuan hasil akuisisi, sedangkan prosesnya berupa penafsiran istilah operasional menjadi struktur atribut yang konsisten. Keluaran tahap ini berupa definisi fitur seperti \texttt{cutoff\_rule}, \texttt{cutoff\_value}, \texttt{receive\_day\_code}, \texttt{days\_to\_cutoff}, \texttt{missed\_receive\_schedule}, dan \texttt{month\_end\_flag}. Dengan proses ini, pengetahuan yang semula bergantung pada interpretasi staf dapat digunakan sebagai dasar model \textit{Rule-Based} dan sebagai fitur pada model Decision Tree C4.5.
 
-\section{Alur Pemodelan Keputusan}
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Contoh formalisasi pengetahuan operasional}
+    \label{tab:formalisasi_pengetahuan}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Pengetahuan} & \textbf{Aturan Bisnis} & \textbf{Atribut Formal} \\ \hline
+        Akhir bulan & Dokumen pelanggan perlu memperhatikan periode penutupan administrasi bulanan. & \texttt{cutoff\_rule} = \texttt{END\_MONTH}; \texttt{month\_end\_flag}. \\ \hline
+        Selasa dan Kamis & Dokumen hanya dapat diterima pada hari penerimaan yang ditentukan pelanggan. & \texttt{receive\_schedule}; \texttt{receive\_day\_code}; \texttt{receive\_days}. \\ \hline
+        Maksimal tanggal 10 & Dokumen diterima paling lambat tanggal 10 pada periode berjalan. & \texttt{cutoff\_rule} = \texttt{MONTHLY\_DATE}; \texttt{cutoff\_value} = 10. \\ \hline
+        Tanpa \textit{cut-off} & Pelanggan tidak memiliki batas tanggal administratif khusus untuk penerimaan dokumen. & \texttt{cutoff\_rule} = \texttt{NO\_CUTOFF}; \texttt{days\_to\_cutoff} = 999. \\ \hline
+    \end{tabularx}
+\end{table}
 
-Pemodelan keputusan dilakukan untuk membandingkan dua pendekatan yang berbeda secara epistemologis. Pendekatan \textit{Rule-Based} bersifat deduktif karena keputusan dihasilkan dari aturan pakar yang telah diformalkan. Sebaliknya, Decision Tree C4.5 bersifat induktif karena model mempelajari pola keputusan dari dataset berlabel. Perbandingan kedua pendekatan ini diperlukan untuk mengetahui apakah aturan eksplisit pakar atau pola historis data lebih sesuai dalam menentukan prioritas pengiriman \textit{invoice}.
+\section{\textit{Dataset Construction}}
 
-\subsection{Perancangan Rule-Based System}
+\textit{Dataset construction} dilakukan untuk membentuk dataset penelitian setelah pengetahuan operasional diformalkan. Masukan tahap ini adalah data historis \textit{invoice}, data pelanggan, aturan \textit{cut-off}, jadwal penerimaan dokumen, dan atribut hasil formalisasi. Proses konstruksi dataset meliputi integrasi data, ekstraksi fitur, rekayasa fitur, pembersihan nilai yang tidak konsisten, serta penyusunan data akhir yang dapat digunakan untuk pelabelan dan pemodelan.
 
-\textit{Rule-Based System} dirancang sebagai representasi eksplisit dari aturan operasional pakar. Pendekatan ini memulai proses dari pengetahuan yang telah diformalkan, kemudian menerapkannya pada data \textit{invoice} untuk menghasilkan label prioritas. Karakter deduktifnya terlihat dari cara sistem menarik keputusan berdasarkan kondisi yang telah didefinisikan sebelumnya. Keunggulan pendekatan ini adalah keputusan dapat dijelaskan secara langsung, karena setiap keluaran memiliki jejak logika yang dapat ditelusuri.
+Integrasi data dilakukan dengan menghubungkan informasi \textit{invoice} dengan regulasi pelanggan. Ekstraksi fitur dilakukan untuk mengambil atribut dasar seperti pelanggan, tanggal penerimaan, aturan \textit{cut-off}, nilai \textit{cut-off}, dan jadwal penerimaan. Rekayasa fitur dilakukan untuk menghasilkan atribut turunan seperti selisih hari menuju \textit{cut-off}, jarak menuju jadwal penerimaan berikutnya, indikator jadwal yang terlewat, dan indikator akhir bulan. Keluaran tahap ini adalah dataset penelitian terstruktur yang memuat fitur operasional dan kolom label prioritas yang akan diisi melalui \textit{Guideline-Based Labeling}.
 
-\begin{algorithm}[htbp]
-    \caption{Pseudocode Penentuan Prioritas Berbasis Aturan}
-    \label{alg:rule_based_priority}
-    \begin{algorithmic}[1]
-        \Require \texttt{days\_to\_cutoff}, \texttt{missed\_receive\_schedule}
-        \Ensure Label prioritas: HIGH, MEDIUM, atau NORMAL
-        \If{\texttt{days\_to\_cutoff} $\leq 2$ \textbf{or} \texttt{missed\_receive\_schedule} = \textit{Yes}}
-            \State \Return HIGH
-        \ElsIf{$3 \leq$ \texttt{days\_to\_cutoff} $\leq 10$}
-            \State \Return MEDIUM
-        \ElsIf{\texttt{days\_to\_cutoff} $> 10$}
-            \State \Return NORMAL
-        \Else
-            \State \Return NORMAL
-        \EndIf
-    \end{algorithmic}
-\end{algorithm}
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Fitur pada dataset penelitian}
+    \label{tab:fitur_dataset}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Fitur} & \textbf{Tipe} & \textbf{Deskripsi} \\ \hline
+        \texttt{customer\_name} atau \texttt{customer\_name\_masking} & Kategorikal & Identitas pelanggan atau identitas pelanggan yang telah disamarkan. \\ \hline
+        \texttt{receive\_date} & Tanggal & Tanggal penerimaan atau pencatatan \textit{invoice} sebagai dasar observasi. \\ \hline
+        \texttt{cutoff\_type} & Kategorikal & Bentuk aturan \textit{cut-off} pelanggan dalam deskripsi operasional. \\ \hline
+        \texttt{cutoff\_value} & Numerik & Nilai tanggal atau batas administratif yang diperoleh dari aturan \textit{cut-off}. \\ \hline
+        \texttt{receive\_schedule} & Kategorikal & Deskripsi jadwal penerimaan dokumen, misalnya setiap hari atau hari tertentu. \\ \hline
+        \texttt{receive\_day\_code} & Kategorikal & Representasi kode hari penerimaan yang digunakan untuk pemrosesan data. \\ \hline
+        \texttt{days\_to\_cutoff} & Numerik & Selisih hari antara tanggal observasi dan batas \textit{cut-off} pelanggan. \\ \hline
+        \texttt{next\_receive\_day\_gap} & Numerik & Jarak hari menuju jadwal penerimaan dokumen berikutnya apabila aturan hari penerimaan tersedia. \\ \hline
+        \texttt{missed\_receive\_schedule} & Kategorikal & Indikator apakah dokumen telah melewati jadwal penerimaan pelanggan. \\ \hline
+        \texttt{month\_end\_flag} & Kategorikal & Indikator apakah dokumen berada pada kondisi akhir bulan yang relevan terhadap prioritas. \\ \hline
+        \texttt{final\_label} & Kategorikal & Label prioritas yang dihasilkan melalui \textit{Operational Labeling Guideline} dan digunakan sebagai \textit{ground truth}. \\ \hline
+    \end{tabularx}
+\end{table}
 
-Algoritma \ref{alg:rule_based_priority} menunjukkan bahwa prioritas HIGH diberikan pada kondisi paling mendesak, yaitu ketika sisa waktu menuju \textit{cut-off} sangat pendek atau jadwal penerimaan dokumen telah terlewat. Prioritas MEDIUM diberikan pada rentang waktu menengah, sedangkan prioritas NORMAL diberikan ketika sisa waktu masih relatif panjang. Aturan ini dirancang agar sistem mampu mempertahankan konsistensi keputusan terhadap regulasi pelanggan yang bersifat kaku.
+\section{\textit{Guideline-Based Labeling}}
 
-\subsection{Pemodelan Decision Tree C4.5}
+\textit{Guideline-Based Labeling} bertujuan membentuk \textit{ground truth} prioritas pengiriman \textit{invoice}. Masukan tahap ini adalah dataset penelitian yang telah memuat atribut hasil formalisasi. Proses pelabelan dilakukan dengan menerapkan \textit{Operational Labeling Guideline} yang disusun dari regulasi pelanggan, risiko keterlambatan \textit{cut-off}, keterbatasan hari penerimaan, dan konsekuensi administratif dari keterlambatan dokumen. Keluaran tahap ini adalah label prioritas yang merepresentasikan pedoman keputusan operasional yang telah diformalkan.
 
-Decision Tree C4.5 digunakan sebagai pendekatan induktif untuk mempelajari hubungan antara fitur operasional dan label prioritas berdasarkan data historis yang telah melalui proses \textit{expert labeling}. Dataset dibagi menjadi data latih dan data uji dengan rasio 80:20. Data latih sebesar 80\% digunakan untuk membangun struktur pohon keputusan, sedangkan data uji sebesar 20\% digunakan untuk mengukur kemampuan generalisasi model terhadap data yang tidak digunakan pada proses pelatihan. Pembagian data dilakukan secara terstratifikasi agar proporsi kelas HIGH, MEDIUM, dan NORMAL tetap terjaga pada data latih dan data uji.
+Pedoman pelabelan disusun agar proses pemberian label konsisten dan dapat ditelusuri. Label HIGH menunjukkan dokumen yang perlu diprioritaskan karena memiliki risiko administratif tinggi. Label MEDIUM menunjukkan dokumen yang perlu dipantau karena mulai mendekati batas waktu operasional. Label NORMAL menunjukkan dokumen yang belum menunjukkan risiko mendesak atau tidak memiliki batas \textit{cut-off} khusus. Kondisi pelabelan pada Tabel \ref{tab:pedoman_labeling} menggunakan kondisi yang telah didefinisikan dalam penelitian, yaitu kedekatan terhadap \textit{cut-off}, status jadwal penerimaan, kondisi akhir bulan, keterbatasan hari penerimaan, dan kondisi tanpa \textit{cut-off}.
 
-Pada proses pelatihan, C4.5 memilih atribut pemisah berdasarkan konsep Entropy dan Information Gain. Entropy digunakan untuk mengukur tingkat ketidakpastian kelas dalam suatu himpunan data, sedangkan Information Gain mengukur penurunan ketidakpastian setelah data dipisahkan berdasarkan atribut tertentu. Atribut yang memberikan pemisahan paling informatif dipilih sebagai node pada pohon keputusan. Dalam implementasi menggunakan pustaka \textit{scikit-learn}, mekanisme ini direpresentasikan melalui \texttt{DecisionTreeClassifier} dengan parameter \texttt{criterion='entropy'}. Dengan konfigurasi tersebut, model diharapkan dapat mengekstrak pola prioritas dari data historis dan menghasilkan keputusan yang dapat dibandingkan dengan aturan pakar.
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Pedoman pelabelan prioritas berbasis operasional}
+    \label{tab:pedoman_labeling}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.2cm}|}
+        \hline
+        \textbf{Label} & \textbf{Kondisi Operasional} & \textbf{Alasan Label} \\ \hline
+        HIGH & Dokumen berada pada kondisi \texttt{CUTOFF\_TODAY}, \texttt{OVERDUE\_CUTOFF}, \texttt{CUTOFF\_NEAR}, jadwal penerimaan terbatas (\texttt{LIMITED\_RECEIVE\_DAY}), jadwal penerimaan terlewat, atau kondisi akhir bulan yang dekat dengan \textit{cut-off}. & Risiko keterlambatan tinggi dan perlu diprioritaskan. \\ \hline
+        MEDIUM & Dokumen belum memenuhi kondisi HIGH, tetapi berada pada rentang $2 <$ \texttt{days\_to\_cutoff} $\leq 10$ sesuai aturan prioritas yang diformalkan. & Perlu dipantau agar tidak berubah menjadi kondisi mendesak. \\ \hline
+        NORMAL & Dokumen memiliki waktu yang masih longgar terhadap \textit{cut-off} (\texttt{LONG\_TIME\_TO\_CUTOFF}) atau berada pada kondisi tanpa \textit{cut-off} khusus (\texttt{NO\_CUTOFF}) tanpa indikasi risiko jadwal penerimaan. & Risiko administratif rendah pada waktu observasi. \\ \hline
+    \end{tabularx}
+\end{table}
 
-\section{Perancangan Sistem Pelacakan dan POD}
+\textit{Ground truth} pada penelitian ini dihasilkan melalui \textit{Operational Labeling Guideline}, bukan oleh model algoritmik. \textit{Ground truth} yang sama digunakan untuk mengevaluasi prediksi \textit{Rule-Based System} dan prediksi Decision Tree C4.5. Dengan demikian, evaluasi kedua pendekatan dilakukan terhadap acuan keputusan yang sama sehingga perbandingan bersifat adil dan terukur.
 
-Perancangan sistem dilakukan untuk mengintegrasikan hasil pemodelan keputusan ke dalam aplikasi web yang mendukung proses operasional administrasi. Sistem dirancang agar staf administrasi dapat mencatat data \textit{invoice}, memperbarui status pengiriman, mengunggah POD, melihat riwayat pelacakan, dan memperoleh informasi prioritas pengiriman. Dengan demikian, sistem tidak hanya berfungsi sebagai repositori dokumen, tetapi juga sebagai alat bantu pengendalian proses pengiriman \textit{invoice}.
+\section{\textit{Rule-Based Model}}
 
-\subsection{Arsitektur Sistem}
+\textit{Rule-Based Model} merepresentasikan pendekatan \textit{knowledge-driven}, yaitu model keputusan yang dibangun dari pengetahuan operasional dan regulasi pelanggan. Dalam penelitian ini, model berbasis aturan tidak diperlakukan sebagai kode program, melainkan sebagai representasi ilmiah dari pengetahuan operasional yang telah diformalkan. Masukan model adalah atribut hasil \textit{Knowledge Formalization}, yaitu \texttt{cutoff\_rule}, \texttt{days\_to\_cutoff}, \texttt{receive\_schedule}, \texttt{next\_receive\_day\_gap}, \texttt{missed\_receive\_schedule}, dan \texttt{month\_end\_flag}. Keluaran model adalah label prioritas HIGH, MEDIUM, atau NORMAL.
 
-Arsitektur sistem menggunakan topologi \textit{client-server} berbasis web. Pada sisi \textit{client}, pengguna mengakses sistem melalui peramban untuk melakukan input data, pembaruan status, unggah POD, dan pemantauan riwayat \textit{invoice}. Pada sisi \textit{server}, aplikasi memproses permintaan pengguna, menjalankan logika bisnis, menyimpan data ke basis data, serta menyediakan hasil penentuan prioritas. Basis data digunakan untuk menyimpan data pelanggan, data \textit{invoice}, status pelacakan, dokumen POD, dan hasil prediksi prioritas.
+Basis aturan disusun dalam bentuk aturan IF-THEN agar proses pengambilan keputusan dapat ditelusuri secara eksplisit. Setiap aturan memiliki kondisi, label prioritas, dan penjelasan operasional. Apabila lebih dari satu aturan terpenuhi pada data \textit{invoice} yang sama, aturan dengan tingkat prioritas tertinggi digunakan sebagai keputusan akhir dengan urutan HIGH, MEDIUM, kemudian NORMAL. Urutan tersebut digunakan karena risiko keterlambatan administratif pada kelas HIGH lebih kritis dibandingkan kebutuhan pemantauan pada kelas MEDIUM atau kondisi normal.
 
-Topologi \textit{client-server} dipilih karena sesuai dengan kebutuhan akses multi-pengguna dan pemusatan data administrasi. Dengan arsitektur ini, pembaruan status yang dilakukan oleh staf dapat langsung tersimpan pada server dan dapat ditelusuri kembali melalui riwayat sistem. Selain itu, penyimpanan POD secara terpusat mengurangi risiko dokumen tersebar pada media penyimpanan terpisah dan memperkuat keterhubungan antara \textit{invoice}, bukti penerimaan, dan status pelacakan.
+\begin{table}[htbp]
+    \centering
+    \scriptsize
+    \caption{Rule base penentuan prioritas pengiriman invoice}
+    \label{tab:rule_base_priority}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{1.1cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.8cm}|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Rule ID} & \textbf{Condition} & \textbf{Priority} & \textbf{Description} \\ \hline
+        R1 &
+        \textbf{IF} \texttt{missed\_receive\_schedule} = \textit{Yes} &
+        HIGH &
+        Jadwal penerimaan dokumen pelanggan telah terlewat, sehingga dokumen berisiko tidak dapat diproses pada periode administrasi berjalan. \\ \hline
+        R2 &
+        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
+        \textbf{AND} \texttt{days\_to\_cutoff} $< 0$ &
+        HIGH &
+        Dokumen telah melewati batas \textit{cut-off} pelanggan sehingga diperlukan prioritas tertinggi untuk mengurangi dampak keterlambatan. \\ \hline
+        R3 &
+        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
+        \textbf{AND} \texttt{days\_to\_cutoff} = 0 &
+        HIGH &
+        Tanggal observasi bertepatan dengan batas \textit{cut-off}; dokumen harus segera dikirim agar masih dapat diterima pada hari yang sama. \\ \hline
+        R4 &
+        \textbf{IF} \texttt{cutoff\_rule} $\in$ \{\texttt{END\_MONTH}, \texttt{MONTHLY\_DATE}, \texttt{MULTIPLE\_MONTHLY\_DATE}\} \newline
+        \textbf{AND} $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ &
+        HIGH &
+        Dokumen mendekati batas administratif bulanan atau tanggal bulanan tertentu, sehingga ruang koreksi operasional sangat terbatas. \\ \hline
+        R5 &
+        \textbf{IF} \texttt{cutoff\_rule} $\in$ \{\texttt{NEXT\_MONTH\_DATE}, \texttt{NEXT\_MONTH\_WORKDAY}, \texttt{NEXT\_MONTH\_FIRST\_WEEK}\} \newline
+        \textbf{AND} $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ &
+        HIGH &
+        Dokumen mendekati batas penerimaan pada awal bulan berikutnya atau batas hari kerja bulan berikutnya. \\ \hline
+        R6 &
+        \textbf{IF} \texttt{month\_end\_flag} = \textit{Yes} \newline
+        \textbf{AND} \texttt{days\_to\_cutoff} $\leq 4$ &
+        HIGH &
+        Dokumen berada pada periode akhir bulan yang sensitif terhadap penutupan administrasi, sehingga keterlambatan kecil dapat berdampak pada periode tagihan. \\ \hline
+        R7 &
+        \textbf{IF} \texttt{receive\_schedule} $\neq$ \textit{Everyday} \newline
+        \textbf{AND} \texttt{next\_receive\_day\_gap} $\leq 1$ &
+        HIGH &
+        Pelanggan hanya menerima dokumen pada hari tertentu dan kesempatan penerimaan berikutnya sangat dekat, sehingga dokumen perlu segera diprioritaskan. \\ \hline
+        R8 &
+        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
+        \textbf{AND} $2 <$ \texttt{days\_to\_cutoff} $\leq 10$ \newline
+        \textbf{AND} tidak memenuhi R1--R7 &
+        MEDIUM &
+        Dokumen belum berada pada kondisi kritis, tetapi mulai mendekati batas administratif sehingga perlu dipantau agar tidak berubah menjadi prioritas tinggi. \\ \hline
+        R9 &
+        \textbf{IF} \texttt{receive\_schedule} $\neq$ \textit{Everyday} \newline
+        \textbf{AND} \texttt{next\_receive\_day\_gap} $> 1$ \newline
+        \textbf{AND} tidak memenuhi R1--R7 &
+        MEDIUM &
+        Jadwal penerimaan pelanggan terbatas, tetapi masih terdapat kesempatan operasional sebelum dokumen masuk kategori mendesak. \\ \hline
+        R10 &
+        \textbf{IF} \texttt{cutoff\_rule} = \texttt{NO\_CUTOFF} \newline
+        \textbf{AND} \texttt{missed\_receive\_schedule} = \textit{No} \newline
+        \textbf{AND} tidak terdapat risiko jadwal penerimaan &
+        NORMAL &
+        Pelanggan tidak memiliki batas \textit{cut-off} khusus dan tidak terdapat indikasi risiko pada jadwal penerimaan dokumen. \\ \hline
+        R11 &
+        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
+        \textbf{AND} \texttt{days\_to\_cutoff} $> 10$ \newline
+        \textbf{AND} tidak memenuhi R1--R9 &
+        NORMAL &
+        Batas administratif masih relatif jauh sehingga dokumen belum memerlukan perlakuan prioritas khusus. \\ \hline
+        R12 &
+        \textbf{IF} tidak ada kondisi pada R1--R11 yang terpenuhi &
+        NORMAL &
+        Aturan penutup digunakan untuk menjaga setiap data \textit{invoice} tetap memperoleh label prioritas yang konsisten. \\ \hline
+    \end{tabularx}
+\end{table}
 
-\subsection{Pemodelan Berorientasi Objek}
-
-Pemodelan berorientasi objek digunakan untuk menggambarkan kebutuhan fungsional, alur aktivitas, dan struktur data sistem. Use Case Diagram menggambarkan interaksi antara aktor staf admin dan sistem. Staf admin memiliki peran untuk mengelola data pelanggan, mencatat \textit{invoice}, memperbarui status pengiriman, mengunggah POD, melihat riwayat pelacakan, dan melihat rekomendasi prioritas. Sistem merespons setiap aktivitas tersebut dengan menyimpan data, memvalidasi masukan, menampilkan informasi, dan menjalankan logika penentuan prioritas.
+Tabel \ref{tab:rule_base_priority} menunjukkan bahwa basis aturan dibentuk dari tiga kelompok pengetahuan utama. Kelompok pertama adalah aturan \textit{cut-off}, yaitu aturan yang memeriksa kedekatan dokumen terhadap batas administratif pelanggan. Kelompok kedua adalah aturan jadwal penerimaan, yaitu aturan yang memeriksa apakah dokumen masih berada dalam jadwal penerimaan yang diperbolehkan. Kelompok ketiga adalah aturan kondisi khusus, seperti akhir bulan, yang dapat meningkatkan tingkat urgensi meskipun batas \textit{cut-off} belum benar-benar jatuh pada hari observasi.
 
 \begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox{0.82\textwidth}{
-            \centering
-            \vspace{1.2cm}
-            Placeholder Use Case Diagram\\
-            Aktor: Staf Admin dan Sistem\\
-            Fungsionalitas: kelola \textit{invoice}, unggah POD, lacak status, lihat prioritas
-            \vspace{1.2cm}
-        }
-    }
-    \caption{Placeholder Use Case Diagram sistem pelacakan invoice dan POD}
-    \label{fig:use_case_placeholder}
+    \begin{tikzpicture}[
+        block/.style={rectangle, draw=black, fill=blue!10, text width=5.2cm, minimum height=0.9cm, align=center, rounded corners},
+        decision/.style={rectangle, draw=black, fill=green!12, text width=5.2cm, minimum height=0.9cm, align=center, rounded corners},
+        arrow/.style={thick, ->, >=stealth}
+    ]
+        \node[block] (invoice) at (0,0) {Data \textit{invoice}};
+        \node[block] (cutofftype) at (0,-1.5) {Identifikasi jenis \textit{cut-off}};
+        \node[block] (daystocutoff) at (0,-3.0) {Periksa \texttt{days\_to\_cutoff}};
+        \node[block] (schedule) at (0,-4.5) {Periksa jadwal penerimaan};
+        \node[block] (special) at (0,-6.0) {Periksa kondisi khusus akhir bulan};
+        \node[decision] (priority) at (0,-7.5) {Penetapan prioritas};
+
+        \draw[arrow] (invoice) -- (cutofftype);
+        \draw[arrow] (cutofftype) -- (daystocutoff);
+        \draw[arrow] (daystocutoff) -- (schedule);
+        \draw[arrow] (schedule) -- (special);
+        \draw[arrow] (special) -- (priority);
+    \end{tikzpicture}
+    \caption{Rule dependency diagram pada model berbasis aturan}
+    \label{fig:rule_dependency_diagram}
 \end{figure}
 
-Activity Diagram digunakan untuk memodelkan alur unggah POD. Alur dimulai ketika staf admin memilih data \textit{invoice}, memeriksa status pengiriman, mengunggah berkas POD, dan mengirimkan data ke sistem. Sistem kemudian memvalidasi format dan kelengkapan berkas, menyimpan POD, memperbarui status \textit{invoice}, serta menambahkan catatan pada riwayat pelacakan. Diagram ini penting karena unggah POD merupakan proses yang menghubungkan bukti fisik penerimaan dengan status administratif \textit{invoice}.
+Gambar \ref{fig:rule_dependency_diagram} menggambarkan ketergantungan antaraturan dalam proses penentuan prioritas. Pemeriksaan dimulai dari data \textit{invoice}, kemudian dilanjutkan dengan identifikasi jenis \textit{cut-off}, kedekatan terhadap batas waktu, jadwal penerimaan, serta kondisi khusus akhir bulan. Struktur ini menunjukkan bahwa keputusan prioritas tidak hanya ditentukan oleh satu atribut, tetapi oleh kombinasi pengetahuan administratif pelanggan dan kondisi operasional pada tanggal observasi.
 
 \begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox{0.82\textwidth}{
-            \centering
-            \vspace{1.2cm}
-            Placeholder Activity Diagram\\
-            Alur: pilih \textit{invoice}, unggah POD, validasi, simpan, perbarui status
-            \vspace{1.2cm}
-        }
-    }
-    \caption{Placeholder Activity Diagram unggah POD}
-    \label{fig:activity_pod_placeholder}
+    \begin{tikzpicture}[
+        block/.style={rectangle, draw=black, fill=orange!15, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
+        process/.style={rectangle, draw=black, fill=blue!10, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
+        output/.style={rectangle, draw=black, fill=green!12, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
+        arrow/.style={thick, ->, >=stealth}
+    ]
+        \node[block] (kb) at (0,0) {\textit{Knowledge Base}\\Basis aturan R1--R12};
+        \node[process] (engine) at (0,-1.6) {\textit{Inference Engine}\\Pemeriksaan fakta operasional};
+        \node[process] (matching) at (0,-3.2) {\textit{Rule Matching}\\Pencocokan IF-THEN};
+        \node[process] (conflict) at (0,-4.8) {Resolusi prioritas\\HIGH $>$ MEDIUM $>$ NORMAL};
+        \node[output] (priority) at (0,-6.4) {Label prioritas\\HIGH, MEDIUM, atau NORMAL};
+
+        \draw[arrow] (kb) -- (engine);
+        \draw[arrow] (engine) -- (matching);
+        \draw[arrow] (matching) -- (conflict);
+        \draw[arrow] (conflict) -- (priority);
+    \end{tikzpicture}
+    \caption{Rule inference flow pada model berbasis aturan}
+    \label{fig:rule_inference_flow}
 \end{figure}
 
-Entity Relationship Diagram (ERD) digunakan untuk menggambarkan relasi data utama pada sistem. Entitas \texttt{customer} menyimpan data pelanggan dan aturan penerimaan dokumen. Entitas \texttt{invoice} menyimpan data tagihan yang berelasi dengan pelanggan. Entitas \texttt{tracking} menyimpan riwayat status pengiriman setiap \textit{invoice}, termasuk waktu perubahan status dan keterangan proses. Selain itu, data POD dapat disimpan sebagai atribut atau entitas terpisah yang berelasi dengan \texttt{invoice} atau \texttt{tracking}, tergantung pada kebutuhan audit dan versi dokumen.
+Gambar \ref{fig:rule_inference_flow} menunjukkan alur inferensi pada model berbasis aturan. \textit{Knowledge base} menyediakan aturan eksplisit, sedangkan \textit{inference engine} menggunakan fakta operasional pada setiap data \textit{invoice} untuk melakukan pencocokan aturan. Hasil pencocokan kemudian diselesaikan melalui urutan prioritas sehingga keluaran akhir berupa label HIGH, MEDIUM, atau NORMAL. Dengan alur tersebut, setiap keputusan model dapat dijelaskan kembali melalui aturan yang memicunya.
+
+\section{\textit{Decision Tree} C4.5}
+
+Decision Tree C4.5 merepresentasikan pendekatan \textit{data-driven}. Masukan model ini adalah dataset penelitian yang telah memiliki fitur operasional dan label berbasis \textit{Operational Labeling Guideline}. Sebelum pelatihan, fitur kategorikal disiapkan agar dapat diproses oleh model, sedangkan label prioritas digunakan sebagai target pembelajaran. Dataset kemudian dibagi menjadi data latih dan data uji secara terstratifikasi agar proporsi kelas pada proses evaluasi tetap terjaga.
+
+Proses pelatihan dilakukan dengan membentuk pohon keputusan dari data latih. Pemilihan atribut pada setiap node dilakukan berdasarkan pengurangan ketidakpastian kelas, yaitu melalui perhitungan \textit{entropy} dan \textit{information gain}. Atribut dengan kontribusi pemisahan paling informatif dipilih sebagai node, kemudian proses pemisahan berlanjut hingga terbentuk struktur pohon keputusan. Keluaran tahap ini adalah model Decision Tree C4.5 yang menghasilkan prediksi prioritas terhadap data uji.
+
+Penjelasan teori mengenai \textit{entropy} dan \textit{information gain} telah dibahas pada Bab II, sehingga bagian ini hanya menempatkannya sebagai prosedur metodologis. Dalam penelitian ini, konsep tersebut digunakan untuk menghasilkan model pembanding terhadap aturan eksplisit operasional, bukan sebagai pengganti \textit{ground truth} yang telah dibangun melalui \textit{Guideline-Based Labeling}.
+
+\section{\textit{Comparative Evaluation}}
+
+Evaluasi komparatif dilakukan untuk membandingkan kemampuan pendekatan \textit{knowledge-driven} dan \textit{data-driven} dalam merepresentasikan keputusan prioritas berdasarkan pedoman operasional. Masukan evaluasi adalah \textit{ground truth} hasil \textit{Guideline-Based Labeling}, prediksi dari \textit{Rule-Based System}, dan prediksi dari Decision Tree C4.5. Proses evaluasi menggunakan acuan yang sama untuk kedua model agar hasil perbandingan tidak dipengaruhi oleh perbedaan standar penilaian.
+
+\[
+\begin{array}{c}
+\text{Ground Truth}\\
+\downarrow\\
+\text{Rule-Based Prediction dan Decision Tree Prediction}\\
+\downarrow\\
+\text{Confusion Matrix}\\
+\downarrow\\
+\text{Accuracy, Precision, Recall, F1-score}
+\end{array}
+\]
+
+\textit{Confusion matrix} digunakan untuk menunjukkan distribusi prediksi benar dan salah pada kelas HIGH, MEDIUM, dan NORMAL. Dari matriks tersebut dihitung \textit{accuracy}, \textit{precision}, \textit{recall}, dan \textit{F1-score}. Keluaran tahap ini bukan nilai hasil eksperimen pada bab metodologi, melainkan rancangan evaluasi yang digunakan untuk menilai kesesuaian kedua pendekatan terhadap \textit{ground truth} pada bab hasil dan pembahasan.
+
+\section{\textit{System Design}}
+
+\textit{System design} ditempatkan setelah metodologi pemodelan karena perancangan perangkat lunak berfungsi sebagai wadah penerapan proses pelacakan \textit{invoice}, penyimpanan POD, dan penyajian hasil prioritas. Masukan tahap ini adalah kebutuhan operasional pengguna, hasil analisis data, dan kebutuhan integrasi model prioritas. Proses perancangan dilakukan melalui arsitektur sistem, Use Case Diagram, Activity Diagram, dan Entity Relationship Diagram (ERD). Keluaran tahap ini adalah rancangan sistem yang menjadi dasar implementasi aplikasi.
+
+\noindent\textbf{Arsitektur sistem.}
+Sistem dirancang dengan pendekatan \textit{client-server}. Pengguna mengakses antarmuka web untuk mencatat \textit{invoice}, memperbarui status pengiriman, mengunggah POD, dan melihat prioritas. Server memproses permintaan pengguna, menjalankan logika bisnis, mengakses basis data, dan menyediakan hasil prioritas. Basis data menyimpan data pelanggan, data \textit{invoice}, riwayat pelacakan, dokumen POD, dan catatan prioritas.
 
 \begin{figure}[htbp]
     \centering
-    \fbox{
-        \parbox{0.82\textwidth}{
-            \centering
-            \vspace{1.2cm}
-            Placeholder Entity Relationship Diagram\\
-            Relasi utama: \texttt{customer} -- \texttt{invoice} -- \texttt{tracking} -- POD
-            \vspace{1.2cm}
-        }
-    }
-    \caption{Placeholder ERD sistem pelacakan invoice dan POD}
-    \label{fig:erd_placeholder}
+    \includegraphics[width=0.95\textwidth]{\detokenize{diagram-blok-arsitektur-sistem.png}}
+    \caption{Arsitektur sistem pelacakan invoice dan POD}
+    \label{fig:arsitektur_sistem}
 \end{figure}
 
-\section{Skenario Pengujian dan Evaluasi}
+\noindent\textbf{Use Case Diagram.}
+Use Case Diagram menggambarkan interaksi aktor dengan sistem. Aktor utama adalah staf administrasi yang mengelola data pelanggan, mencatat \textit{invoice}, memperbarui status pengiriman, mengunggah POD, melihat riwayat pelacakan, dan melihat rekomendasi prioritas. Diagram ini digunakan untuk memastikan kebutuhan fungsional sistem sesuai dengan proses operasional.
 
-Pengujian dilakukan dalam dua dimensi, yaitu pengujian model keputusan dan pengujian sistem perangkat lunak. Pengujian model bertujuan menilai performa pendekatan \textit{Rule-Based} dan Decision Tree C4.5 dalam menentukan prioritas pengiriman berdasarkan \textit{ground truth} hasil \textit{expert labeling}. Evaluasi dilakukan menggunakan Confusion Matrix untuk melihat distribusi prediksi benar dan salah pada kelas HIGH, MEDIUM, dan NORMAL. Dari Confusion Matrix dihitung metrik Accuracy, Precision, dan Recall. Accuracy digunakan untuk mengukur proporsi prediksi yang benar secara keseluruhan, Precision digunakan untuk menilai ketepatan prediksi pada suatu kelas prioritas, sedangkan Recall digunakan untuk menilai kemampuan model menemukan seluruh data yang seharusnya masuk ke kelas prioritas tertentu.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{use-case-diagram.png}
+    \caption{Use Case Diagram Sistem Pelacakan Invoice dan POD}
+    \label{fig:use_case_diagram}
+\end{figure}
 
-Pada evaluasi komparatif, prediksi dari C4.5 dan prediksi dari \textit{Rule-Based System} dibandingkan terhadap \textit{ground truth} yang sama. Perbandingan ini memungkinkan penelitian menilai dua hal. Pertama, sejauh mana model C4.5 mampu mempelajari pola keputusan pakar dari data historis. Kedua, sejauh mana aturan eksplisit pada \textit{Rule-Based System} mampu menghasilkan keputusan yang konsisten dengan label pakar. Hasil evaluasi digunakan untuk mengidentifikasi pendekatan yang lebih sesuai dalam konteks prioritas pengiriman \textit{invoice}, terutama ketika terdapat aturan pelanggan yang kaku dan risiko perubahan regulasi operasional.
+\noindent\textbf{Activity Diagram.}
+Activity Diagram memodelkan alur kerja unggah POD dan pembaruan status \textit{invoice}. Alur dimulai ketika pengguna memilih data \textit{invoice}, mengunggah bukti penerimaan, dan mengirimkan data ke sistem. Sistem kemudian memvalidasi masukan, menyimpan POD, memperbarui status, dan menambahkan catatan pada riwayat pelacakan.
 
-Pengujian sistem perangkat lunak dilakukan menggunakan metode \textit{Black-Box Testing}. Metode ini dipilih karena pengujian berfokus pada kesesuaian fungsi sistem terhadap kebutuhan pengguna tanpa memeriksa struktur kode internal. Skenario pengujian mencakup validasi antarmuka web, input data \textit{invoice}, pembaruan status pelacakan, unggah dan penyimpanan POD, tampilan riwayat pengiriman, serta penampilan hasil prioritas. Setiap skenario diuji berdasarkan masukan, proses yang diharapkan, dan keluaran yang dihasilkan sistem.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{activity-diagram.png}
+    \caption{Activity Diagram Sistem Pelacakan dan POD}
+    \label{fig:activity_pod}
+\end{figure}
 
-Pengujian \textit{Black-Box} juga digunakan untuk memastikan integrasi antara modul pelacakan dan penyimpanan POD berjalan sesuai rancangan. Misalnya, ketika staf admin mengunggah POD pada suatu \textit{invoice}, sistem harus menyimpan berkas, mengaitkannya dengan data \textit{invoice} yang benar, memperbarui status pelacakan, dan menampilkan riwayat perubahan. Dengan dua dimensi pengujian tersebut, penelitian dapat mengevaluasi tidak hanya akurasi model keputusan, tetapi juga kesiapan sistem sebagai perangkat lunak pendukung proses administrasi pengiriman \textit{invoice}.
+\noindent\textbf{Entity Relationship Diagram.}
+ERD menggambarkan struktur data yang mendukung sistem. Entitas utama meliputi pelanggan, \textit{invoice}, pengiriman atau pelacakan, pengguna, dan catatan prioritas. Relasi antarentitas memastikan setiap \textit{invoice} dapat ditelusuri terhadap pelanggan, status pengiriman, bukti penerimaan, dan hasil prioritas yang terkait.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ERD.png}
+    \caption{ERD sistem pelacakan invoice dan POD}
+    \label{fig:erd}
+\end{figure}

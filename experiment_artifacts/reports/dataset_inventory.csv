@@ -1,0 +1,15 @@
+dataset,sheet,rows,columns,non_empty_rows,column_names,all_empty_columns
+expert_labeling_sheet.csv,,832,28,107,invoice_no; customer_name; customer_name_masking; receive_date; sent_date; Driver; cutoff_type; cutoff_rule; cutoff_value; receive_day_code; receive_schedule; days_to_cutoff; next_receive_day_gap; missed_receive_schedule; month_end_flag; weekday_receive; expert_label; expert_reason; rule_based_label; rule_based_reason; Unnamed: 20; Unnamed: 21; Unnamed: 22; Unnamed: 23; Unnamed: 24; Unnamed: 25; Unnamed: 26; Unnamed: 27,next_receive_day_gap; month_end_flag; weekday_receive; rule_based_label; rule_based_reason; Unnamed: 20; Unnamed: 21; Unnamed: 22; Unnamed: 23; Unnamed: 24; Unnamed: 25; Unnamed: 26; Unnamed: 27
+expert_labeling_sheet.xlsx,Data Labeling,107,20,107,invoice_no; customer_name; customer_name_masking; receive_date; sent_date; Driver; cutoff_type; cutoff_rule; cutoff_value; receive_day_code; receive_schedule; days_to_cutoff; next_receive_day_gap; missed_receive_schedule; month_end_flag; weekday_receive; expert_label; expert_reason; rule_based_label; rule_based_reason,next_receive_day_gap; month_end_flag; weekday_receive; rule_based_label; rule_based_reason
+expert_labeling_sheet.xlsx,masking,507,2,507,customer; Unnamed: 1,
+expert_labeling_sheet.xlsx,Guidelines,95,3,72,PANDUAN LABELING PRIORITAS PENGIRIMAN INVOICE; Unnamed: 1; Unnamed: 2,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,LIST_INV_FINAL,3148,12,3148,date_to_ss; no_inv; customer_name; Driver; Date of Sent; CUTOFF_INVOICE ; Unnamed: 6; cutoff_rule; cutoff_value; customer_receive_schedule; receive_day_code; effective_cutoff_date,effective_cutoff_date
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Copy of LIST_INV_FINAL,3147,14,3147,date_to_ss; no_inv; customer_name; Driver; Date of Sent; CUTOFF_INVOICE ; Unnamed: 6; cutoff_rule; cutoff_value; customer_receive_schedule; receive_day_code; priority_label; Unnamed: 12; Unnamed: 13,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet6,503,16,502,NO; Unnamed: 1; CUSTOMER ACCOUNT; CUSTOMER NAME; Category; SALES PIC; CUT OF INVOICE (Normal Condition); SCHEDULE PAYMENT (Normal Condition); DAY SCHEDULE SEND INVOICE; LOCATION; DRIVER/COURIER; Rekap by Driver; PLACE FOR DROP INV DUE TO COVID19; Email; No TELP; Remarks,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Customer_master,510,6,508,customer_name; customer_receive_schedule; receive_day_code; cutoff_type; cutoff_rule; cutoff_value,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet5,0,0,0,,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet4,0,0,0,,
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet2,4,4,3,Unnamed: 0; Unnamed: 1; Unnamed: 2; Unnamed: 3,Unnamed: 0
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet1,857,5,782,Unnamed: 0; Unnamed: 1; Unnamed: 2; Unnamed: 3; Unnamed: 4,Unnamed: 0
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,Sheet3,22,6,17,Unnamed: 0; Unnamed: 1; Unnamed: 2; Unnamed: 3; Unnamed: 4; Unnamed: 5,Unnamed: 0; Unnamed: 1
+LIST INV YANG SUDAH DIKIRIM-2026 (1).xlsx,TEST,423,7,419,Unnamed: 0; Unnamed: 1; Unnamed: 2; Unnamed: 3; Unnamed: 4; Unnamed: 5; Unnamed: 6,Unnamed: 0; Unnamed: 1

@@ -1,0 +1,12 @@
+Item,Value
+Number of invoices reviewed,41
+Number changed to HIGH,3
+Number changed to MEDIUM,33
+Number remaining NORMAL,0
+Number remaining HIGH,5
+Low-confidence invoices,0
+Potential rule conflicts,11
+Final dataset rows,105
+Final HIGH labels,27
+Final MEDIUM labels,33
+Final NORMAL labels,45

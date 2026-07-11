@@ -1,0 +1,1 @@
+model,invoice_no,actual_label,predicted_label,error_type,cutoff_rule,days_to_cutoff_decision_time,receive_schedule,next_receive_day_gap_decision_time,receive_month_end_flag,rule_based_applied_rules,final_label_source,interpretation

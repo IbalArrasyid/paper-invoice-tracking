@@ -1,0 +1,19 @@
+|--- num__days_to_cutoff <= 4.50
+|   |--- class: HIGH
+|--- num__days_to_cutoff >  4.50
+|   |--- cat__receive_schedule_Everyday <= 0.50
+|   |   |--- num__days_to_cutoff <= 7.50
+|   |   |   |--- class: NORMAL
+|   |   |--- num__days_to_cutoff >  7.50
+|   |   |   |--- cat__receive_date_feature_2026-05-22 <= 0.50
+|   |   |   |   |--- cat__receive_date_feature_2026-05-29 <= 0.50
+|   |   |   |   |   |--- cat__customer_name_masking_CUST101 <= 0.50
+|   |   |   |   |   |   |--- class: HIGH
+|   |   |   |   |   |--- cat__customer_name_masking_CUST101 >  0.50
+|   |   |   |   |   |   |--- class: NORMAL
+|   |   |   |   |--- cat__receive_date_feature_2026-05-29 >  0.50
+|   |   |   |   |   |--- class: NORMAL
+|   |   |   |--- cat__receive_date_feature_2026-05-22 >  0.50
+|   |   |   |   |--- class: NORMAL
+|   |--- cat__receive_schedule_Everyday >  0.50
+|   |   |--- class: NORMAL

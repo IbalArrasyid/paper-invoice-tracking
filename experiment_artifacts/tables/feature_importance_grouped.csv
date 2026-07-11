@@ -1,0 +1,11 @@
+feature,importance
+receive_schedule,0.44883306853150867
+days_to_cutoff,0.35715598196445625
+receive_date_feature,0.11799109201607655
+customer_name_masking,0.07601985748795856
+cutoff_value_feature,0.0
+cutoff_rule,0.0
+receive_day_code_feature,0.0
+next_receive_day_gap_experiment,0.0
+missed_receive_schedule_experiment,0.0
+month_end_flag_experiment,0.0

@@ -1,0 +1,14 @@
+feature,decision,rationale
+customer_name_masking,Retain,Masked customer identity; available at decision time.
+cutoff_rule,Retain,Customer regulation; available before invoice decision.
+cutoff_value,Retain,Customer regulation; use with missing-value review where absent.
+receive_schedule,Retain,Customer regulation; available before invoice decision.
+receive_day_code,Retain,Customer regulation; needed for schedule gap derivation.
+days_to_cutoff_decision_time,Retain,Receive-date/customer-regulation replacement for source days_to_cutoff.
+next_receive_day_gap_decision_time,Retain with missing review,Derived from receive_date and receive_day_code only.
+receive_date_schedule_status,Retain,Decision-time schedule status derived from receive_date and customer receive days.
+receive_weekday_code,Retain,Operational date attribute; avoids raw-date memorization.
+receive_week_of_month,Retain,Operational date attribute for early/mid/late month pattern.
+receive_day_of_month,Retain,Operational date attribute; interpretable and less specific than full raw date.
+receive_month_end_flag,Retain,Decision-time replacement for month_end_flag.
+limited_receive_schedule_flag,Retain,Operational simplification of receive_schedule.

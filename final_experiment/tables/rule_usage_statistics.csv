@@ -1,0 +1,25 @@
+scope,Rule ID,frequency
+all,R10,38
+all,R11,7
+all,R2,1
+all,R3,3
+all,R4,4
+all,R6,5
+all,R7,17
+all,R8,30
+all,R9,7
+test,R10,8
+test,R11,1
+test,R4,1
+test,R6,1
+test,R7,3
+test,R8,7
+train,R10,30
+train,R11,6
+train,R2,1
+train,R3,3
+train,R4,3
+train,R6,4
+train,R7,14
+train,R8,23
+train,R9,7

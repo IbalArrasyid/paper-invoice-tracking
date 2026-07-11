@@ -1,0 +1,19 @@
+|--- num__days_to_cutoff_decision_time <= 10.50
+|   |--- num__days_to_cutoff_decision_time <= 3.50
+|   |   |--- class: HIGH
+|   |--- num__days_to_cutoff_decision_time >  3.50
+|   |   |--- cat__receive_schedule_Everyday <= 0.50
+|   |   |   |--- num__next_receive_day_gap_feature <= 2.00
+|   |   |   |   |--- class: HIGH
+|   |   |   |--- num__next_receive_day_gap_feature >  2.00
+|   |   |   |   |--- class: MEDIUM
+|   |   |--- cat__receive_schedule_Everyday >  0.50
+|   |   |   |--- class: MEDIUM
+|--- num__days_to_cutoff_decision_time >  10.50
+|   |--- cat__receive_day_code_1,2,3,4,5 <= 0.50
+|   |   |--- num__next_receive_day_gap_feature <= 1.50
+|   |   |   |--- class: HIGH
+|   |   |--- num__next_receive_day_gap_feature >  1.50
+|   |   |   |--- class: MEDIUM
+|   |--- cat__receive_day_code_1,2,3,4,5 >  0.50
+|   |   |--- class: NORMAL

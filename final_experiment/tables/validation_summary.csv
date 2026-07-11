@@ -1,0 +1,9 @@
+Item,Value
+Rows,105
+Unique invoice_no,105
+Duplicated invoice_no,0
+Missing final_label,0
+Invalid final_label values,0
+Invalid cutoff_rule values,0
+Validation blockers,0
+Validation warnings,2

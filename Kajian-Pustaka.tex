@@ -121,7 +121,7 @@ Namun, pendekatan \textit{Rule-Based} juga memiliki keterbatasan. Kualitas keput
 
 \subsection{Konsep Dasar Klasifikasi Data-Driven}
 
-Klasifikasi berbasis data atau \textit{data-driven classification} merupakan pendekatan yang mempelajari hubungan antara atribut masukan dan kelas keluaran berdasarkan data historis yang telah memiliki label. Dalam paradigma \textit{supervised learning}, setiap data latih terdiri atas pasangan atribut dan label. Algoritma kemudian mencari pola yang dapat membedakan satu kelas dari kelas lainnya, sehingga pola tersebut dapat digunakan untuk memprediksi kelas pada data baru. Berbeda dengan pendekatan \textit{Rule-Based} yang memulai proses dari aturan pakar, pendekatan \textit{data-driven} memulai proses dari data dan membangun model berdasarkan keteraturan yang ditemukan pada data tersebut.
+Klasifikasi berbasis data atau \textit{data-driven classification} merupakan pendekatan yang mempelajari hubungan antara atribut masukan dan kelas keluaran berdasarkan data historis yang telah memiliki label. Dalam paradigma \textit{supervised learning}, setiap data latih terdiri atas pasangan atribut dan label. Algoritma kemudian mencari pola yang dapat membedakan satu kelas dari kelas lainnya, sehingga pola tersebut dapat digunakan untuk memprediksi kelas pada data baru. Berbeda dengan pendekatan \textit{Rule-Based} yang memulai proses dari aturan operasional yang telah diformalkan, pendekatan \textit{data-driven} memulai proses dari data dan membangun model berdasarkan keteraturan yang ditemukan pada data tersebut.
 
 Dalam konteks prioritas pengiriman \textit{invoice}, data historis dapat memuat atribut seperti pelanggan, tanggal penerimaan \textit{invoice}, jadwal penerimaan dokumen, jenis \textit{cut-off}, status POD, dan label prioritas. Algoritma klasifikasi mempelajari kombinasi atribut yang sering mengarah pada prioritas tertentu. Pendekatan ini penting karena data historis dapat menyimpan pola yang tidak selalu mudah dijelaskan secara manual. Akan tetapi, model berbasis data juga memiliki risiko, terutama apabila data historis tidak lengkap, tidak seimbang, atau tidak lagi sesuai dengan perubahan aturan pelanggan. Oleh sebab itu, hasil model data-driven perlu dievaluasi dan dibandingkan dengan pendekatan berbasis pengetahuan.
 
@@ -156,15 +156,15 @@ Keterangan $S_v$ menyatakan subset data pada $S$ yang memiliki nilai $v$ untuk a
 \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[
-        treenode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=blue!10},
-        leafnode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3.2cm, minimum height=0.9cm, fill=green!20},
+        treenode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3cm, minimum height=0.9cm, fill=blue!10},
+        leafnode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3cm, minimum height=0.9cm, fill=green!20},
         treeedge/.style={-{Stealth[length=2.5mm]}, thick}
     ]
         \node[treenode] (root) {Atribut Akar};
-        \node[treenode, below left=1.5cm and 1.7cm of root] (internal) {Atribut Internal};
-        \node[leafnode, below right=1.5cm and 1.7cm of root] (leaf1) {Daun Keputusan\\(Kelas)};
-        \node[leafnode, below left=1.5cm and 0.7cm of internal] (leaf2) {Daun Keputusan\\(Kelas)};
-        \node[leafnode, below right=1.5cm and 0.7cm of internal] (leaf3) {Daun Keputusan\\(Kelas)};
+        \node[treenode, below left=1cm and 0.2cm of root] (internal) {Atribut Internal};
+        \node[leafnode, below right=1cm and 1cm of root] (leaf1) {Daun Keputusan\\(Kelas)};
+        \node[leafnode, below left=1cm and 0cm of internal] (leaf2) {Daun Keputusan\\(Kelas)};
+        \node[leafnode, below right=1cm and 0cm of internal] (leaf3) {Daun Keputusan\\(Kelas)};
 
         \draw[treeedge] (root) -- node[above left] {Nilai 1} (internal);
         \draw[treeedge] (root) -- node[above right] {Nilai 2} (leaf1);

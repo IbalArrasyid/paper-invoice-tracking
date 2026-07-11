@@ -1,0 +1,13 @@
+model,class,error_type,count
+RuleBased,HIGH,false_positive,9
+RuleBased,HIGH,false_negative,1
+RuleBased,MEDIUM,false_positive,26
+RuleBased,MEDIUM,false_negative,0
+RuleBased,NORMAL,false_positive,0
+RuleBased,NORMAL,false_negative,34
+DecisionTree,HIGH,false_positive,1
+DecisionTree,HIGH,false_negative,0
+DecisionTree,MEDIUM,false_positive,0
+DecisionTree,MEDIUM,false_negative,0
+DecisionTree,NORMAL,false_positive,0
+DecisionTree,NORMAL,false_negative,1

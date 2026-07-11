@@ -1,0 +1,42 @@
+Invoice Number,Current Label,Suggested Label,Applied Rule(s),Operational Reason,Confidence,All Matching Rule Conditions,Potential Rule Conflict,Conflict Detail
+S202605-0419,NORMAL,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+S202605-0557,NORMAL,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+S202605-0587,HIGH,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+S202605-0719,NORMAL,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+S202605-0745,HIGH,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+S202605-0764,HIGH,HIGH,R6,"R6: periode akhir bulan dan cutoff berada dalam batas <= 4 hari. priority resolution applied because multiple rule conditions were detected: R6, R8",Medium,R6; R8,Yes,R6; R8
+S202605-0772,HIGH,HIGH,R6,"R6: periode akhir bulan dan cutoff berada dalam batas <= 4 hari. priority resolution applied because multiple rule conditions were detected: R6, R8",Medium,R6; R8,Yes,R6; R8
+S202605-1766,HIGH,HIGH,R7,"R7: jadwal penerimaan terbatas dan kesempatan penerimaan berikutnya <= 1 hari. priority resolution applied because multiple rule conditions were detected: R7, R8",Medium,R7; R8,Yes,R7; R8
+93106212,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+93106374,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+93115446,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+93115889,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+93118518,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202604-2405,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0360,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0550,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0609,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0628,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0632,NORMAL,MEDIUM,R9,"R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak. priority resolution applied because multiple rule conditions were detected: R9, R10",Medium,R9; R10,Yes,R9; R10
+S202605-0708,NORMAL,MEDIUM,R9,"R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak. priority resolution applied because multiple rule conditions were detected: R9, R10",Medium,R9; R10,Yes,R9; R10
+S202605-0710,NORMAL,MEDIUM,R8; R9,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH. R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak,Medium,R8; R9,No,
+S202605-0712,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0715,NORMAL,MEDIUM,R8; R9,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH. R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak,Medium,R8; R9,No,
+S202605-0721,NORMAL,MEDIUM,R8; R9,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH. R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak,Medium,R8; R9,No,
+S202605-0723,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0737,HIGH,MEDIUM,R9,"R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak. priority resolution applied because multiple rule conditions were detected: R9, R10",Medium,R9; R10,Yes,R9; R10
+S202605-0769,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0795,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-0830,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1314,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1758,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1765,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1767,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1781,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-1800,NORMAL,MEDIUM,R8; R9,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH. R9: jadwal penerimaan terbatas tetapi masih terdapat kesempatan operasional sebelum mendesak,Medium,R8; R9,No,
+S202605-2103,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-2382,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-2386,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-2484,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-2575,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,
+S202605-2835,NORMAL,MEDIUM,R8,R8: cutoff berada pada rentang pemantauan 3-10 hari dan tidak memenuhi aturan HIGH,High,R8,No,

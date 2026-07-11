@@ -1,0 +1,11 @@
+feature,decision,rationale
+sent_date,Remove from training,Not known if priority must be predicted at invoice receive/decision time; retained only for traceability.
+days_to_cutoff,Replace,Guideline defines it from sent_date; replaced by days_to_cutoff_decision_time.
+next_receive_day_gap,Replace,Source column is empty and previous derivation used sent_date; replaced by receive-date version.
+missed_receive_schedule,Replace/remove,Original meaning depends on send date; replaced by receive_date_schedule_status.
+month_end_flag,Replace,Source column is empty and previous derivation used sent_date; replaced by receive_month_end_flag.
+receive_date_feature/raw receive_date,Remove from training,Raw dates can let a small tree memorize sample-specific collection days; use weekday/week/month-end attributes instead.
+expert_label,Target only,Must never be used as a feature.
+expert_reason,Exclude from training,Explanation text is label-derived and would leak expert judgment.
+rule_based_label,Exclude from training,"Model output/helper column, not an input feature."
+rule_based_reason,Exclude from training,"Model output/helper explanation, not an input feature."

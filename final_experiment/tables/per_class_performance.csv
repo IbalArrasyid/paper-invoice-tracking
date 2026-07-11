@@ -1,0 +1,13 @@
+class_or_metric,scope,model,precision,recall,f1-score,support
+HIGH,test,Rule-Based,1.0,1.0,1.0,5.0
+MEDIUM,test,Rule-Based,1.0,1.0,1.0,7.0
+NORMAL,test,Rule-Based,1.0,1.0,1.0,9.0
+accuracy,test,Rule-Based,1.0,1.0,1.0,1.0
+macro avg,test,Rule-Based,1.0,1.0,1.0,21.0
+weighted avg,test,Rule-Based,1.0,1.0,1.0,21.0
+HIGH,test,Decision Tree C4.5,1.0,1.0,1.0,5.0
+MEDIUM,test,Decision Tree C4.5,1.0,1.0,1.0,7.0
+NORMAL,test,Decision Tree C4.5,1.0,1.0,1.0,9.0
+accuracy,test,Decision Tree C4.5,1.0,1.0,1.0,1.0
+macro avg,test,Decision Tree C4.5,1.0,1.0,1.0,21.0
+weighted avg,test,Decision Tree C4.5,1.0,1.0,1.0,21.0

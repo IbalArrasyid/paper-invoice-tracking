@@ -1,0 +1,107 @@
+encoded_feature,importance
+num__days_to_cutoff_decision_time,0.48182753089060987
+"cat__receive_day_code_1,2,3,4,5",0.2983590013195632
+num__next_receive_day_gap_feature,0.14293016926194543
+cat__receive_schedule_Everyday,0.07688329852788157
+cat__customer_name_masking_CUST030,0.0
+cat__customer_name_masking_CUST031,0.0
+cat__customer_name_masking_CUST018,0.0
+cat__customer_name_masking_CUST024,0.0
+cat__customer_name_masking_CUST008,0.0
+cat__customer_name_masking_CUST013,0.0
+cat__customer_name_masking_CUST069,0.0
+cat__customer_name_masking_CUST073,0.0
+cat__customer_name_masking_CUST074,0.0
+cat__customer_name_masking_CUST079,0.0
+cat__customer_name_masking_CUST082,0.0
+cat__customer_name_masking_CUST084,0.0
+cat__customer_name_masking_CUST101,0.0
+cat__customer_name_masking_CUST102,0.0
+cat__customer_name_masking_CUST108,0.0
+cat__customer_name_masking_CUST109,0.0
+cat__customer_name_masking_CUST123,0.0
+cat__customer_name_masking_CUST127,0.0
+cat__customer_name_masking_CUST128,0.0
+cat__customer_name_masking_CUST135,0.0
+cat__customer_name_masking_CUST142,0.0
+cat__customer_name_masking_CUST155,0.0
+cat__customer_name_masking_CUST172,0.0
+cat__customer_name_masking_CUST176,0.0
+cat__customer_name_masking_CUST179,0.0
+cat__customer_name_masking_CUST186,0.0
+cat__customer_name_masking_CUST196,0.0
+cat__customer_name_masking_CUST198,0.0
+cat__customer_name_masking_CUST220,0.0
+cat__customer_name_masking_CUST235,0.0
+cat__customer_name_masking_CUST238,0.0
+cat__customer_name_masking_CUST242,0.0
+cat__customer_name_masking_CUST259,0.0
+cat__customer_name_masking_CUST261,0.0
+cat__customer_name_masking_CUST034,0.0
+cat__customer_name_masking_CUST053,0.0
+cat__customer_name_masking_CUST058,0.0
+cat__customer_name_masking_CUST059,0.0
+cat__customer_name_masking_CUST284,0.0
+cat__customer_name_masking_CUST283,0.0
+cat__customer_name_masking_CUST281,0.0
+cat__customer_name_masking_CUST276,0.0
+cat__customer_name_masking_CUST320,0.0
+cat__customer_name_masking_CUST287,0.0
+cat__customer_name_masking_CUST291,0.0
+cat__customer_name_masking_CUST290,0.0
+cat__customer_name_masking_CUST364,0.0
+cat__customer_name_masking_CUST366,0.0
+cat__customer_name_masking_CUST367,0.0
+cat__customer_name_masking_CUST374,0.0
+cat__customer_name_masking_CUST380,0.0
+cat__customer_name_masking_CUST328,0.0
+cat__customer_name_masking_CUST342,0.0
+cat__customer_name_masking_CUST307,0.0
+cat__customer_name_masking_CUST394,0.0
+cat__customer_name_masking_CUST400,0.0
+cat__customer_name_masking_CUST493,0.0
+cat__customer_name_masking_CUST402,0.0
+cat__customer_name_masking_CUST502,0.0
+cat__customer_name_masking_CUST503,0.0
+cat__cutoff_rule_END_MONTH,0.0
+cat__customer_name_masking_CUST498,0.0
+cat__cutoff_rule_MONTHLY_DATE,0.0
+cat__cutoff_rule_MULTIPLE_MONTHLY_DATE,0.0
+cat__cutoff_rule_NEXT_MONTH_FIRST_WEEK,0.0
+cat__cutoff_rule_NEXT_MONTH_DATE,0.0
+cat__cutoff_rule_NEXT_MONTH_WORKDAY,0.0
+cat__customer_name_masking_CUST381,0.0
+cat__customer_name_masking_CUST382,0.0
+cat__customer_name_masking_CUST359,0.0
+cat__receive_schedule_Monday - Wednesday,0.0
+cat__receive_schedule_Based on Schedule Payment,0.0
+cat__cutoff_rule_NO_CUTOFF,0.0
+"cat__receive_schedule_Monday, Thursday",0.0
+cat__receive_schedule_Tuesday & Thursday,0.0
+"cat__receive_schedule_Tuesday, Thursday",0.0
+"cat__receive_schedule_Monday, Tuesday, Wednesday",0.0
+"cat__receive_schedule_Monday, Tuesday & Thursday",0.0
+cat__receive_schedule_Wednesday,0.0
+cat__receive_schedule_Wednesday & Friday,0.0
+"cat__receive_day_code_1,2,3",0.0
+"cat__receive_day_code_1,2,4",0.0
+"cat__receive_day_code_1,3,5",0.0
+"cat__receive_day_code_1,4",0.0
+"cat__receive_schedule_Tuesday,Thursday & Friday",0.0
+"cat__receive_schedule_Monday, Wednesday, Friday",0.0
+"cat__receive_day_code_2,4,5",0.0
+"cat__receive_day_code_2,4",0.0
+cat__receive_day_code_3,0.0
+"cat__receive_day_code_3,5",0.0
+cat__receive_date_schedule_status_UNKNOWN_RECEIVE_DAY,0.0
+cat__receive_date_schedule_status_VALID_RECEIVE_DAY,0.0
+cat__receive_day_code_MISSING,0.0
+cat__receive_date_schedule_status_NEXT_RECEIVE_DAY_AVAILABLE_LATER,0.0
+cat__receive_month_end_flag_Yes,0.0
+cat__receive_month_end_flag_No,0.0
+cat__limited_receive_schedule_flag_Yes,0.0
+cat__limited_receive_schedule_flag_No,0.0
+num__cutoff_value_feature,0.0
+num__receive_weekday_code,0.0
+num__receive_week_of_month,0.0
+num__receive_day_of_month,0.0

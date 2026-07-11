@@ -1,0 +1,23 @@
+{
+  "categorical_features": [
+    "customer_name_masking",
+    "cutoff_rule",
+    "receive_schedule",
+    "receive_day_code",
+    "receive_date_schedule_status",
+    "receive_month_end_flag",
+    "limited_receive_schedule_flag"
+  ],
+  "numeric_features": [
+    "cutoff_value_feature",
+    "days_to_cutoff_decision_time",
+    "next_receive_day_gap_feature",
+    "receive_weekday_code",
+    "receive_week_of_month",
+    "receive_day_of_month"
+  ],
+  "target": "final_label",
+  "criterion": "entropy",
+  "random_state": 42,
+  "test_size": 0.2
+}
