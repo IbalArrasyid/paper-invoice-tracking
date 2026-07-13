@@ -276,60 +276,26 @@ Konsistensi representasi pengetahuan terjadi ketika Rule-Based dan C4.5 menghasi
 
 Tidak adanya kesalahan klasifikasi pada data uji memperkuat interpretasi konsistensi representasi. Namun, karena \textit{Guideline-Based Ground Truth} dibentuk dari pedoman operasional, hasil ini tidak boleh ditafsirkan sebagai pembuktian di luar konteks bahwa keputusan prioritas akan selalu sama pada semua kondisi nyata. Hasil tersebut menunjukkan bahwa dalam dataset final, dua representasi yang berbeda mempertahankan makna keputusan yang sama terhadap pedoman yang sama.
 
-Secara konseptual, hubungan antara akuisisi pengetahuan, formalisasi pengetahuan, representasi berbasis aturan, dan rekonstruksi berbasis pohon keputusan dirangkum pada Gambar \ref{fig:knowledge_reconstruction}.
+\section{Diskusi}
+
+Gambar~\ref{fig:knowledge_reconstruction} menjadi ringkasan konseptual untuk membaca makna ilmiah dari hasil Chapter IV.
 
 \begin{figure}[htbp]
 \centering
-\fbox{
-\begin{minipage}{0.9\columnwidth}
-\centering
-
-Placeholder
-
-Knowledge Acquisition
-
-$\downarrow$
-
-Knowledge Formalization
-
-$\downarrow$
-
-Operational Labeling Guideline
-
-$\downarrow$
-
-Rule-Based Representation
-
-$\downarrow$
-
-Decision Tree Reconstruction
-
-$\downarrow$
-
-Equivalent Operational Decisions
-
-\end{minipage}
-}
-\caption{Conceptual Illustration of Knowledge Reconstruction}
+\includegraphics[width=\columnwidth]{KnowledgeReconstruction.png}
+\caption{Conceptual Illustration of Knowledge Reconstruction and Representation Consistency.}
 \label{fig:knowledge_reconstruction}
 \end{figure}
-% NOTE: Placeholder ini perlu diganti dengan ilustrasi profesional yang merangkum alur rekonstruksi pengetahuan sebelum naskah final dicetak atau diserahkan.
 
-\section{Diskusi}
+Gambar~\ref{fig:knowledge_reconstruction} memperlihatkan bahwa kontribusi penelitian tidak berhenti pada keluaran numerik, tetapi pada hubungan antara \textit{explicit operational knowledge}, \textit{Rule-Based Representation}, \textit{Decision Tree Reconstruction}, dan \textit{Guideline-Based Ground Truth}. Pengetahuan operasional yang telah diformalkan berperan sebagai sumber makna bersama. Dari sumber tersebut, Rule-Based menyatakan pengetahuan secara eksplisit melalui aturan, sedangkan Decision Tree merekonstruksi pola keputusan dari atribut operasional dan label referensi berbasis pedoman.
 
-Hasil penelitian menegaskan bahwa kontribusi ilmiah utama terletak pada \textit{Operational Knowledge Formalization Framework}. Melalui kerangka tersebut, pengetahuan administratif yang semula berada dalam regulasi pelanggan, jadwal penerimaan, batas \textit{cutoff}, dan praktik penentuan prioritas dapat diformalkan menjadi atribut, pedoman pelabelan, Rule Base, dan dataset operasional. Chapter IV menunjukkan bahwa artefak-artefak tersebut dapat digunakan untuk mengevaluasi konsistensi dua representasi pengetahuan.
+Kedua bentuk tersebut bersifat \textit{complementary representations}. Rule-Based menjaga keterbacaan administratif karena setiap \textit{Priority Recommendation} dapat ditelusuri ke kondisi operasional yang diformalkan. Decision Tree Reconstruction memberikan sudut pandang rekonstruktif karena struktur pohon memperlihatkan bagaimana atribut seperti jarak terhadap \textit{cutoff} dan jadwal penerimaan cukup untuk membentuk kembali makna keputusan yang sama. Dengan demikian, C4.5 tidak diposisikan sebagai pengganti pedoman, melainkan sebagai mekanisme untuk memeriksa apakah struktur pengetahuan dapat direkonstruksi dari data yang telah diberi \textit{Guideline-Based Ground Truth}.
 
-Rule-Based memperlihatkan fungsi sebagai representasi eksplisit dari pengetahuan operasional. Nilai utamanya terletak pada transparansi, keterlacakan, dan kemudahan audit. Setiap rekomendasi prioritas dapat dijelaskan melalui Rule ID yang aktif sehingga pengguna dapat menelusuri alasan administratif di balik keluaran sistem.
+Makna utama dari gambar tersebut adalah \textit{representation consistency}. Konsistensi tidak hanya berarti kesamaan keluaran, tetapi juga kesetaraan makna operasional antara representasi eksplisit dan rekonstruksi data-driven. Apabila dua representasi menghasilkan keputusan yang sama terhadap pedoman yang sama dan masih dapat dijelaskan melalui konsep operasional yang sama, maka keduanya mempertahankan \textit{equivalent operational meaning}.
 
-C4.5 memperlihatkan fungsi sebagai rekonstruksi statistik terhadap pengetahuan yang sama. Model ini tidak menggantikan Rule Base dan tidak membentuk aturan operasional di luar pedoman. Struktur pohon menunjukkan bahwa pola keputusan berbasis pedoman dapat direkonstruksi dari atribut formal, terutama jarak menuju \textit{cutoff}, informasi hari penerimaan, dan jadwal penerimaan.
+Implikasi ilmiahnya adalah bahwa Knowledge Engineering menjadi pusat penelitian. Tanpa akuisisi, strukturisasi, dan formalisasi pengetahuan, atribut operasional hanya menjadi variabel data yang terpisah dari konteks administrasi. Setelah diformalkan, atribut dan aturan tersebut menjadi artefak pengetahuan yang dapat direpresentasikan, direkonstruksi, dan dievaluasi konsistensinya.
 
-Implikasi ilmiah dari hasil tersebut adalah bahwa Knowledge Engineering menjadi pusat penelitian. Tanpa akuisisi dan formalisasi pengetahuan, atribut seperti \texttt{days\_to\_cutoff\_decision\_time} dan \texttt{next\_receive\_day\_gap\_feature} hanya menjadi variabel data. Setelah diformalkan, atribut tersebut membawa makna operasional yang dapat digunakan dalam representasi Rule-Based dan rekonstruksi C4.5.
-
-Implikasi praktisnya adalah bahwa organisasi dapat menggunakan pengetahuan operasional sebagai dasar sistem pendukung keputusan. Rule-Based menjaga transparansi dan kemudahan penyesuaian aturan, sedangkan C4.5 dapat digunakan untuk memeriksa apakah pola keputusan berbasis pedoman tetap dapat direkonstruksi dari data. Keduanya mendukung sistem pelacakan \textit{invoice} dan POD karena rekomendasi prioritas tidak berdiri sebagai label model semata, tetapi menjadi bagian dari alur informasi operasional.
-
-Pada konteks Sistem Informasi, pengetahuan yang telah dievaluasi tidak berhenti sebagai hasil eksperimen. Pengetahuan tersebut menjadi dasar untuk menempatkan rekomendasi prioritas di dalam proses pelacakan \textit{invoice}, penyimpanan POD, dan riwayat pengiriman. Dengan demikian, hasil Chapter IV menghubungkan artefak pengetahuan dengan kebutuhan sistem pendukung keputusan yang dapat digunakan dalam proses administrasi harian.
-
-Dengan demikian, hasil eksperimen lebih tepat dibaca sebagai bukti konsistensi representasi pengetahuan daripada klaim performa prediktif yang berlaku umum. Angka evaluasi memberikan bukti pendukung, tetapi kontribusi ilmiah tetap berada pada transformasi pengetahuan operasional menjadi dua representasi yang dapat dijelaskan dan dibandingkan maknanya.
+Implikasi praktisnya adalah bahwa hasil evaluasi dapat ditempatkan kembali dalam sistem pelacakan \textit{invoice} dan POD. Rekomendasi prioritas tidak berdiri sebagai label teknis semata, tetapi sebagai bagian dari alur informasi operasional yang mendukung pelacakan dokumen, penyimpanan POD, riwayat pengiriman, dan pengambilan keputusan administratif. Dengan demikian, gambar tersebut menegaskan bahwa nilai ilmiah penelitian terletak pada kemampuan mempertahankan makna pengetahuan operasional ketika pengetahuan tersebut bergerak dari pedoman eksplisit menuju rekonstruksi dan konteks sistem informasi.
 
 \section{Threats to Validity}
 

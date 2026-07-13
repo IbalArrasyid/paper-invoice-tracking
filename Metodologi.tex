@@ -6,67 +6,16 @@ Penelitian ini mengusulkan \textit{Operational Knowledge Formalization Framework
 
 Kerangka ini memandang pengetahuan operasional sebagai sumber utama penelitian. Pengetahuan tersebut diperoleh melalui \textit{Knowledge Acquisition}, disusun menjadi kategori keputusan melalui \textit{Knowledge Structuring}, diformalkan ke dalam atribut dan aturan, kemudian digunakan untuk membentuk \textit{Operational Labeling Guideline}, \textit{Guideline-Based Ground Truth}, representasi Rule-Based, dan rekonstruksi Decision Tree C4.5. Dengan demikian, Rule-Based dan Decision Tree C4.5 bukan diposisikan sebagai dua algoritma yang saling berkompetisi, tetapi sebagai dua bentuk representasi yang digunakan untuk memeriksa apakah makna operasional yang sama tetap terjaga.
 
-% TODO(Chapter III Figure Update): Gambar kerangka penelitian berikut perlu diganti pada tahap penyempurnaan visual.
-% Kerangka baru harus menunjukkan alur:
-% Knowledge Acquisition -> Knowledge Structuring -> Attribute Formalization dan Rule Formalization.
-% Cabang Attribute Formalization menghasilkan Operational Attributes dan Operational Dataset.
-% Cabang Rule Formalization menghasilkan Operational Labeling Guideline dan Rule Base.
-% Keduanya harus bermuara pada Rule-Based Representation, Decision Tree Reconstruction,
-% Knowledge Representation Consistency Evaluation, dan System Integration.
-% Jangan gunakan lagi label visual "Evaluasi Komparatif" sebagai pusat kontribusi.
 \begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[
-        block/.style={rectangle, draw=black, fill=blue!10, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        model/.style={rectangle, draw=black, fill=green!12, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        eval/.style={rectangle, draw=black, fill=orange!15, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        arrow/.style={thick, ->, >=stealth}
-    ]
-        \node[block] (problem) at (0,0) {Identifikasi Masalah Operasional};
-        \node[block] (acquisition) at (0,-1.7) {\textit{Knowledge Acquisition}};
-        \node[block] (formalization) at (0,-3.4) {\textit{Knowledge Formalization}};
-        \node[block] (dataset) at (0,-5.1) {\textit{Dataset Construction}};
-        \node[block] (labeling) at (0,-6.8) {\textit{Guideline-Based Labeling} dan \textit{Ground Truth}};
-        \node[model] (rule) at (-3.4,-8.9) {\textit{Rule-Based System}\\(\textit{knowledge-driven})};
-        \node[model] (tree) at (3.4,-8.9) {Decision Tree C4.5\\(\textit{data-driven})};
-        \node[eval] (evaluation) at (0,-11.0) {Evaluasi Komparatif};
-        \node[block] (design) at (0,-12.7) {Perancangan Sistem};
-
-        \draw[arrow] (problem) -- (acquisition);
-        \draw[arrow] (acquisition) -- (formalization);
-        \draw[arrow] (formalization) -- (dataset);
-        \draw[arrow] (dataset) -- (labeling);
-        \draw[arrow] (labeling) -- (rule);
-        \draw[arrow] (labeling) -- (tree);
-        \draw[arrow] (rule) |- (evaluation);
-        \draw[arrow] (tree) |- (evaluation);
-        \draw[arrow] (evaluation) -- (design);
-    \end{tikzpicture}
-    \caption{Kerangka penelitian}
-    \label{fig:kerangka_penelitian}
+\centering
+\includegraphics[width=\columnwidth]{Knowledge Formalization Framework.png}
+\caption{Operational Knowledge Formalization Framework.}
+\label{fig:knowledge_formalization_framework}
 \end{figure}
 
-Secara konseptual, alur metodologi penelitian ini dapat dirangkum sebagai berikut.
+Gambar~\ref{fig:knowledge_formalization_framework} memperlihatkan alur pengetahuan dalam \textit{Operational Knowledge Formalization Framework}. Alur tersebut dimulai dari \textit{Operational Knowledge} yang diperoleh melalui \textit{Knowledge Acquisition}, kemudian disusun melalui \textit{Knowledge Structuring} agar konsep operasional seperti batas \textit{cutoff}, jadwal penerimaan, dan kondisi prioritas memiliki posisi yang jelas dalam kerangka keputusan. Setelah itu, \textit{Knowledge Formalization} memisahkan pengetahuan ke dalam dua jalur yang saling melengkapi, yaitu \textit{Attribute Formalization} dan \textit{Rule Formalization}.
 
-\[
-\begin{array}{c}
-\text{\textit{Knowledge Acquisition}}\\
-\downarrow\\
-\text{\textit{Knowledge Structuring}}\\
-\downarrow\\
-\text{\textit{Attribute Formalization} dan \textit{Rule Formalization}}\\
-\downarrow\\
-\text{\textit{Operational Labeling Guideline} dan \textit{Guideline-Based Ground Truth}}\\
-\downarrow\\
-\text{\textit{Knowledge Representation} dan \textit{Knowledge Reconstruction}}\\
-\downarrow\\
-\text{\textit{Knowledge Representation Consistency Evaluation}}\\
-\downarrow\\
-\text{\textit{System Integration}}
-\end{array}
-\]
-
-Keluaran metodologi ini berupa atribut operasional, dataset operasional, \textit{Operational Labeling Guideline}, \textit{Guideline-Based Ground Truth}, Rule Base, representasi Rule-Based, rekonstruksi Decision Tree C4.5, hasil evaluasi konsistensi representasi, dan rancangan integrasi pada sistem pelacakan \textit{invoice} dan POD. Bab hasil dan pembahasan kemudian menggunakan artefak-artefak tersebut untuk menjelaskan apakah pengetahuan operasional yang telah diformalkan dapat dipertahankan maknanya dalam dua bentuk representasi.
+Melalui \textit{Attribute Formalization}, pengetahuan operasional diubah menjadi atribut dan \textit{Operational Dataset} yang dapat digunakan untuk rekonstruksi. Melalui \textit{Rule Formalization}, pengetahuan yang sama diubah menjadi \textit{Operational Labeling Guideline} yang menghasilkan \textit{Guideline-Based Ground Truth} serta \textit{Rule-Based Representation}. Kedua jalur tersebut kemudian bertemu pada \textit{Decision Tree Reconstruction} dan \textit{Knowledge Representation Consistency Evaluation} untuk menilai apakah makna operasional tetap setara dalam dua bentuk representasi. Hasil evaluasi tersebut menjadi dasar konseptual bagi \textit{Invoice Tracking and POD System}, sehingga rekomendasi prioritas ditempatkan sebagai bagian dari alur kerja operasional, bukan sebagai keluaran model yang berdiri sendiri.
 
 \section{\textit{Knowledge Acquisition}}
 
