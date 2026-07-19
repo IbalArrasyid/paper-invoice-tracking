@@ -1,376 +1,285 @@
 \chapter{HASIL DAN PEMBAHASAN}
 
-\section{Karakteristik Dataset}
+\section{Dataset dan \textit{Ground Truth}}
 
-Dataset final pada penelitian ini diposisikan sebagai artefak pengetahuan operasional, bukan sekadar kumpulan data historis \textit{invoice}. Dataset tersebut merupakan hasil dari proses \textit{Knowledge Acquisition} dan \textit{Knowledge Formalization} yang mengubah regulasi pelanggan, jadwal penerimaan dokumen, batas \textit{cutoff}, dan praktik administrasi menjadi atribut yang dapat digunakan dalam evaluasi representasi pengetahuan. Dengan demikian, karakteristik dataset perlu dibaca sebagai dasar untuk menilai apakah pengetahuan operasional yang telah diformalkan dapat dipertahankan maknanya dalam dua bentuk representasi.
+Dataset penelitian bersumber dari berkas \texttt{dataset\_invoice.xlsx} pada lembar \texttt{Data Labeling}. Berkas sumber memuat 101 baris. Pemeriksaan berdasarkan \texttt{invoice\_no} menemukan dua baris duplikat. Setelah satu catatan paling awal dipertahankan untuk setiap nomor yang berulang, dataset analisis terdiri atas 99 \textit{invoice} unik.
 
-Dataset final yang digunakan telah dibersihkan dan diberi label berdasarkan \textit{Operational Labeling Guideline}. Dataset tersebut berisi 105 data \textit{invoice} dengan 105 nomor \textit{invoice} unik, sehingga tidak terdapat duplikasi nomor \textit{invoice}. Kolom target yang digunakan adalah \texttt{final\_label}, yaitu representasi implementatif dari \textit{Guideline-Based Ground Truth}. Hasil validasi akhir menunjukkan bahwa tidak terdapat label target yang kosong, tidak terdapat nilai label yang tidak valid, serta tidak terdapat nilai \texttt{cutoff\_rule} yang tidak sesuai dengan kategori operasional yang digunakan dalam penelitian.
-
-Distribusi label pada dataset final ditunjukkan pada Tabel \ref{tab:distribusi-label-final}. Komposisi ini penting karena dataset memuat tiga kondisi prioritas operasional, yaitu HIGH, MEDIUM, dan NORMAL. Keberadaan tiga kelas tersebut menunjukkan bahwa pedoman operasional tidak hanya membedakan dokumen mendesak dan tidak mendesak, tetapi juga menangkap kondisi antara yang membutuhkan pemantauan administratif.
+Label historis admin perusahaan tersimpan pada atribut \texttt{expert\_label}. Nilai sumber HIGH dinormalisasi menjadi \textit{Urgent}, sedangkan NORMAL dinormalisasi menjadi \textit{Not Urgent}. Normalisasi tersebut hanya mengubah representasi kelas. Tidak ada label yang dibentuk atau diubah menggunakan keluaran \textit{Rule-Based}. Ringkasan dataset disajikan pada Tabel \ref{tab:ringkasan-dataset-bab-empat}.
 
 \begin{table}[htbp]
     \centering
-    \caption{Distribusi Label pada Dataset Final}
-    \label{tab:distribusi-label-final}
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lrr}
+    \caption{Ringkasan Dataset dan Distribusi \textit{Ground Truth}}
+    \label{tab:ringkasan-dataset-bab-empat}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.37\textwidth}p{0.18\textwidth}X}
         \toprule
-        \textbf{Kelas Prioritas} & \textbf{Jumlah Data} & \textbf{Persentase} \\
+        \textbf{Komponen} & \textbf{Hasil} & \textbf{Keterangan} \\
         \midrule
-        HIGH & 27 & 25,71\% \\
-        MEDIUM & 33 & 31,43\% \\
-        NORMAL & 45 & 42,86\% \\
-        \midrule
-        \textbf{Total} & \textbf{105} & \textbf{100,00\%} \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Karakteristik utama dataset ini terletak pada keberadaan atribut operasional yang merepresentasikan proses administrasi \textit{invoice}, seperti jenis aturan \textit{cutoff}, jarak hari menuju \textit{cutoff}, jadwal penerimaan dokumen, kode hari penerimaan, jarak menuju jadwal penerimaan berikutnya, serta indikator akhir bulan. Atribut-atribut tersebut merupakan hasil formalisasi konsep operasional. Oleh karena itu, dataset ini menjadi penghubung antara pengetahuan yang diperoleh dari praktik administrasi dan dua representasi yang dievaluasi pada bab ini: representasi eksplisit melalui Rule Base dan rekonstruksi statistik melalui \textit{Decision Tree} C4.5.
-
-Pembagian data dilakukan menggunakan \textit{stratified random split} dengan \texttt{test\_size = 0.20} dan \texttt{random\_state = 42}. Pembagian secara stratifikasi digunakan agar proporsi kelas HIGH, MEDIUM, dan NORMAL tetap terwakili pada data latih dan data uji. Rincian pembagian data ditunjukkan pada Tabel \ref{tab:split-final}.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Distribusi Kelas pada Data Latih dan Data Uji}
-    \label{tab:split-final}
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lrr}
-        \toprule
-        \textbf{Kelas Prioritas} & \textbf{Data Latih} & \textbf{Data Uji} \\
-        \midrule
-        HIGH & 22 & 5 \\
-        MEDIUM & 26 & 7 \\
-        NORMAL & 36 & 9 \\
-        \midrule
-        \textbf{Total} & \textbf{84} & \textbf{21} \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Tabel \ref{tab:split-final} menunjukkan bahwa setiap kelas tetap muncul pada data uji. Hal ini membuat evaluasi konsistensi representasi dapat dilakukan terhadap seluruh kategori prioritas yang digunakan dalam pedoman operasional. Dengan demikian, dataset final berfungsi sebagai artefak pengetahuan yang memuat atribut formal, \textit{Guideline-Based Ground Truth}, dan dasar evaluasi untuk melihat apakah representasi Rule-Based dan rekonstruksi C4.5 mempertahankan makna operasional yang sama.
-
-\section{Representasi Pengetahuan Rule-Based}
-
-Model \textit{Rule-Based} pada penelitian ini diposisikan sebagai representasi eksplisit dari pengetahuan operasional yang telah diformalkan. Rule Base R1 sampai R12 tidak diperlakukan sebagai algoritma pesaing, tetapi sebagai artefak \textit{Knowledge Representation} yang menerjemahkan \textit{Operational Labeling Guideline} ke dalam aturan IF-THEN. Setiap aturan menyimpan makna administratif tertentu, misalnya kedekatan terhadap \textit{cutoff}, keterbatasan jadwal penerimaan, kondisi akhir bulan, atau kondisi tanpa \textit{cutoff}.
-
-Nilai ilmiah dari representasi Rule-Based terletak pada keterlacakan dan transparansi. Ketika sebuah \textit{invoice} diberi rekomendasi prioritas HIGH, MEDIUM, atau NORMAL, alasan keputusan dapat ditelusuri melalui Rule ID yang aktif. Keterlacakan ini penting karena prioritas pengiriman \textit{invoice} berhubungan dengan aturan pelanggan dan konsekuensi administratif. Dengan kata lain, Rule Base mempertahankan hubungan langsung antara pedoman operasional dan rekomendasi prioritas.
-
-Frekuensi aktivasi aturan pada keseluruhan dataset ditunjukkan pada Tabel \ref{tab:rule-usage-final}. Aturan R10 dan R8 menjadi aturan yang paling sering aktif. Pola ini menunjukkan bahwa sebagian besar data berada pada kondisi normal atau mendekati \textit{cutoff} tetapi belum memenuhi kondisi prioritas tertinggi. Aturan R2, R3, dan R4 lebih jarang aktif karena kondisi operasional yang dipenuhi lebih spesifik. Distribusi aktivasi aturan ini memperlihatkan bagaimana pengetahuan operasional yang diformalkan digunakan secara berbeda pada kasus-kasus \textit{invoice}.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Frekuensi Aktivasi Aturan Rule-Based pada Dataset Final}
-    \label{tab:rule-usage-final}
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lr}
-        \toprule
-        \textbf{Rule ID} & \textbf{Frekuensi} \\
-        \midrule
-        R2 & 1 \\
-        R3 & 3 \\
-        R4 & 4 \\
-        R6 & 5 \\
-        R7 & 17 \\
-        R8 & 30 \\
-        R9 & 7 \\
-        R10 & 38 \\
-        R11 & 7 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Hasil konsistensi Rule-Based terhadap \textit{Guideline-Based Ground Truth} pada data uji ditunjukkan melalui \textit{confusion matrix} pada Gambar \ref{fig:cm-rule-based-final}. Pada data uji sebanyak 21 \textit{invoice}, keluaran Rule-Based berada pada diagonal matriks untuk kelas HIGH, MEDIUM, dan NORMAL.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.72\textwidth]{\detokenize{final_experiment/figures/confusion_matrix_rule_based.png}}
-    \caption{\textit{Confusion Matrix} Model Rule-Based}
-    \label{fig:cm-rule-based-final}
-\end{figure}
-
-Nilai akurasi, presisi, \textit{recall}, dan F1-score pada data uji mencapai 1,000 untuk setiap kelas. Dalam posisi ilmiah penelitian ini, angka tersebut dibaca sebagai konsistensi internal antara \textit{Operational Labeling Guideline}, \textit{Guideline-Based Ground Truth}, dan Rule Base. Angka tersebut tidak digunakan untuk menyatakan kebenaran universal keputusan prioritas, tetapi untuk menunjukkan bahwa pengetahuan yang diformalkan dapat direpresentasikan secara eksplisit dan diterapkan secara konsisten pada dataset final.
-
-\section{Rekonstruksi Pengetahuan Decision Tree C4.5}
-
-Model \textit{Decision Tree} C4.5 pada penelitian ini diposisikan sebagai mekanisme \textit{Knowledge Reconstruction}. Model ini tidak menerima Rule Base R1 sampai R12 secara langsung. Masukan yang digunakan adalah atribut operasional yang telah diformalkan dan \textit{Guideline-Based Ground Truth}. Oleh karena itu, hasil C4.5 harus ditafsirkan sebagai rekonstruksi statistik terhadap struktur pengetahuan yang telah diformalkan, bukan sebagai pembentukan aturan operasional di luar pedoman.
-
-Struktur pohon keputusan hasil pelatihan ditunjukkan pada Gambar \ref{fig:decision-tree-final}. Akar pohon menggunakan atribut \texttt{days\_to\_cutoff\_decision\_time}. Posisi atribut ini pada akar pohon menunjukkan dominasi pengetahuan tentang jarak menuju batas administratif. Secara operasional, hal tersebut sejalan dengan pedoman prioritas karena kedekatan terhadap \textit{cutoff} merupakan salah satu konsep utama dalam penentuan urgensi pengiriman \textit{invoice}.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{\detokenize{final_experiment/figures/decision_tree_visualization.png}}
-    \caption{Visualisasi Decision Tree C4.5}
-    \label{fig:decision-tree-final}
-\end{figure}
-
-Pohon keputusan membentuk beberapa jalur keputusan utama. Apabila \texttt{days\_to\_cutoff\_decision\_time} bernilai kurang dari atau sama dengan 3,5, model mengarah pada kelas HIGH. Pada kondisi lain, struktur pohon mempertimbangkan jadwal penerimaan harian, kode hari penerimaan, dan jarak menuju jadwal penerimaan berikutnya. Jalur-jalur ini menunjukkan bahwa C4.5 merekonstruksi konsep operasional yang sama dengan pedoman, yaitu kombinasi antara kedekatan terhadap \textit{cutoff} dan keterbatasan kesempatan penerimaan dokumen.
-
-Hasil konsistensi C4.5 terhadap \textit{Guideline-Based Ground Truth} pada data uji ditunjukkan pada Gambar \ref{fig:cm-dt-final}. Pola matriks tersebut menunjukkan bahwa keluaran jalur keputusan C4.5 sejalan dengan label berbasis pedoman pada data uji.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.72\textwidth]{\detokenize{final_experiment/figures/confusion_matrix_decision_tree.png}}
-    \caption{\textit{Confusion Matrix} Model Decision Tree C4.5}
-    \label{fig:cm-dt-final}
-\end{figure}
-
-Interpretasi utama dari hasil C4.5 bukan terletak pada perayaan metrik, melainkan pada struktur rekonstruksi. Model membentuk jalur yang dapat dibaca dan dibandingkan dengan Rule Base. Karena C4.5 tidak menerima aturan eksplisit, kesesuaian jalur pohon dengan pedoman menunjukkan bahwa atribut operasional yang diformalkan memuat struktur pengetahuan yang dapat direkonstruksi secara statistik.
-
-Peringkat kepentingan fitur pada Gambar \ref{fig:feature-importance-final} dan Tabel \ref{tab:feature-importance-final} digunakan untuk melihat dominasi pengetahuan dalam proses rekonstruksi. Kepentingan fitur tidak ditafsirkan sebagai bukti kausal, tetapi sebagai indikasi atribut formal mana yang paling banyak digunakan oleh pohon untuk mempertahankan struktur keputusan berbasis pedoman.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.82\textwidth]{\detokenize{final_experiment/figures/feature_importance.png}}
-    \caption{Kepentingan Fitur pada Decision Tree C4.5}
-    \label{fig:feature-importance-final}
-\end{figure}
-
-\begin{table}[htbp]
-    \centering
-    \caption{Peringkat Kepentingan Fitur Decision Tree C4.5}
-    \label{tab:feature-importance-final}
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lr}
-        \toprule
-        \textbf{Fitur} & \textbf{Importance} \\
-        \midrule
-        \texttt{days\_to\_cutoff\_decision\_time} & 0,4818 \\
-        \texttt{receive\_day\_code} & 0,2984 \\
-        \texttt{next\_receive\_day\_gap\_feature} & 0,1429 \\
-        \texttt{receive\_schedule} & 0,0769 \\
-        Fitur operasional lain & 0,0000 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Tabel \ref{tab:feature-importance-final} memperlihatkan bahwa fitur non-nol dalam rekonstruksi terdiri atas \texttt{days\_to\_cutoff\_decision\_time}, \texttt{receive\_day\_code}, \texttt{next\_receive\_day\_gap\_feature}, dan \texttt{receive\_schedule}. Keempat fitur tersebut dapat dibaca sebagai tiga kelompok pengetahuan operasional dominan: jarak terhadap \textit{cutoff}, informasi hari penerimaan, dan batasan jadwal penerimaan. Dominasi ini selaras dengan proses formalisasi karena ketiga kelompok tersebut merupakan dasar operasional dalam penentuan prioritas pengiriman.
-
-Sebaliknya, fitur seperti \texttt{cutoff\_rule}, \texttt{receive\_month\_end\_flag}, \texttt{receive\_weekday\_code}, dan \texttt{receive\_day\_of\_month} memiliki nilai kepentingan 0 pada model akhir. Kondisi ini tidak berarti bahwa fitur-fitur tersebut tidak relevan secara administrasi. Dalam struktur pohon yang terbentuk, sebagian informasi dari fitur tersebut telah direpresentasikan secara lebih langsung oleh \texttt{days\_to\_cutoff\_decision\_time} dan atribut jadwal penerimaan. Dengan demikian, nilai kepentingan 0 dibaca sebagai redundansi dalam rekonstruksi pohon, bukan sebagai ketiadaan makna operasional.
-
-\section{Analisis Representasi Komparatif}
-
-Analisis komparatif pada penelitian ini tidak digunakan untuk menentukan peringkat paradigma. Analisis ini digunakan untuk menjelaskan perbedaan mekanisme representasi pengetahuan. Rule-Based merepresentasikan pengetahuan operasional secara eksplisit melalui aturan, sedangkan C4.5 merekonstruksi pengetahuan yang sama dari atribut operasional dan \textit{Guideline-Based Ground Truth}. Dengan demikian, perbandingan diarahkan pada sumber pengetahuan, transparansi, interpretabilitas, pemeliharaan, kemampuan rekonstruksi, dan kesesuaian makna operasional.
-
-Perbandingan metrik evaluasi ditunjukkan pada Tabel \ref{tab:metric-comparison-final}. Tabel tersebut digunakan sebagai bukti pendukung bahwa kedua representasi menghasilkan keluaran yang konsisten terhadap \textit{Guideline-Based Ground Truth} pada data uji. Metrik tidak digunakan sebagai dasar pemeringkatan antarmodel.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Perbandingan Metrik Evaluasi pada Data Uji}
-    \label{tab:metric-comparison-final}
-    \scriptsize
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lrrrrr}
-        \toprule
-        \textbf{Model} & \textbf{Akurasi} & \textbf{Prec. Makro} & \textbf{Rec. Makro} & \textbf{Macro F1} & \textbf{Weighted F1} \\
-        \midrule
-        Rule-Based & 1,000 & 1,000 & 1,000 & 1,000 & 1,000 \\
-        Decision Tree C4.5 & 1,000 & 1,000 & 1,000 & 1,000 & 1,000 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-Perbedaan konseptual antara kedua pendekatan dirangkum pada Tabel \ref{tab:comparison-characteristics}. Tabel ini menempatkan \textit{Rule-Based} sebagai representasi pengetahuan eksplisit dan C4.5 sebagai rekonstruksi pola keputusan berbasis data. Dengan demikian, pembacaan tabel harus dilakukan pada level paradigma representasi, bukan pada level kompetisi performa.
-
-\begin{table}[htbp]
-    \centering
-    \caption{Perbandingan Karakteristik Rule-Based dan Decision Tree C4.5}
-    \label{tab:comparison-characteristics}
-    \scriptsize
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabularx}{\textwidth}{p{0.21\textwidth}XX}
-        \toprule
-        \textbf{Aspek} & \textbf{Rule-Based} & \textbf{Decision Tree C4.5} \\
-        \midrule
-        Sumber pengetahuan & Berasal dari \textit{Operational Labeling Guideline} yang diformalkan menjadi aturan R1 sampai R12. & Berasal dari data latih yang memuat atribut operasional dan label akhir berbasis pedoman. \\
-        Mekanisme keputusan & Menggunakan pencocokan kondisi IF-THEN terhadap aturan yang telah didefinisikan. & Menggunakan pemisahan data berdasarkan \textit{entropy} dan menghasilkan jalur keputusan dari akar ke daun. \\
-        Interpretabilitas & Interpretasi langsung melalui Rule ID dan kondisi aturan yang aktif. & Interpretasi dilakukan melalui jalur pohon dan nilai fitur pada setiap node. \\
-        Transparansi & Sangat eksplisit karena struktur keputusan ditentukan sebelum prediksi dilakukan. & Transparan setelah pohon dibentuk, tetapi struktur keputusannya dipengaruhi oleh data latih. \\
-        Maintainability & Perubahan regulasi dapat diterjemahkan dengan memperbarui aturan tertentu. & Perubahan pola operasional memerlukan data baru dan pelatihan ulang model. \\
-        Adaptabilitas & Stabil untuk lingkungan dengan aturan administratif yang tetap. & Memerlukan data berlabel baru untuk merepresentasikan perubahan operasional. \\
-        Kebutuhan pelatihan & Tidak memerlukan proses pelatihan statistik. & Memerlukan data latih, proses encoding, dan pembentukan model. \\
-        Representasi pengetahuan & Pengetahuan direpresentasikan secara deklaratif dan eksplisit. & Pengetahuan direpresentasikan secara terkompresi dalam struktur pohon. \\
-        Kesesuaian operasional & Sesuai untuk kebutuhan audit, penelusuran alasan keputusan, dan dokumentasi aturan administratif. & Sesuai untuk analisis pola, dominasi atribut, dan rekonstruksi pedoman dari data. \\
-        Skalabilitas masa depan & Bergantung pada kemampuan menjaga dan memperbarui Rule Base ketika regulasi berubah. & Bergantung pada ketersediaan data yang representatif dan pengendalian risiko overfitting. \\
+        Baris sumber & 101 & Seluruh baris memiliki nomor \textit{invoice} dan label sumber. \\
+        Duplikat yang dihapus & 2 & Satu catatan paling awal dipertahankan untuk setiap \texttt{invoice\_no}. \\
+        \textit{Invoice} unik & 99 & Menjadi unit analisis akhir. \\
+        Label kosong & 0 & Seluruh unit analisis memiliki \textit{ground truth}. \\
+        Kelas \textit{Urgent} & 30 (30,30\%) & Kelas positif dalam evaluasi. \\
+        Kelas \textit{Not Urgent} & 69 (69,70\%) & Kelas negatif dalam evaluasi. \\
+        Catatan derivasi fitur & 6 & Ditemukan pada empat \textit{invoice} dan dipertahankan dalam artefak audit. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Tabel \ref{tab:comparison-characteristics} menunjukkan bahwa kedua pendekatan memiliki fungsi ilmiah yang berbeda. Rule-Based mempertahankan kedekatan dengan bahasa administratif karena aturan dapat dibaca sebagai prosedur operasional. C4.5 memberikan struktur data-driven yang dapat diperiksa melalui jalur pohon dan dominasi fitur. Keduanya menjawab pertanyaan berbeda: apakah pengetahuan dapat direpresentasikan secara eksplisit, dan apakah pengetahuan yang sama dapat direkonstruksi dari atribut operasional.
+Label admin digunakan sebagai \textit{ground truth} karena merepresentasikan keputusan historis yang independen dari pembentukan Rule Base. \textit{Rule-Based} dibangun dari SOP, sedangkan \textit{Decision Tree} mempelajari label admin pada data latih. Penggunaan acuan yang sama mencegah evaluasi dibentuk oleh keluaran salah satu metode dan sesuai dengan prinsip klasifikasi terawasi yang memerlukan label acuan untuk pelatihan dan evaluasi \cite{JamesEtAl2023}.
 
-Dari sisi interpretabilitas, Rule-Based menjelaskan keluaran melalui Rule ID dan kondisi aturan yang aktif, sedangkan C4.5 menjelaskan keluaran melalui jalur dari akar pohon ke daun. Penjelasan Rule-Based lebih dekat dengan bahasa pedoman operasional. Penjelasan C4.5 lebih dekat dengan struktur atribut karena menggunakan ambang seperti 3,5 dan 10,5 hari sebagai hasil pemisahan data.
+Distribusi kelas menunjukkan bahwa \textit{Not Urgent} merupakan kelas mayoritas. Oleh karena itu, \textit{accuracy} tidak dibaca secara terpisah. Interpretasi hasil juga menggunakan \textit{precision}, \textit{recall}, F1-score, serta jumlah \textit{false positive} dan \textit{false negative} sebagaimana disarankan dalam landasan evaluasi klasifikasi dan panduan kontemporer \cite{SokolovaLapalme2009,RainioEtAl2024}.
 
-Dari sisi pemeliharaan, Rule-Based dapat diperbarui melalui perubahan aturan ketika regulasi pelanggan berubah. C4.5 memerlukan data baru dan pelatihan ulang agar struktur pohon mencerminkan kondisi baru. Perbedaan ini menunjukkan bahwa kedua pendekatan memiliki peran yang saling melengkapi dalam kerangka formalisasi pengetahuan: satu menjaga transparansi aturan, sedangkan yang lain menyediakan rekonstruksi dan analisis dominasi atribut.
+\FloatBarrier
 
-Ringkasan kesalahan klasifikasi pada data uji ditunjukkan pada Tabel \ref{tab:misclassification-summary-final}. Tidak adanya \textit{false positive}, \textit{false negative}, maupun kesalahan antar kelas dibaca sebagai konsistensi representasi terhadap \textit{Guideline-Based Ground Truth} pada dataset final. Temuan ini tidak digunakan untuk memperluas klaim ke luar konteks penelitian, melainkan sebagai bukti bahwa kedua representasi mempertahankan makna operasional yang sama dalam ruang data yang dievaluasi.
+\section{Hasil \textit{Rule-Based}}
+
+Hasil \textit{Rule-Based} pada E1--E4 disajikan pada Tabel \ref{tab:metrik-rule-based}. Seluruh nilai \textit{precision}, \textit{recall}, dan F1-score pada tabel mengacu pada kelas positif \textit{Urgent}. Matriks kebingungan setiap skenario disajikan pada Tabel \ref{tab:confusion-matrix-rule-based}.
 
 \begin{table}[htbp]
     \centering
-    \caption{Ringkasan Kesalahan Klasifikasi pada Data Uji}
-    \label{tab:misclassification-summary-final}
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabular}{lrrr}
+    \caption{Metrik Klasifikasi \textit{Rule-Based} pada E1--E4}
+    \label{tab:metrik-rule-based}
+    \scriptsize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lrrrrrr}
         \toprule
-        \textbf{Model} & \textbf{False Positive} & \textbf{False Negative} & \textbf{Total Kesalahan} \\
+        \textbf{Skenario} & \textbf{$n$} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Macro F1} \\
         \midrule
-        Rule-Based & 0 & 0 & 0 \\
-        Decision Tree C4.5 & 0 & 0 & 0 \\
+        E1 80:20 & 20 & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 100,00\% \\
+        E2 70:30 & 30 & 93,33\% & 100,00\% & 77,78\% & 87,50\% & 91,48\% \\
+        E3 5-fold CV & 99 & 93,94\% & 100,00\% & 80,00\% & 88,89\% & 92,36\% \\
+        E4 LOOCV & 99 & 93,94\% & 100,00\% & 80,00\% & 88,89\% & 92,36\% \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\section{\textit{Knowledge Representation Perspective}}
+\begin{table}[htbp]
+    \centering
+    \caption{\textit{Confusion Matrix Rule-Based} pada E1--E4}
+    \label{tab:confusion-matrix-rule-based}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lrrrr}
+        \toprule
+        \textbf{Skenario} & \textbf{TN} & \textbf{FP} & \textbf{FN} & \textbf{TP} \\
+        \midrule
+        E1 80:20 & 14 & 0 & 0 & 6 \\
+        E2 70:30 & 21 & 0 & 2 & 7 \\
+        E3 5-fold CV & 69 & 0 & 6 & 24 \\
+        E4 LOOCV & 69 & 0 & 6 & 24 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-Subbab ini merupakan bagian utama dari Chapter IV karena menghubungkan hasil eksperimen dengan kontribusi ilmiah penelitian. Berdasarkan \textit{Research Positioning Statement}, kontribusi utama penelitian ini adalah \textit{Operational Knowledge Formalization Framework}. Oleh karena itu, hasil pada bab ini harus dibaca sebagai evaluasi konsistensi representasi pengetahuan, bukan sebagai pemeringkatan prediktif suatu model.
+Pada E1, seluruh 20 \textit{invoice} uji diklasifikasikan dengan benar. Hasil ini menunjukkan kesesuaian aturan pada pembagian tersebut, tetapi cakupannya terbatas pada 20 kasus. Pada E2, dua \textit{invoice Urgent} diprediksi \textit{Not Urgent}. Kesalahan tersebut menurunkan \textit{recall} menjadi 77,78\%, sementara \textit{precision} tetap 100,00\% karena tidak terdapat FP.
 
-Kebaruan yang ditunjukkan pada subbab ini bukan terletak pada penggunaan Rule-Based atau C4.5 secara terpisah, melainkan pada proses transformasi pengetahuan operasional menjadi dua representasi yang dapat diperiksa konsistensinya. Dengan demikian, pembaca dapat menelusuri bagaimana pengetahuan administratif yang semula berada pada regulasi pelanggan dan praktik kerja berubah menjadi atribut formal, Rule Base, rekonstruksi pohon, dan dasar rekomendasi prioritas.
+E3 dan E4 menghasilkan metrik yang sama karena \textit{Rule-Based} tidak memerlukan pelatihan dan menerapkan Rule Base yang sama pada seluruh 99 \textit{invoice}. Pada kedua skenario, metode ini menghasilkan enam FN dan tidak menghasilkan FP. Pola tersebut menunjukkan bahwa \textit{Rule-Based} berhati-hati dalam memberikan kelas \textit{Urgent}: seluruh rekomendasi \textit{Urgent} sesuai dengan label admin, tetapi sebagian kasus \textit{Urgent} tidak tercakup oleh kondisi eksplisit R1--R7.
 
-Alur pengetahuan dalam penelitian ini dimulai dari \textit{Knowledge Acquisition}. Pada tahap tersebut, pengetahuan administratif mengenai batas \textit{cutoff}, jadwal penerimaan dokumen, kondisi prioritas, dan praktik penanganan \textit{invoice} diperoleh dari konteks operasional. Pengetahuan tersebut kemudian melalui \textit{Knowledge Formalization}, yaitu proses menerjemahkan konsep operasional menjadi atribut formal dan aturan eksplisit. Hasil formalisasi ini menghasilkan dua cabang representasi: Rule Base sebagai representasi eksplisit dan dataset operasional sebagai dasar rekonstruksi C4.5.
+\FloatBarrier
 
-\textit{Operational Labeling Guideline} berperan sebagai penghubung antara aturan operasional dan \textit{Guideline-Based Ground Truth}. Label pada dataset final tidak diposisikan sebagai kebenaran universal yang berdiri sendiri, tetapi sebagai keputusan referensi yang diturunkan dari pedoman operasional yang telah diformalkan. Oleh karena itu, evaluasi pada bab ini menilai apakah Rule-Based dan C4.5 mempertahankan makna keputusan yang sama terhadap referensi tersebut.
+\section{Hasil \textit{Decision Tree}}
 
-Dalam representasi Rule-Based, pengetahuan digunakan secara langsung. Setiap aturan IF-THEN merepresentasikan kondisi administratif tertentu dan menghasilkan prioritas yang sesuai dengan pedoman. Dalam rekonstruksi C4.5, pengetahuan tidak diberikan sebagai daftar aturan. Model hanya menerima atribut operasional dan \textit{Guideline-Based Ground Truth}. Struktur pohon yang terbentuk karena itu menggambarkan rekonstruksi statistik terhadap pedoman operasional, bukan pembentukan aturan baru di luar proses formalisasi.
-
-\subsection{\textit{Knowledge Compression}}
-
-Kompresi pengetahuan merupakan temuan penting dalam pembacaan struktur C4.5. Rule Base mendeskripsikan pengetahuan operasional melalui 12 aturan eksplisit, sedangkan struktur C4.5 merangkum pola tersebut menjadi tujuh jalur keputusan utama sebagaimana ditunjukkan pada Tabel \ref{tab:mapping-dt-rulebase}. Kompresi ini terjadi karena beberapa aturan memiliki efek keputusan yang serupa ketika diproyeksikan ke dalam atribut formal, terutama atribut yang berkaitan dengan kedekatan terhadap \textit{cutoff} dan keterbatasan jadwal penerimaan.
-
-Kompresi tersebut tidak berarti bahwa jalur pohon menggantikan Rule Base. Rule Base tetap mempertahankan makna administratif secara deklaratif dan dapat ditelusuri ke pedoman operasional. C4.5 menyajikan bentuk terkompresi dari pola yang sama, sehingga beberapa kondisi administratif yang berbeda dapat muncul sebagai satu jalur pohon apabila menghasilkan pemisahan kelas yang serupa pada dataset final. Dengan demikian, kompresi pengetahuan menunjukkan perubahan bentuk representasi, bukan pengurangan makna operasional.
-
-Berdasarkan Tabel \ref{tab:feature-importance-final}, rekonstruksi C4.5 didominasi oleh atribut \texttt{days\_to\_cutoff\_decision\_time}, \texttt{receive\_day\_code}, \texttt{next\_receive\_day\_gap\_feature}, dan \texttt{receive\_schedule}. Keempat fitur non-nol tersebut dapat dikelompokkan menjadi tiga konsep pengetahuan operasional dominan: jarak terhadap \textit{cutoff}, informasi hari penerimaan, dan keterbatasan jadwal penerimaan. Hal ini memperlihatkan bahwa kompresi C4.5 tetap berada dalam ruang pengetahuan yang telah diformalkan.
-
-Dari sudut pandang rekayasa pengetahuan, kompresi tersebut dapat dipahami sebagai penyederhanaan representasi dan abstraksi pengetahuan. Beberapa aturan yang berbeda secara administratif dapat memiliki makna keputusan yang sama ketika dilihat melalui atribut dominan. Misalnya, kondisi yang semula dibedakan melalui jenis \textit{cutoff}, hari penerimaan, atau indikator akhir bulan dapat direpresentasikan kembali melalui jarak menuju \textit{cutoff} dan keterbatasan jadwal penerimaan. Oleh karena itu, atribut dengan nilai kepentingan 0 tidak langsung menunjukkan ketiadaan makna operasional, melainkan dapat menunjukkan redundansi atribut dalam struktur pohon yang telah memilih representasi paling langsung.
-
-\subsection{Pemetaan Jalur Rekonstruksi terhadap Rule Base}
-
-Pemetaan jalur keputusan C4.5 terhadap Rule Base ditunjukkan pada Tabel \ref{tab:mapping-dt-rulebase}. Pemetaan ini menggunakan jalur yang tampak pada struktur pohon dan membandingkannya dengan aturan R1 sampai R12 yang telah diformalkan. Tujuannya bukan mencari aturan baru, melainkan memeriksa apakah jalur rekonstruksi memiliki padanan makna dengan Rule Base.
+Hasil \textit{Decision Tree} berbasis \textit{entropy} pada E1--E4 disajikan pada Tabel \ref{tab:metrik-decision-tree}. Matriks kebingungan disajikan pada Tabel \ref{tab:confusion-matrix-decision-tree}.
 
 \begin{table}[htbp]
     \centering
-    \caption{Pemetaan Jalur Decision Tree terhadap Rule Base}
-    \label{tab:mapping-dt-rulebase}
+    \caption{Metrik Klasifikasi \textit{Decision Tree} pada E1--E4}
+    \label{tab:metrik-decision-tree}
     \scriptsize
-    \renewcommand{\arraystretch}{1.25}
-    \begin{tabularx}{\textwidth}{p{0.10\textwidth}X p{0.18\textwidth} p{0.18\textwidth}}
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lrrrrrr}
         \toprule
-        \textbf{Jalur DT} & \textbf{Kondisi Utama} & \textbf{Padanan Rule-Based} & \textbf{Jenis Kesesuaian} \\
+        \textbf{Skenario} & \textbf{$n$} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Macro F1} \\
         \midrule
-        DTR1 & \texttt{days\_to\_cutoff\_decision\_time} $\leq$ 3,5 menghasilkan HIGH & R2, R3, R4, R6 & Partial Match \\
-        DTR2 & 3,5 $<$ \texttt{days\_to\_cutoff\_decision\_time} $\leq$ 10,5, jadwal tidak setiap hari, dan \texttt{next\_receive\_day\_gap\_feature} $\leq$ 2 menghasilkan HIGH & R7 & Partial Match \\
-        DTR3 & 3,5 $<$ \texttt{days\_to\_cutoff\_decision\_time} $\leq$ 10,5, jadwal tidak setiap hari, dan \texttt{next\_receive\_day\_gap\_feature} $>$ 2 menghasilkan MEDIUM & R8, R9 & Partial Match \\
-        DTR4 & 3,5 $<$ \texttt{days\_to\_cutoff\_decision\_time} $\leq$ 10,5 dan jadwal setiap hari menghasilkan MEDIUM & R8 & Exact Match \\
-        DTR5 & \texttt{days\_to\_cutoff\_decision\_time} $>$ 10,5, kode hari penerimaan terbatas, dan \texttt{next\_receive\_day\_gap\_feature} $\leq$ 1,5 menghasilkan HIGH & R7 & Exact Match \\
-        DTR6 & \texttt{days\_to\_cutoff\_decision\_time} $>$ 10,5, kode hari penerimaan terbatas, dan \texttt{next\_receive\_day\_gap\_feature} $>$ 1,5 menghasilkan MEDIUM & R9 & Exact Match \\
-        DTR7 & \texttt{days\_to\_cutoff\_decision\_time} $>$ 10,5 dan kode hari penerimaan normal menghasilkan NORMAL & R10, R11 & Partial Match \\
+        E1 80:20 & 20 & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 100,00\% \\
+        E2 70:30 & 30 & 96,67\% & 100,00\% & 88,89\% & 94,12\% & 95,90\% \\
+        E3 5-fold CV & 99 & 95,96\% & 96,43\% & 90,00\% & 93,10\% & 95,12\% \\
+        E4 LOOCV & 99 & 97,98\% & 96,67\% & 96,67\% & 96,67\% & 97,61\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{\textit{Confusion Matrix Decision Tree} pada E1--E4}
+    \label{tab:confusion-matrix-decision-tree}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lrrrr}
+        \toprule
+        \textbf{Skenario} & \textbf{TN} & \textbf{FP} & \textbf{FN} & \textbf{TP} \\
+        \midrule
+        E1 80:20 & 14 & 0 & 0 & 6 \\
+        E2 70:30 & 21 & 0 & 1 & 8 \\
+        E3 5-fold CV & 68 & 1 & 3 & 27 \\
+        E4 LOOCV & 68 & 1 & 1 & 29 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Pada E1, seluruh 20 kasus uji diklasifikasikan dengan benar. Pada E2, terdapat satu FN dan tidak terdapat FP, sehingga \textit{precision} tetap 100,00\% dan \textit{recall} menjadi 88,89\%. Pada E3, tiga FN dan satu FP menghasilkan \textit{recall} 90,00\% serta \textit{precision} 96,43\%. Pada E4, kesalahan terdiri atas satu FN dan satu FP. Kondisi tersebut menghasilkan nilai \textit{precision}, \textit{recall}, dan F1-score yang sama, yaitu 96,67\%.
+
+Kompleksitas pohon tetap rendah pada seluruh skenario. Pohon E1 dan E2 memiliki kedalaman 2 dan 4 daun. Lima pohon pada E3 seluruhnya memiliki kedalaman 2 dengan 3--4 daun. Pada E4, 98 dari 99 pohon memiliki kedalaman 2 dan satu pohon memiliki kedalaman 3, dengan jumlah daun antara 3 dan 5. Pohon interpretatif yang dilatih pada seluruh data memiliki kedalaman 2 dan 4 daun. Pohon penuh tersebut tidak digunakan untuk menghitung metrik uji.
+
+Pada pohon interpretatif, kontribusi penurunan impurity berasal dari \texttt{limited\_receive\_schedule\_flag} sebesar 56,96\%, \texttt{days\_to\_cutoff\_feature} sebesar 39,78\%, dan \texttt{cutoff\_value\_feature} sebesar 3,26\%. Nilai tersebut menunjukkan fitur yang digunakan oleh pohon penuh dalam membentuk pemisahan, bukan pengaruh kausal dan bukan hasil evaluasi \textit{out-of-sample}.
+
+\FloatBarrier
+
+\section{Analisis Komparatif}
+
+Perbandingan langsung kedua metode disajikan pada Tabel \ref{tab:perbandingan-performa-bab-empat}. Tabel ini menggunakan kasus validasi yang sama pada setiap skenario sehingga perbedaan metrik dapat dibaca sebagai perbedaan prediksi pada kasus yang berpasangan.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Perbandingan Performa \textit{Rule-Based} dan \textit{Decision Tree}}
+    \label{tab:perbandingan-performa-bab-empat}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{llrrrrrr}
+        \toprule
+        \textbf{Skenario} & \textbf{Metode} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FP} & \textbf{FN} \\
+        \midrule
+        E1 & \textit{Rule-Based} & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 0 & 0 \\
+        E1 & \textit{Decision Tree} & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 0 & 0 \\
+        E2 & \textit{Rule-Based} & 93,33\% & 100,00\% & 77,78\% & 87,50\% & 0 & 2 \\
+        E2 & \textit{Decision Tree} & 96,67\% & 100,00\% & 88,89\% & 94,12\% & 0 & 1 \\
+        E3 & \textit{Rule-Based} & 93,94\% & 100,00\% & 80,00\% & 88,89\% & 0 & 6 \\
+        E3 & \textit{Decision Tree} & 95,96\% & 96,43\% & 90,00\% & 93,10\% & 1 & 3 \\
+        E4 & \textit{Rule-Based} & 93,94\% & 100,00\% & 80,00\% & 88,89\% & 0 & 6 \\
+        E4 & \textit{Decision Tree} & 97,98\% & 96,67\% & 96,67\% & 96,67\% & 1 & 1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Pada E1, kedua metode menghasilkan prediksi yang sama untuk seluruh kasus uji. Hasil tersebut tidak cukup untuk menyatakan bahwa performa kedua metode selalu sama karena evaluasi hanya mencakup 20 \textit{invoice}. Pada E2, \textit{Decision Tree} memberikan \textit{accuracy}, \textit{recall}, dan F1-score yang secara deskriptif lebih tinggi. Perbedaan tersebut berasal dari satu FN yang lebih sedikit, sedangkan kedua metode tidak menghasilkan FP.
+
+Pada E3, \textit{Decision Tree} mengurangi FN dari enam menjadi tiga, tetapi menghasilkan satu FP. Akibatnya, \textit{recall} dan F1-score meningkat secara deskriptif, sedangkan \textit{precision} turun dari 100,00\% menjadi 96,43\%. Pada E4, \textit{Decision Tree} menghasilkan lima FN lebih sedikit dan satu FP lebih banyak. Pola tersebut menghasilkan \textit{recall} 96,67\%, sedangkan \textit{Rule-Based} mempertahankan \textit{precision} 100,00\% dengan \textit{recall} 80,00\%.
+
+Dengan demikian, perbedaan utama terletak pada pola kesalahan. \textit{Rule-Based} tidak memberikan rekomendasi \textit{Urgent} yang salah pada E1--E4, tetapi tidak menemukan seluruh kasus \textit{Urgent}. \textit{Decision Tree} menemukan lebih banyak kasus \textit{Urgent} pada E2--E4, dengan konsekuensi satu FP pada E3 dan E4. Perbedaan deskriptif ini selanjutnya diuji secara berpasangan.
+
+Metrik E3 berasal dari gabungan prediksi \textit{out-of-fold}. Nilai per fold tidak diperlakukan sebagai replikasi independen dan tidak digunakan untuk membentuk estimasi varians atau \textit{confidence interval}. Batas interpretasi ini diperlukan karena himpunan data latih antar-fold saling tumpang tindih \cite{BatesEtAl2024CV}.
+
+\FloatBarrier
+
+\section{Analisis Statistik}
+
+Hasil pengelompokan prediksi berpasangan dan uji Exact McNemar disajikan pada Tabel \ref{tab:hasil-mcnemar-bab-empat}. Kasus \textit{Rule-Based only correct} menjadi nilai $b$, sedangkan kasus \textit{Decision Tree only correct} menjadi nilai $c$.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Hasil Perbandingan Berpasangan dan Uji Exact McNemar}
+    \label{tab:hasil-mcnemar-bab-empat}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lrrrrc}
+        \toprule
+        \textbf{Skenario} & \textbf{Keduanya Benar} & \textbf{RB Saja Benar ($b$)} & \textbf{DT Saja Benar ($c$)} & \textbf{Keduanya Salah} & \textbf{$p$} \\
+        \midrule
+        E1 80:20 & 20 & 0 & 0 & 0 & 1,0000 \\
+        E2 70:30 & 28 & 0 & 1 & 1 & 1,0000 \\
+        E3 5-fold CV & 90 & 3 & 5 & 1 & 0,7266 \\
+        E4 LOOCV & 91 & 2 & 6 & 0 & 0,2891 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Pada E4, terdapat dua kasus yang hanya diklasifikasikan dengan benar oleh \textit{Rule-Based} dan enam kasus yang hanya diklasifikasikan dengan benar oleh \textit{Decision Tree}. Exact McNemar dua sisi menghasilkan \(p = 0{,}2891\). Karena nilai tersebut lebih besar dari taraf signifikansi \(\alpha = 0{,}05\), tidak terdapat bukti yang cukup untuk menyatakan adanya perbedaan performa yang signifikan secara statistik.
+
+Nilai $p$ pada E1, E2, dan E3 juga berada di atas 0,05. Hasil ini tidak membuktikan bahwa kedua metode identik. Landasan klasik membahas McNemar untuk perbandingan keluaran klasifikasi berpasangan \cite{McNemar1947,Dietterich1998}, dan panduan evaluasi kontemporer tetap mensyaratkan kesesuaian uji dengan struktur prediksi berpasangan \cite{RainioEtAl2024}. Uji ditentukan oleh jumlah kasus \textit{discordant}, dan jumlah tersebut relatif kecil pada seluruh skenario. Oleh karena itu, perbedaan metrik dan pola kesalahan tetap dibahas sebagai temuan deskriptif, tetapi tidak digunakan untuk menetapkan superioritas salah satu metode.
+
+\FloatBarrier
+
+\section{Analisis Karakteristik Operasional}
+
+Analisis karakteristik operasional menggunakan artefak aturan, model, konfigurasi, prediksi, dan prosedur pembaruan. Aspek yang tidak memiliki eksperimen khusus dinyatakan sebagai analisis prosedural, bukan sebagai hasil pengujian empiris. Ringkasannya disajikan pada Tabel \ref{tab:karakteristik-operasional-bab-empat}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Perbandingan Karakteristik Operasional Kedua Metode}
+    \label{tab:karakteristik-operasional-bab-empat}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.17\textwidth}p{0.37\textwidth}X}
+        \toprule
+        \textbf{Aspek} & \textbf{Rule-Based} & \textbf{Decision Tree} \\
+        \midrule
+        \textit{Explainability} & Prediksi menyimpan Rule ID. Kondisi R1--R8 dan kelas keluarannya dapat dibaca langsung. & Prediksi dapat ditelusuri melalui simpul, ambang, ID daun, dan probabilitas. Pohon penuh memiliki kedalaman 2 dan 4 daun. \\
+        \textit{Maintainability} & Perubahan dilakukan pada aturan tertentu, kemudian memerlukan pemeriksaan konflik, cakupan, dan keterlacakan SOP. & Pemeliharaan mencakup fitur, pipeline, parameter, model tersimpan, serta pelatihan dan validasi ulang. \\
+        \textit{Adaptability} & Perubahan SOP dapat diterapkan dengan merevisi kondisi terkait dan memvalidasi Rule Base kembali. & Perubahan pola keputusan memerlukan data historis berlabel baru dan pelatihan ulang. Aspek ini tidak diuji melalui simulasi perubahan. \\
+        \textit{Auditability} & Versi aturan, Rule ID aktif, kondisi masukan, dan keluaran dapat disimpan per kasus. & Konfigurasi, model, fitur, probabilitas, ID daun, dan prediksi per kasus dapat disimpan dan direproduksi. \\
+        \textit{Scalability} & Penambahan aturan dapat meningkatkan tumpang tindih, konflik, dan beban validasi. Tidak dilakukan eksperimen penambahan aturan. & Penambahan data dan fitur meningkatkan kebutuhan pelatihan dan pencarian parameter. Tidak dilakukan eksperimen peningkatan skala. \\
+        Biaya komputasi & Tidak memerlukan pelatihan. Penerapan aturan pada 99 \textit{invoice} tercatat 0,0399 detik. & E4 memerlukan 99 pelatihan dengan total waktu 193,0057 detik dan total prediksi 4,5690 detik, termasuk proses pemilihan parameter pada setiap data latih. \\
+        Kesesuaian SOP & Hubungan R1--R8 dengan kondisi SOP bersifat langsung dan menjadi dasar pembentukan metode. & Model mempelajari keputusan historis admin. Jalur pohon dapat diperiksa, tetapi tidak menjadi bukti langsung kepatuhan terhadap setiap klausul SOP. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Tabel \ref{tab:mapping-dt-rulebase} menunjukkan bahwa jalur DTR1 menggabungkan beberapa kondisi HIGH yang berkaitan dengan kedekatan terhadap \textit{cutoff}. Jalur DTR2 dan DTR5 menunjukkan rekonstruksi terhadap kondisi jadwal penerimaan terbatas yang berhubungan dengan R7. Jalur DTR3, DTR4, dan DTR6 menunjukkan bagaimana kondisi MEDIUM direkonstruksi melalui kombinasi jarak terhadap \textit{cutoff} dan kesempatan penerimaan berikutnya. Jalur DTR7 menunjukkan representasi kondisi NORMAL ketika jarak terhadap \textit{cutoff} masih panjang dan kode hari penerimaan berada pada kondisi normal.
+Keterlacakan \textit{Rule-Based} didukung oleh bentuk IF--THEN dan penyimpanan Rule ID. Namun, transparansi tetap bergantung pada dokumentasi kondisi, sumber aturan, dan jejak eksekusi yang dapat diperiksa \cite{BuchananShortliffe1984,Rudin2019,RudinEtAl2022}. Pemeliharaan Rule Base juga dapat menjadi lebih sulit ketika jumlah aturan meningkat karena redundansi dan kontribusi aturan perlu dievaluasi \cite{BenDavid2008}.
 
-Jenis kesesuaian \textit{Exact Match} dan \textit{Partial Match} penting untuk dibaca secara hati-hati. \textit{Exact Match} menunjukkan bahwa jalur pohon memiliki padanan yang dekat dengan satu aturan operasional. \textit{Partial Match} menunjukkan bahwa satu jalur pohon merangkum lebih dari satu kondisi operasional atau hanya menangkap sebagian dari struktur aturan. Kedua jenis kesesuaian tersebut tetap mendukung interpretasi rekonstruksi karena C4.5 memang menghasilkan struktur yang lebih ringkas daripada Rule Base.
+\textit{Decision Tree} pada penelitian ini memiliki keterperiksaan struktural karena pohonnya dangkal. Kedalaman 2--3 dan jumlah daun 3--5 memungkinkan jalur prediksi ditelusuri, sesuai dengan prinsip bahwa interpretabilitas model intrinsik tetap bergantung pada kompleksitas yang dapat dikelola \cite{RudinEtAl2022}. Bukti ini tidak sama dengan validasi pemahaman manusia karena penelitian tidak melakukan studi interpretasi oleh admin. Selain itu, jalur pohon berasal dari pola pemisahan data, bukan dari pemetaan langsung ke SOP. Perubahan data atau label dapat menghasilkan struktur yang berbeda sehingga versi data, konfigurasi, dan model perlu disimpan bersama \cite{JamesEtAl2023}.
 
-\subsection{Konsistensi Representasi Pengetahuan}
+Catatan waktu pada Tabel \ref{tab:karakteristik-operasional-bab-empat} tidak digunakan sebagai perbandingan kecepatan yang sepenuhnya setara. Waktu \textit{Rule-Based} berasal dari satu penerapan aturan pada seluruh dataset, sedangkan waktu \textit{Decision Tree} E4 mencakup pelatihan, validasi parameter, dan prediksi berulang. Bukti tersebut hanya menunjukkan bahwa \textit{Decision Tree} memiliki tahap komputasi pelatihan yang tidak dimiliki \textit{Rule-Based}.
 
-Konsistensi representasi pengetahuan terjadi ketika Rule-Based dan C4.5 menghasilkan keluaran yang sama terhadap \textit{Guideline-Based Ground Truth}, sekaligus mempertahankan makna operasional yang dapat dijelaskan. Pada Rule-Based, makna tersebut dipertahankan melalui Rule ID dan kondisi IF-THEN. Pada C4.5, makna tersebut dipertahankan melalui jalur pohon, ambang atribut, dan dominasi fitur operasional.
+Dalam konteks sistem pelacakan \textit{invoice} dan POD, keluaran kedua metode tetap berupa rekomendasi bagi admin. Posisi klasik sistem pendukung keputusan menempatkan teknologi sebagai sarana pendukung analisis \cite{ShimEtAl2002}, sedangkan kajian kontemporer menekankan desain pembagian peran manusia dan kecerdasan artifisial \cite{StoreyEtAl2024}. Karena itu, kedua metode tidak menggantikan kewenangan pengambil keputusan.
 
-Tidak adanya kesalahan klasifikasi pada data uji memperkuat interpretasi konsistensi representasi. Namun, karena \textit{Guideline-Based Ground Truth} dibentuk dari pedoman operasional, hasil ini tidak boleh ditafsirkan sebagai pembuktian di luar konteks bahwa keputusan prioritas akan selalu sama pada semua kondisi nyata. Hasil tersebut menunjukkan bahwa dalam dataset final, dua representasi yang berbeda mempertahankan makna keputusan yang sama terhadap pedoman yang sama.
+\FloatBarrier
 
-Secara konseptual, hubungan antara akuisisi pengetahuan, formalisasi pengetahuan, representasi berbasis aturan, dan rekonstruksi berbasis pohon keputusan dirangkum pada Gambar \ref{fig:knowledge_reconstruction}.
+\section{Analisis Kesalahan}
 
-\begin{figure}[htbp]
-\centering
-\fbox{
-\begin{minipage}{0.9\columnwidth}
-\centering
+Analisis utama menggunakan E4 karena setiap \textit{invoice} memperoleh satu prediksi \textit{out-of-sample}. Pada skenario ini, 91 kasus diklasifikasikan dengan benar oleh kedua metode, enam kasus hanya benar pada \textit{Decision Tree}, dua kasus hanya benar pada \textit{Rule-Based}, dan tidak ada kasus yang salah pada keduanya. Delapan kasus \textit{discordant} disajikan pada Tabel \ref{tab:kasus-kesalahan-loocv}.
 
-Placeholder
+\begin{table}[htbp]
+    \centering
+    \caption{Kasus dengan Prediksi Berbeda pada LOOCV}
+    \label{tab:kasus-kesalahan-loocv}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabularx}{\textwidth}{p{0.16\textwidth}p{0.12\textwidth}p{0.22\textwidth}p{0.18\textwidth}X}
+        \toprule
+        \textbf{Invoice} & \textbf{Ground Truth} & \textbf{Prediksi Rule-Based} & \textbf{Prediksi Decision Tree} & \textbf{Kelompok} \\
+        \midrule
+        \texttt{S202605-0737} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-0715} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-0632} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-0721} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-0710} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-0708} & \textit{Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & DT saja benar \\
+        \texttt{S202605-1801} & \textit{Urgent} & \textit{Urgent} (R7) & \textit{Not Urgent} & RB saja benar \\
+        \texttt{S202605-1800} & \textit{Not Urgent} & \textit{Not Urgent} (R8) & \textit{Urgent} & RB saja benar \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-Knowledge Acquisition
+Enam FN \textit{Rule-Based} memiliki pola yang sama. Seluruhnya memiliki jadwal penerimaan terbatas, tetapi nilai \texttt{next\_receive\_day\_gap\_feature} berada pada rentang 2--5 hari. R7 hanya menghasilkan \textit{Urgent} ketika jarak tersebut tidak lebih dari satu hari. Karena tidak ada kondisi R1--R7 lain yang aktif, keenam kasus masuk ke R8 dan diprediksi \textit{Not Urgent}. Pola ini menjelaskan nilai \textit{precision} yang tetap tinggi sekaligus \textit{recall} yang lebih rendah: ambang eksplisit mencegah FP, tetapi tidak mencakup seluruh keputusan \textit{Urgent} pada label admin.
 
-$\downarrow$
+Kesalahan \textit{Decision Tree} pada E4 terdiri atas satu FN, yaitu \texttt{S202605-1801}, dan satu FP, yaitu \texttt{S202605-1800}. Kedua kasus memiliki jadwal penerimaan terbatas dan \texttt{cutoff\_value\_feature} bernilai 5. Namun, \texttt{S202605-1801} memiliki jarak menuju \textit{cutoff} 12 hari dan jarak jadwal berikutnya 0 hari, sedangkan \texttt{S202605-1800} memiliki jarak menuju \textit{cutoff} 5 hari dan jarak jadwal berikutnya 3 hari. Kombinasi fitur yang berdekatan tetapi memiliki label berbeda dapat berada pada partisi yang sulit dipisahkan oleh pohon dangkal. Penjelasan ini bersifat deskriptif; pohon interpretatif penuh tidak digunakan untuk menghasilkan prediksi LOOCV.
 
-Knowledge Formalization
+Perubahan kesalahan antar-skenario juga menunjukkan sensitivitas terhadap komposisi data latih. \texttt{S202605-0708} salah pada kedua metode di E2 dan E3, tetapi diklasifikasikan dengan benar oleh \textit{Decision Tree} pada E4. \texttt{S202605-2098} menjadi FN \textit{Decision Tree} pada E3, tetapi benar pada E4; kasus ini juga memiliki kode hari penerimaan yang tidak tersedia dan nilai \textit{cutoff} yang diturunkan dari deskripsi sumber. Temuan tersebut tidak membuktikan hubungan sebab-akibat, tetapi menunjukkan bahwa evaluasi per kasus diperlukan untuk melengkapi metrik agregat.
 
-$\downarrow$
+\FloatBarrier
 
-Operational Labeling Guideline
+% \section{Ancaman terhadap Validitas}
 
-$\downarrow$
+% Ancaman terhadap validitas hasil penelitian adalah sebagai berikut.
 
-Rule-Based Representation
+% \begin{enumerate}
+%     \item \textbf{Satu perusahaan.} Dataset dan SOP berasal dari satu perusahaan. Karakteristik pelanggan, aturan \textit{cutoff}, dan jadwal penerimaan dapat berbeda pada organisasi lain sehingga validitas eksternal masih terbatas.
+%     \item \textbf{Jumlah data.} Evaluasi menggunakan 99 \textit{invoice} unik dengan 30 kasus \textit{Urgent}. Jumlah kasus \textit{discordant} pada uji McNemar juga kecil. Pada E3, fold tidak independen sehingga variasi antar-fold tidak digunakan sebagai estimasi ketidakpastian konvensional \cite{BatesEtAl2024CV}. Kondisi ini membatasi kekuatan bukti statistik dan kestabilan estimasi performa.
+%     \item \textbf{Satu sumber label admin.} \texttt{expert\_label} diperlakukan sebagai label historis admin, tetapi berasal dari satu sumber keputusan. Variasi penilaian antar-admin tidak dapat diukur sehingga potensi subjektivitas label tetap ada.
+%     \item \textbf{Perubahan SOP.} Rule Base merepresentasikan SOP pada periode penelitian. Perubahan aturan pelanggan dapat mengubah relevansi R1--R8. \textit{Decision Tree} juga dapat kehilangan kesesuaian apabila pola keputusan admin berubah setelah periode data.
+%     \item \textbf{Tidak ada validasi eksternal.} Kedua metode belum diuji pada perusahaan, unit operasional, atau dataset independen lain. Hasil tidak dapat digeneralisasi di luar konteks penelitian tanpa bukti tambahan.
+%     \item \textbf{Tidak ada validasi temporal.} Eksperimen belum menggunakan pemisahan berdasarkan periode waktu. Dengan demikian, kemampuan metode mempertahankan performa pada data masa depan belum dievaluasi.
+% \end{enumerate}
 
-$\downarrow$
+% Ancaman tersebut membatasi ruang interpretasi hasil. Nilai metrik menunjukkan performa pada dataset dan skenario yang diuji, bukan jaminan performa pada periode, perusahaan, atau SOP yang berbeda.
 
-Decision Tree Reconstruction
+% \section{Ringkasan}
 
-$\downarrow$
+% Bab ini menunjukkan bahwa kedua metode dapat digunakan untuk klasifikasi prioritas terhadap label historis admin yang sama. \textit{Rule-Based} menghasilkan prediksi \textit{Urgent} yang konsisten tanpa FP pada seluruh skenario, tetapi melewatkan sejumlah kasus \textit{Urgent} yang tidak memenuhi kondisi eksplisit. \textit{Decision Tree} menemukan lebih banyak kasus \textit{Urgent} pada E2--E4, tetapi menghasilkan masing-masing satu FP pada E3 dan E4.
 
-Equivalent Operational Decisions
-
-\end{minipage}
-}
-\caption{Conceptual Illustration of Knowledge Reconstruction}
-\label{fig:knowledge_reconstruction}
-\end{figure}
-% NOTE: Placeholder ini perlu diganti dengan ilustrasi profesional yang merangkum alur rekonstruksi pengetahuan sebelum naskah final dicetak atau diserahkan.
-
-\section{Diskusi}
-
-Hasil penelitian menegaskan bahwa kontribusi ilmiah utama terletak pada \textit{Operational Knowledge Formalization Framework}. Melalui kerangka tersebut, pengetahuan administratif yang semula berada dalam regulasi pelanggan, jadwal penerimaan, batas \textit{cutoff}, dan praktik penentuan prioritas dapat diformalkan menjadi atribut, pedoman pelabelan, Rule Base, dan dataset operasional. Chapter IV menunjukkan bahwa artefak-artefak tersebut dapat digunakan untuk mengevaluasi konsistensi dua representasi pengetahuan.
-
-Rule-Based memperlihatkan fungsi sebagai representasi eksplisit dari pengetahuan operasional. Nilai utamanya terletak pada transparansi, keterlacakan, dan kemudahan audit. Setiap rekomendasi prioritas dapat dijelaskan melalui Rule ID yang aktif sehingga pengguna dapat menelusuri alasan administratif di balik keluaran sistem.
-
-C4.5 memperlihatkan fungsi sebagai rekonstruksi statistik terhadap pengetahuan yang sama. Model ini tidak menggantikan Rule Base dan tidak membentuk aturan operasional di luar pedoman. Struktur pohon menunjukkan bahwa pola keputusan berbasis pedoman dapat direkonstruksi dari atribut formal, terutama jarak menuju \textit{cutoff}, informasi hari penerimaan, dan jadwal penerimaan.
-
-Implikasi ilmiah dari hasil tersebut adalah bahwa Knowledge Engineering menjadi pusat penelitian. Tanpa akuisisi dan formalisasi pengetahuan, atribut seperti \texttt{days\_to\_cutoff\_decision\_time} dan \texttt{next\_receive\_day\_gap\_feature} hanya menjadi variabel data. Setelah diformalkan, atribut tersebut membawa makna operasional yang dapat digunakan dalam representasi Rule-Based dan rekonstruksi C4.5.
-
-Implikasi praktisnya adalah bahwa organisasi dapat menggunakan pengetahuan operasional sebagai dasar sistem pendukung keputusan. Rule-Based menjaga transparansi dan kemudahan penyesuaian aturan, sedangkan C4.5 dapat digunakan untuk memeriksa apakah pola keputusan berbasis pedoman tetap dapat direkonstruksi dari data. Keduanya mendukung sistem pelacakan \textit{invoice} dan POD karena rekomendasi prioritas tidak berdiri sebagai label model semata, tetapi menjadi bagian dari alur informasi operasional.
-
-Pada konteks Sistem Informasi, pengetahuan yang telah dievaluasi tidak berhenti sebagai hasil eksperimen. Pengetahuan tersebut menjadi dasar untuk menempatkan rekomendasi prioritas di dalam proses pelacakan \textit{invoice}, penyimpanan POD, dan riwayat pengiriman. Dengan demikian, hasil Chapter IV menghubungkan artefak pengetahuan dengan kebutuhan sistem pendukung keputusan yang dapat digunakan dalam proses administrasi harian.
-
-Dengan demikian, hasil eksperimen lebih tepat dibaca sebagai bukti konsistensi representasi pengetahuan daripada klaim performa prediktif yang berlaku umum. Angka evaluasi memberikan bukti pendukung, tetapi kontribusi ilmiah tetap berada pada transformasi pengetahuan operasional menjadi dua representasi yang dapat dijelaskan dan dibandingkan maknanya.
-
-\section{Threats to Validity}
-
-\subsection{Validitas Internal}
-
-Ancaman terhadap validitas internal terutama berkaitan dengan hubungan antara \textit{Guideline-Based Ground Truth}, \textit{Operational Labeling Guideline}, dan Rule Base. Label akhir dibentuk menggunakan pedoman operasional, sedangkan Rule-Based juga dibangun dari pengetahuan yang sama. Oleh karena itu, kesesuaian hasil Rule-Based terhadap label lebih tepat dipahami sebagai konsistensi implementasi pengetahuan, bukan sebagai pembuktian independen terhadap kebenaran keputusan operasional.
-
-Pada C4.5, ancaman validitas internal muncul karena model belajar dari dataset yang telah diberi label berbasis pedoman. Kesesuaian C4.5 terhadap label menunjukkan rekonstruksi terhadap struktur pedoman pada data uji, bukan validasi bahwa model akan menghasilkan pola yang sama pada seluruh situasi nyata. Selain itu, struktur pohon dipengaruhi oleh pembagian data latih dan data uji, sehingga hasil pada satu pembagian data tetap perlu dibaca secara hati-hati.
-
-\subsection{Validitas Eksternal}
-
-Validitas eksternal berkaitan dengan sejauh mana temuan dapat diterapkan di luar konteks penelitian. Dataset yang digunakan berasal dari karakteristik administrasi \textit{invoice} dan regulasi pelanggan pada organisasi yang menjadi objek penelitian. Apabila organisasi lain memiliki aturan \textit{cutoff}, pola penerimaan dokumen, kebijakan POD, atau prosedur prioritas yang berbeda, Rule Base, atribut operasional, dan struktur pohon keputusan dapat memerlukan penyesuaian.
-
-Dengan demikian, hasil penelitian tidak dapat langsung digeneralisasi ke seluruh proses administrasi \textit{invoice}. Generalisasi hanya dapat dilakukan setelah dilakukan akuisisi pengetahuan baru, formalisasi ulang terhadap aturan organisasi lain, serta evaluasi konsistensi representasi pada dataset dan pedoman yang sesuai dengan konteks tersebut.
-
-\subsection{Validitas Konstruk}
-
-Validitas konstruk berkaitan dengan apakah atribut yang digunakan benar-benar merepresentasikan konsep prioritas operasional. Penelitian ini menggunakan atribut seperti jarak menuju \textit{cutoff}, jadwal penerimaan, kode hari penerimaan, dan jarak menuju jadwal penerimaan berikutnya. Atribut tersebut merepresentasikan aspek penting dari pedoman operasional, tetapi tidak menutup kemungkinan adanya faktor lain yang belum dimodelkan, misalnya kondisi komunikasi pelanggan, perubahan kebijakan mendadak, kendala pengiriman fisik, atau pertimbangan administratif yang tidak tercatat dalam dataset.
-
-Nilai kepentingan fitur juga harus dibaca dalam batas validitas konstruk. Fitur yang memiliki nilai 0 pada pohon akhir tidak otomatis kehilangan makna operasional. Fitur tersebut dapat menjadi redundan karena informasi yang sama telah diserap oleh atribut lain yang lebih langsung, terutama \texttt{days\_to\_cutoff\_decision\_time} dan atribut jadwal penerimaan.
-
-\subsection{Keterbatasan Ruang Lingkup Pengetahuan}
-
-Pengetahuan yang diformalkan dalam penelitian ini dibatasi pada regulasi pelanggan, atribut waktu administrasi, jadwal penerimaan dokumen, dan kondisi prioritas yang tersedia pada konteks organisasi yang diteliti. Ruang lingkup pengetahuan tersebut belum mencakup seluruh kemungkinan faktor operasional, seperti negosiasi khusus dengan pelanggan, perubahan prosedur mendadak, kendala logistik fisik, atau kebijakan internal yang tidak terdokumentasi dalam dataset.
-
-Keterbatasan ini penting karena \textit{Operational Knowledge Formalization Framework} dapat dipindahkan sebagai metode, tetapi isi pengetahuannya tetap bergantung pada konteks organisasi. Dengan demikian, Rule Base dan rekonstruksi C4.5 pada penelitian ini harus dibaca sebagai representasi pengetahuan yang terikat pada ruang operasional yang telah diakuisisi dan diformalkan.
-
-\subsection{Keterbatasan Dataset}
-
-Dataset final berisi 105 data \textit{invoice}. Jumlah ini cukup untuk menunjukkan proses evaluasi konsistensi antara \textit{Guideline-Based Ground Truth}, Rule Base, dan rekonstruksi C4.5 dalam konteks penelitian ini, tetapi masih terbatas untuk menarik kesimpulan yang luas. Variasi pelanggan, variasi aturan, variasi periode waktu, dan perubahan kondisi operasional dapat menghasilkan struktur pengetahuan yang berbeda.
-
-Laporan validasi juga menunjukkan adanya peringatan terkait nilai \textit{schedule gap} yang hilang pada beberapa baris dengan \texttt{receive\_day\_code} tidak tersedia dan nilai \texttt{cutoff\_value} yang hilang pada sebagian regulasi pelanggan. Peringatan tersebut telah ditangani dalam eksperimen, tetapi tetap menunjukkan bahwa kualitas rekonstruksi bergantung pada kelengkapan atribut operasional yang tersedia.
-
-\subsection{Keterbatasan Guideline-Based Labeling}
-
-Label akhir pada eksperimen final tidak berasal dari validasi independen baru pada tahap evaluasi, melainkan dari \textit{Guideline-Based Labeling} berdasarkan \textit{Operational Labeling Guideline}. Pendekatan ini sesuai dengan tujuan penelitian, yaitu mengevaluasi konsistensi antara representasi eksplisit dan rekonstruksi data-driven dari pengetahuan operasional yang sama. Namun, keterbatasannya adalah hasil evaluasi tidak boleh ditafsirkan sebagai bukti bahwa label tersebut selalu identik dengan keputusan manusia pada seluruh situasi nyata.
-
-Dengan kata lain, \textit{Guideline-Based Ground Truth} adalah referensi operasional yang dibangun dari pedoman, bukan kebenaran eksternal yang bebas dari proses formalisasi. Hal ini tidak melemahkan tujuan penelitian, tetapi membatasi jenis klaim yang boleh dibuat: penelitian ini mengklaim konsistensi representasi pengetahuan dalam konteks yang diformalkan, bukan generalisasi keputusan prioritas di luar konteks tersebut.
-
-\subsection{Keterbatasan Generalisasi dan Future Work}
-
-Generalisasi hasil penelitian perlu dilakukan secara bertahap. Penelitian selanjutnya dapat memperluas dataset dengan periode waktu yang lebih panjang, menambahkan pelanggan dengan variasi regulasi yang lebih beragam, serta mengevaluasi model pada data operasional baru. Selain itu, perubahan regulasi pelanggan perlu diamati secara berkala agar Rule Base dan model data-driven tetap merepresentasikan kondisi administrasi yang aktual.
-
-Future work juga perlu memperkuat validasi eksternal terhadap pedoman. Pengujian pada organisasi lain atau periode operasional baru harus dimulai dari akuisisi pengetahuan ulang, bukan hanya menerapkan model yang sama. Dengan cara tersebut, \textit{Operational Knowledge Formalization Framework} dapat diuji sebagai kerangka yang dapat dipindahkan secara metodologis, sementara isi pengetahuannya tetap disesuaikan dengan batas operasional masing-masing konteks.
+% Perbedaan tersebut terlihat pada metrik dan pola kesalahan, tetapi Exact McNemar pada LOOCV belum menunjukkan perbedaan yang signifikan secara statistik. Analisis operasional memperlihatkan perbedaan sumber pengetahuan, prosedur pembaruan, keterlacakan, dan kebutuhan komputasi kedua metode. Seluruh temuan tetap dibatasi oleh ukuran dataset, satu sumber label, satu konteks perusahaan, serta belum adanya validasi eksternal dan temporal.

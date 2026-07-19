@@ -1,107 +1,93 @@
 # Chapter III Revision Report
 
-## 1. Section-by-Section Revisions
+## Status
 
-### 3.1 Proposed Method
+The dataset, experimental protocol, and active `Metodologi.tex` are revised. Finalization still requires label-provenance evidence, SOP-to-rule traceability, and LaTeX compilation.
 
-- Reframed the chapter around the Operational Knowledge Formalization Framework.
-- Positioned Rule-Based and Decision Tree C4.5 as components inside the framework, not as the primary contribution.
-- Added the conceptual process chain from Knowledge Acquisition to System Integration.
-- Inserted LaTeX comments before the current research framework figure explaining exactly how the figure should later be replaced.
+## 1. Methodological Identity
 
-### 3.2 Knowledge Acquisition
+Chapter III must present a comparative binary-classification study:
 
-- Expanded the explanation of knowledge sources: Customer Regulations, Historical Invoice Data, and Expert Operational Knowledge.
-- Distinguished explicit knowledge from tacit operational knowledge.
-- Clarified why acquisition is necessary before attribute construction, rule construction, or evaluation.
+- ground truth: the supplied historical label source;
+- target: `Urgent` and `Not Urgent`;
+- Rule-Based: constructed from company SOP through Knowledge Acquisition and Rule Construction;
+- Decision Tree: trained on historical attributes and training-partition labels; and
+- evaluation: E1 80:20, E2 70:30, E3 5-fold CV, and E4 LOOCV.
 
-### 3.3 Knowledge Formalization
+Knowledge Engineering remains a supporting process for Rule-Based development. Comparative Analysis is the primary contribution.
 
-- Made this the methodological core of Chapter III.
-- Split the section into Attribute Formalization and Rule Formalization.
-- Explained how operational concepts become operational attributes and dataset structure.
-- Explained how the same operational knowledge becomes the Operational Labeling Guideline and Rule Base.
+## 2. Verified Dataset
 
-### 3.4 Dataset Construction
+| Item | Result |
+|---|---:|
+| Source file | `dataset_invoice.xlsx` |
+| Source rows | 101 |
+| Unique invoices | 99 |
+| Removed duplicate rows | 2 |
+| Urgent | 30 |
+| Not Urgent | 69 |
 
-- Reframed the dataset as an operational knowledge artifact.
-- Added explanation of attribute selection, attribute transformation, decision-time features, and the role of `final_label`.
-- Updated feature descriptions to align with the final experiment artifacts, including `days_to_cutoff_decision_time`, `next_receive_day_gap_feature`, and `receive_month_end_flag`.
+The source column is `expert_label`. The authorized normalization is `HIGH = Urgent` and `NORMAL = Not Urgent`. Chapter III must document evidence that these labels represent administrator decisions; the workbook alone does not state that provenance explicitly.
 
-### 3.5 Guideline-Based Labeling
+## 3. Data Preparation
 
-- Reframed labeling as generation of Guideline-Based Ground Truth.
-- Clarified that labels are produced from the Operational Labeling Guideline, not independently observed universal truth.
-- Added the relationship between label consistency and knowledge consistency.
+1. Read the `Data Labeling` sheet without altering the source workbook.
+2. Retain one earliest record for each duplicated `invoice_no`.
+3. Normalize the binary target.
+4. Derive cutoff and schedule features using information available at `receive_date`.
+5. Exclude leakage and identity fields.
+6. Freeze the cleaned dataset and feature policy.
 
-### 3.6 Knowledge Representation
+Excluded predictors: `expert_reason`, `sent_date`, `invoice_no`, customer identity, `Driver`, and the source `days_to_cutoff`. The last field is replaced with a decision-time calculation.
 
-- Replaced the separate Rule-Based Model and Decision Tree sections with one Knowledge Representation section.
-- Added Rule-Based Representation as explicit representation of the formalized Rule Base.
-- Added Decision Tree Reconstruction as statistical reconstruction of the same formalized knowledge.
-- Clarified that C4.5 receives operational attributes and Guideline-Based Ground Truth, not the Rule Base itself.
+## 4. Rule-Based Method
 
-### 3.7 Knowledge Representation Consistency Evaluation
+The Rule Base uses SOP-derived conditions for missed receiving days, overdue or near cutoff, month-end conditions, and limited receiving schedules. It produces `Urgent` when at least one urgency rule is active and `Not Urgent` through the default rule. Every prediction stores its Rule ID.
 
-- Replaced Comparative Evaluation with Knowledge Representation Consistency Evaluation.
-- Reframed accuracy, precision, recall, and F1-score as indicators of representation consistency against Guideline-Based Ground Truth.
-- Added qualitative evaluation dimensions: Rule ID traceability, tree-path mapping, attribute dominance, and validity boundaries.
+The Rule Base must not be tuned using validation labels. Chapter III must include the final rule table, precedence, conflict handling, default behavior, and SOP traceability.
 
-### 3.8 System Integration
+## 5. Decision Tree Method
 
-- Replaced System Design framing with System Integration.
-- Connected evaluated operational knowledge to Invoice Tracking, POD, Priority Recommendation, and Decision Support.
-- Preserved the existing architecture, use case, activity, and ERD figure labels.
+The Decision Tree uses entropy. Categorical features are one-hot encoded; numerical features pass through the pipeline. Candidate values are:
 
-## 2. Scientific Rationale
+- `max_depth`: 2, 3, 4, or unlimited;
+- `min_samples_leaf`: 1, 2, or 4.
 
-The revision aligns Chapter III with the thesis identity defined in `Research-Positioning-Statement.md`: the research contribution is the Operational Knowledge Formalization Framework. The chapter now explains how operational knowledge is acquired, structured, formalized, represented, reconstructed, and evaluated for consistency.
+Selection uses stratified inner validation on training data only. The final full-data tree is used for interpretation, not performance estimation.
 
-The methodology no longer reads as a machine-learning pipeline. Decision Tree C4.5 is introduced only after knowledge acquisition, formalization, dataset construction, and guideline-based labeling have been established. This makes C4.5 a reconstruction component rather than the center of the research.
+## 6. Experimental Design
 
-The revision also reduces circularity risk by explicitly stating that Guideline-Based Ground Truth is derived from the Operational Labeling Guideline. This makes the evaluation claim precise: the experiment evaluates consistency between representations of the same formalized operational knowledge.
+| ID | Scenario | Evaluation set |
+|---|---|---|
+| E1 | Stratified hold-out 80:20 | Shared 20% test invoices |
+| E2 | Stratified hold-out 70:30 | Shared 30% test invoices |
+| E3 | Stratified 5-fold CV | Aggregated out-of-fold predictions |
+| E4 | LOOCV | Aggregated held-out predictions |
 
-## 3. Terminology Changes
+Both methods use identical validation invoice IDs. `Urgent` is the positive class. Report accuracy, precision, recall, F1, macro F1, confusion matrices, paired disagreements, and exact McNemar results.
 
-| Previous wording | Revised wording |
-| --- | --- |
-| Rule-Based Model | Rule-Based Representation |
-| Decision Tree model as data-driven method | Decision Tree Reconstruction |
-| Ground Truth | Guideline-Based Ground Truth |
-| Comparative Evaluation | Knowledge Representation Consistency Evaluation |
-| Prediction/predicted output | Output, reconstruction output, or priority recommendation |
-| Dataset for modeling | Operational dataset / operational knowledge artifact |
-| Model comparison | Representation consistency evaluation |
-| System Design | System Integration |
+## 7. Reproducibility
 
-## 4. Consistency Check Against Research-Positioning-Statement.md
+- Random seed: 42.
+- Pipeline: `run_comparative_experiment.py`.
+- Dependencies: `requirements-comparative-experiment.txt`.
+- Configuration: `comparative_experiment/experiment_config.json`.
+- Case-level predictions: `comparative_experiment/predictions/all_scenario_predictions.csv`.
+- Cleaned analysis data: `comparative_experiment/data/cleaned_analysis_dataset.csv`.
 
-| Requirement | Status | Evidence in Chapter III |
-| --- | --- | --- |
-| Primary contribution is Operational Knowledge Formalization Framework | Satisfied | Section 3.1 introduces the framework as the chapter foundation. |
-| Do not introduce another research paradigm | Satisfied | Chapter III keeps Knowledge Engineering as the central paradigm. |
-| Distinguish Attribute Formalization and Rule Formalization | Satisfied | Section 3.3 is split into two dedicated subsections. |
-| Treat Rule-Based as explicit knowledge representation | Satisfied | Section 3.6.1 defines Rule-Based Representation as an explicit Rule Base artifact. |
-| Treat Decision Tree as knowledge reconstruction | Satisfied | Section 3.6.2 defines C4.5 as Decision Tree Reconstruction. |
-| Explain Guideline-Based Ground Truth | Satisfied | Section 3.5 explains label derivation from the Operational Labeling Guideline. |
-| Interpret metrics as representation consistency | Satisfied | Section 3.7 explicitly defines the evaluation as consistency against Guideline-Based Ground Truth. |
-| Preserve distinction between prediction and recommendation | Satisfied | System-facing outputs are described as priority recommendations. |
-| Keep system contribution secondary | Satisfied | System Integration appears after the knowledge framework and evaluation methodology. |
-| Do not modify experiments, datasets, figures, or results | Satisfied | No experiment artifact, dataset, result value, or figure file was changed. |
+## 8. Chapter III Revision Checklist
 
-## 5. Experiment Artifact Review
+- [x] Binary target defined.
+- [x] Duplicate handling documented.
+- [x] Leakage-prone fields excluded.
+- [x] Rule-Based and Decision Tree procedures separated.
+- [x] E1-E4 executed reproducibly.
+- [x] LOOCV metrics aggregated correctly.
+- [ ] Label provenance evidence added to the thesis.
+- [ ] Complete SOP-to-rule traceability table added.
+- [x] `Metodologi.tex` rewritten using the executed protocol.
+- [ ] Revised LaTeX compiled and checked.
 
-Reviewed the final experiment artifacts under `final_experiment/`, including validation summaries, metric tables, class split table, rule usage statistics, feature importance ranking, confusion matrices, Decision Tree rules, and scientific interpretation report.
+## 9. Next Action
 
-Fixed facts preserved in the methodology:
-
-- Final dataset: 105 rows and 105 unique invoice numbers.
-- Validation blockers: 0.
-- Guideline-Based Ground Truth stored as `final_label`.
-- Test split: 21 rows with HIGH, MEDIUM, and NORMAL represented.
-- Both representations reached 1.000 agreement metrics in Chapter IV, but Chapter III now frames the evaluation as representation consistency.
-- Dominant reconstruction attributes include `days_to_cutoff_decision_time`, `receive_day_code`, `next_receive_day_gap_feature`, and `receive_schedule`.
-
-## 6. Figure Note
-
-The current Chapter III research framework figure still visually reflects the older comparative framing. Following the instruction not to redraw figures, the figure was left intact and LaTeX comments were inserted before it. The comments specify that the later replacement figure should show the two-branch Operational Knowledge Formalization Framework and should replace the visual label "Evaluasi Komparatif" with Knowledge Representation Consistency Evaluation.
+Complete the label-provenance evidence and SOP-to-rule traceability table, then compile and visually audit Chapter III. Do not restore Guideline-Based Ground Truth, three-class labels, Decision Tree reconstruction, or Knowledge Representation Consistency terminology.

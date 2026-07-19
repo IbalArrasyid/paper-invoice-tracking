@@ -1,68 +1,97 @@
 # Chapter IV Revision Report
 
-## 1. Subsections Revised
+## Status
 
-| Chapter IV part | Revision status | Scientific reason |
-|---|---|---|
-| 4.1 Karakteristik Dataset | Revised | Repositioned the dataset as an operational knowledge artifact produced by Knowledge Acquisition and Knowledge Formalization, not merely as statistical input. |
-| 4.2 Representasi Pengetahuan Rule-Based | Revised and retitled | Reframed Rule-Based as explicit operational knowledge representation. Rule traceability and operational transparency now precede metric discussion. |
-| 4.3 Rekonstruksi Pengetahuan Decision Tree C4.5 | Revised and retitled | Reframed C4.5 as statistical reconstruction of formalized operational knowledge, with tree structure and feature dominance emphasized before metrics. |
-| 4.4 Analisis Representasi Komparatif | Revised and retitled | Changed the comparison from model performance comparison to representation-mechanism comparison. Metrics are now supporting evidence only. |
-| 4.5 Knowledge Representation Perspective | Revised, retitled, and expanded | Made this the scientific core of Chapter IV, aligned with the Operational Knowledge Formalization Framework and Knowledge Representation Consistency Evaluation. |
-| 4.5.1 Knowledge Compression | Inserted | Added a dedicated explanation of 12 operational rules being reconstructed into seven major Decision Tree paths and grouped into dominant operational knowledge concepts. |
-| 4.5.2 Pemetaan Jalur Rekonstruksi terhadap Rule Base | Expanded | Preserved the existing mapping table and expanded its interpretation without adding new mapping rows or invented rule correspondences. |
-| 4.5.3 Konsistensi Representasi Pengetahuan | Inserted | Clarified how Rule-Based and C4.5 preserve the same operational meaning against Guideline-Based Ground Truth. |
-| 4.6 Diskusi | Revised | Focused discussion on scientific implications and Knowledge Engineering as the primary contribution. |
-| 4.7 Threats to Validity | Strengthened | Expanded limitations around Guideline-Based Ground Truth, dataset size, knowledge scope, operational scope, and no external generalization. |
+The revised experiment is complete. `Hasil-dan-Pembahasan.tex` still contains legacy evidence and was not modified in this stage.
 
-## 2. Paragraphs Removed
+## 1. Dataset Result
 
-- Removed opening prose that treated Chapter IV primarily as an experiment or model-result presentation.
-- Removed metric-first Rule-Based explanation.
-- Removed metric-first Decision Tree explanation.
-- Removed comparative prose that could be read as model-performance competition.
-- Removed language that over-centered prediction, model performance, or general classification success.
-- Removed discussion phrasing that could imply C4.5 forms operational rules outside the formalized guideline.
+The source contains 101 rows. Duplicate handling leaves 99 unique invoices: 30 `Urgent` and 69 `Not Urgent`. Two duplicate rows were removed. Six data-quality entries were documented during cutoff and schedule-feature derivation.
 
-No figures, table labels, metrics, datasets, or experiment artifacts were removed.
+The source label column is `expert_label`, normalized as `HIGH = Urgent` and `NORMAL = Not Urgent`. The thesis must provide supporting evidence that the field records administrator decisions.
 
-## 3. Paragraphs Inserted
+## 2. Comparative Metrics
 
-- Added a Chapter IV opening position in Section 4.1 explaining the dataset as an operational knowledge artifact.
-- Added Rule-Based paragraphs emphasizing Rule Base, Operational Labeling Guideline, traceability, transparency, and operational meaning.
-- Added Decision Tree paragraphs emphasizing reconstruction, tree paths, feature dominance, and knowledge compression.
-- Added comparative-analysis paragraphs explaining knowledge source, representation mechanism, interpretability, maintainability, and operational meaning.
-- Added an expanded Knowledge Representation Perspective section.
-- Added dedicated paragraphs on Knowledge Compression.
-- Added expanded interpretation of DTR1-DTR7 mapping.
-- Added strengthened validity paragraphs on Guideline-Based Ground Truth, dataset limitations, operational scope, and external generalization.
+| Scenario | Method | Accuracy | Precision Urgent | Recall Urgent | F1 Urgent | Macro F1 |
+|---|---|---:|---:|---:|---:|---:|
+| E1 80:20 | Rule-Based | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| E1 80:20 | Decision Tree | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| E2 70:30 | Rule-Based | 0.9333 | 1.0000 | 0.7778 | 0.8750 | 0.9148 |
+| E2 70:30 | Decision Tree | 0.9667 | 1.0000 | 0.8889 | 0.9412 | 0.9590 |
+| E3 5-fold | Rule-Based | 0.9394 | 1.0000 | 0.8000 | 0.8889 | 0.9236 |
+| E3 5-fold | Decision Tree | 0.9596 | 0.9643 | 0.9000 | 0.9310 | 0.9512 |
+| E4 LOOCV | Rule-Based | 0.9394 | 1.0000 | 0.8000 | 0.8889 | 0.9236 |
+| E4 LOOCV | Decision Tree | 0.9798 | 0.9667 | 0.9667 | 0.9667 | 0.9761 |
 
-## 4. Terminology Changes
+## 3. Comparative Interpretation
 
-| Previous tendency | Revised terminology |
-|---|---|
-| Ground truth without qualification | Guideline-Based Ground Truth |
-| Model performance as primary interpretation | Knowledge Representation Consistency Evaluation |
-| Prediction-centered output | Priority recommendation or model output, depending on context |
-| Decision Tree learning/discovery | Decision Tree reconstruction |
-| Feature importance as causal importance | Feature importance as knowledge dominance or reconstruction attribute dominance |
-| Model comparison | Comparative representation analysis |
+Decision Tree performs better descriptively in E2-E4 and detects more `Urgent` invoices. In E4, Rule-Based has 6 false negatives and no false positives; Decision Tree has 1 false negative and 1 false positive.
 
-## 5. Consistency Check Against Research-Positioning-Statement.md
+The paired differences are not statistically significant. Exact McNemar results are `p = 0.7266` for E3 and `p = 0.2891` for E4. The valid claim is that Decision Tree shows a performance advantage on this dataset, not that it is universally superior.
 
-- Chapter IV now treats Knowledge Engineering as the primary contribution.
-- Chapter IV centers the Operational Knowledge Formalization Framework.
-- Rule-Based is presented as explicit Knowledge Representation.
-- Decision Tree C4.5 is presented as Knowledge Reconstruction.
-- Evaluation is framed as Knowledge Representation Consistency Evaluation.
-- 1,000 metric values are interpreted as consistency with Guideline-Based Ground Truth, not predictive ranking.
-- The discussion avoids algorithm-ranking, replacement, and new-rule-formation narratives.
-- Feature importance is interpreted as dominance within reconstruction, not causal proof.
-- Threats to validity explicitly bound the claims to the studied organization and final dataset.
+E1 gives 100% accuracy for both methods on 20 test invoices. This result must be presented with E2-E4 and cannot support a standalone conclusion.
 
-## 6. Remaining Weaknesses for Manual Review
+## 4. Error Analysis
 
-- The conceptual figure `fig:knowledge_reconstruction` remains a placeholder and still uses a simple linear illustration. It was not modified because the instruction prohibited modifying figures.
-- The table `tab:comparison-characteristics` contains some wording that may later benefit from terminology refinement, but its structure was preserved to avoid unnecessary table modification.
-- The Rule Mapping table is preserved from the existing Chapter IV. No separate mapping audit report was found under `final_experiment/`; therefore, no new mappings were introduced.
-- Full LaTeX compilation was not performed in this pass.
+The six Rule-Based false negatives in full-data evaluation activate the default rule. All involve limited receiving schedules with a next receiving-day gap of 2-5 days. This indicates that the Rule-Based threshold is more conservative than the supplied labels.
+
+The revised Chapter IV should include cases where:
+
+- only Rule-Based is correct;
+- only Decision Tree is correct;
+- both are wrong; and
+- both are correct.
+
+Case-level evidence is stored in `comparative_experiment/tables/misclassification_cases.csv`.
+
+## 5. Decision Tree Interpretation
+
+The final interpretive tree has depth 2 and 4 leaves. Its impurity-based importance is concentrated in:
+
+| Feature | Importance |
+|---|---:|
+| `limited_receive_schedule_flag` | 56.96% |
+| `days_to_cutoff_feature` | 39.78% |
+| `cutoff_value_feature` | 3.26% |
+
+Feature importance is descriptive and must not be interpreted causally.
+
+## 6. Required Chapter IV Structure
+
+1. Dataset and ground-truth analysis.
+2. Experimental configuration.
+3. Rule-Based results.
+4. Decision Tree results.
+5. Comparative performance and paired analysis.
+6. Error and misclassification cases.
+7. Comparative operational characteristics.
+8. Discussion and threats to validity.
+
+Comparative Analysis must be the chapter's main section. Explainability, maintainability, adaptability, computational cost, and SOP compliance require observable evidence or a stated rubric.
+
+## 7. Validity Boundaries
+
+- The analysis uses 99 unique invoices from one organizational context.
+- Class distribution is 69.70% `Not Urgent` and 30.30% `Urgent`.
+- The label-provenance document is not present in the workbook.
+- E1 is sensitive to its small test set.
+- McNemar tests have limited power with few disagreements.
+- External or temporal generalization has not been tested.
+
+## 8. Chapter IV Revision Checklist
+
+- [x] E1-E4 completed on shared validation cases.
+- [x] Out-of-fold predictions validated.
+- [x] Confusion matrices and class metrics generated.
+- [x] Paired comparisons generated.
+- [x] Rule IDs and error cases preserved.
+- [x] Tree depth, leaves, and feature importance recorded.
+- [ ] Label provenance evidence added.
+- [ ] SOP traceability and rule-freezing record added.
+- [ ] Operational-characteristic rubric completed.
+- [ ] `Hasil-dan-Pembahasan.tex` rewritten.
+- [ ] Revised LaTeX compiled and audited.
+
+## 9. Evidence Location
+
+Use `Comparative-Experiment-Report.md` for the concise result summary and `comparative_experiment` for reproducible tables, predictions, model artifacts, and reports.

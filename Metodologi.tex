@@ -1,420 +1,362 @@
 \chapter{METODOLOGI PENELITIAN}
 
-\section{\textit{Proposed Method}}
+\section{Desain Penelitian}
 
-Penelitian ini mengusulkan \textit{Operational Knowledge Formalization Framework} untuk penentuan prioritas pengiriman \textit{invoice} pada konteks pelacakan \textit{invoice} dan \textit{Proof of Delivery} (POD). Fokus utama metodologi bukan terletak pada pengolahan data semata, melainkan pada proses mengubah pengetahuan operasional yang semula tersebar dalam regulasi pelanggan, data historis, dan praktik administrasi menjadi artefak pengetahuan yang terstruktur, dapat direpresentasikan, dapat direkonstruksi, dan dapat dievaluasi konsistensinya.
+Penelitian ini menggunakan desain komparatif untuk mengevaluasi klasifikasi prioritas pengiriman \textit{invoice}. Dua metode yang dibandingkan adalah \textit{Rule-Based} dan \textit{Decision Tree}. Keduanya menghasilkan kelas \textit{Urgent} atau \textit{Not Urgent} dan dievaluasi terhadap label historis yang sama.
 
-Kerangka ini memandang pengetahuan operasional sebagai sumber utama penelitian. Pengetahuan tersebut diperoleh melalui \textit{Knowledge Acquisition}, disusun menjadi kategori keputusan melalui \textit{Knowledge Structuring}, diformalkan ke dalam atribut dan aturan, kemudian digunakan untuk membentuk \textit{Operational Labeling Guideline}, \textit{Guideline-Based Ground Truth}, representasi Rule-Based, dan rekonstruksi Decision Tree C4.5. Dengan demikian, Rule-Based dan Decision Tree C4.5 bukan diposisikan sebagai dua algoritma yang saling berkompetisi, tetapi sebagai dua bentuk representasi yang digunakan untuk memeriksa apakah makna operasional yang sama tetap terjaga.
+\textit{Rule-Based} merupakan metode berbasis pengetahuan. Aturannya dibangun dari SOP perusahaan melalui \textit{Knowledge Acquisition}, \textit{Rule Construction}, dan \textit{Rule Validation}. \textit{Decision Tree} merupakan metode berbasis data yang mempelajari hubungan antara atribut historis dan label pada bagian data latih. Kedua metode diperlakukan sebagai pendekatan klasifikasi yang berbeda, bukan sebagai proses rekonstruksi pengetahuan.
 
-% TODO(Chapter III Figure Update): Gambar kerangka penelitian berikut perlu diganti pada tahap penyempurnaan visual.
-% Kerangka baru harus menunjukkan alur:
-% Knowledge Acquisition -> Knowledge Structuring -> Attribute Formalization dan Rule Formalization.
-% Cabang Attribute Formalization menghasilkan Operational Attributes dan Operational Dataset.
-% Cabang Rule Formalization menghasilkan Operational Labeling Guideline dan Rule Base.
-% Keduanya harus bermuara pada Rule-Based Representation, Decision Tree Reconstruction,
-% Knowledge Representation Consistency Evaluation, dan System Integration.
-% Jangan gunakan lagi label visual "Evaluasi Komparatif" sebagai pusat kontribusi.
+Penelitian dilaksanakan melalui pengumpulan data, verifikasi \textit{ground truth}, pembersihan data, pembentukan fitur, pembangunan kedua metode, penyusunan skenario validasi, evaluasi berpasangan, dan analisis komparatif. Kerangka metodologi ditunjukkan pada Gambar \ref{fig:kerangka-metodologi-komparatif}.
+
 \begin{figure}[htbp]
     \centering
-    \begin{tikzpicture}[
-        block/.style={rectangle, draw=black, fill=blue!10, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        model/.style={rectangle, draw=black, fill=green!12, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        eval/.style={rectangle, draw=black, fill=orange!15, text width=4.8cm, minimum height=1cm, align=center, rounded corners},
-        arrow/.style={thick, ->, >=stealth}
-    ]
-        \node[block] (problem) at (0,0) {Identifikasi Masalah Operasional};
-        \node[block] (acquisition) at (0,-1.7) {\textit{Knowledge Acquisition}};
-        \node[block] (formalization) at (0,-3.4) {\textit{Knowledge Formalization}};
-        \node[block] (dataset) at (0,-5.1) {\textit{Dataset Construction}};
-        \node[block] (labeling) at (0,-6.8) {\textit{Guideline-Based Labeling} dan \textit{Ground Truth}};
-        \node[model] (rule) at (-3.4,-8.9) {\textit{Rule-Based System}\\(\textit{knowledge-driven})};
-        \node[model] (tree) at (3.4,-8.9) {Decision Tree C4.5\\(\textit{data-driven})};
-        \node[eval] (evaluation) at (0,-11.0) {Evaluasi Komparatif};
-        \node[block] (design) at (0,-12.7) {Perancangan Sistem};
-
-        \draw[arrow] (problem) -- (acquisition);
-        \draw[arrow] (acquisition) -- (formalization);
-        \draw[arrow] (formalization) -- (dataset);
-        \draw[arrow] (dataset) -- (labeling);
-        \draw[arrow] (labeling) -- (rule);
-        \draw[arrow] (labeling) -- (tree);
-        \draw[arrow] (rule) |- (evaluation);
-        \draw[arrow] (tree) |- (evaluation);
-        \draw[arrow] (evaluation) -- (design);
-    \end{tikzpicture}
-    \caption{Kerangka penelitian}
-    \label{fig:kerangka_penelitian}
+    \includegraphics[width=\linewidth]{fp-1.png}
+    \caption{Comparative research framework for invoice urgency classification.}
+    \label{fig:kerangka-metodologi-komparatif}
 \end{figure}
 
-Secara konseptual, alur metodologi penelitian ini dapat dirangkum sebagai berikut.
+% Kontribusi utama penelitian terletak pada analisis komparatif. \textit{Knowledge Engineering} tetap digunakan untuk membangun dan memvalidasi \textit{Rule-Based}, sedangkan sistem pelacakan \textit{invoice} dan \textit{Proof of Delivery} menjadi konteks penerapan rekomendasi prioritas.
 
-\[
-\begin{array}{c}
-\text{\textit{Knowledge Acquisition}}\\
-\downarrow\\
-\text{\textit{Knowledge Structuring}}\\
-\downarrow\\
-\text{\textit{Attribute Formalization} dan \textit{Rule Formalization}}\\
-\downarrow\\
-\text{\textit{Operational Labeling Guideline} dan \textit{Guideline-Based Ground Truth}}\\
-\downarrow\\
-\text{\textit{Knowledge Representation} dan \textit{Knowledge Reconstruction}}\\
-\downarrow\\
-\text{\textit{Knowledge Representation Consistency Evaluation}}\\
-\downarrow\\
-\text{\textit{System Integration}}
-\end{array}
-\]
+\FloatBarrier
 
-Keluaran metodologi ini berupa atribut operasional, dataset operasional, \textit{Operational Labeling Guideline}, \textit{Guideline-Based Ground Truth}, Rule Base, representasi Rule-Based, rekonstruksi Decision Tree C4.5, hasil evaluasi konsistensi representasi, dan rancangan integrasi pada sistem pelacakan \textit{invoice} dan POD. Bab hasil dan pembahasan kemudian menggunakan artefak-artefak tersebut untuk menjelaskan apakah pengetahuan operasional yang telah diformalkan dapat dipertahankan maknanya dalam dua bentuk representasi.
+% \section{Dataset dan \textit{Ground Truth}}
 
-\section{\textit{Knowledge Acquisition}}
+% \subsection{Sumber dan Unit Analisis}
 
-\textit{Knowledge Acquisition} dilakukan untuk memperoleh pengetahuan operasional yang menjadi dasar penentuan prioritas pengiriman \textit{invoice}. Pengetahuan yang dikumpulkan berasal dari tiga sumber utama, yaitu regulasi pelanggan, data historis \textit{invoice}, dan pengetahuan operasional staf administrasi. Ketiga sumber tersebut diperlukan karena keputusan prioritas tidak hanya dipengaruhi oleh data transaksi, tetapi juga oleh aturan penerimaan pelanggan, batas \textit{cutoff}, jadwal penerimaan dokumen, konsekuensi keterlambatan, dan pengalaman staf dalam menangani kondisi operasional.
+% Dataset bersumber dari berkas \texttt{dataset\_invoice.xlsx}, khususnya lembar \texttt{Data Labeling}. Satu baris merepresentasikan satu catatan \textit{invoice}. Unit analisis ditetapkan berdasarkan \texttt{invoice\_no}. Berkas sumber memuat 101 baris dan menghasilkan 99 \textit{invoice} unik setelah penanganan duplikat.
 
-Regulasi pelanggan menyediakan pengetahuan eksplisit karena sebagian aturan sudah tertulis dalam bentuk jadwal penerimaan, batas tanggal administratif, atau ketentuan penyerahan dokumen. Data historis \textit{invoice} menyediakan kasus operasional yang menunjukkan bagaimana dokumen diterima, dicatat, dikirim, dan diproses. Pengetahuan operasional staf menyediakan pengetahuan \textit{tacit}, yaitu pertimbangan yang belum selalu terdokumentasi secara formal, seperti dokumen yang perlu didahulukan ketika jadwal penerimaan terbatas atau ketika batas administrasi pelanggan semakin dekat.
+% Data memuat informasi tanggal penerimaan, aturan \textit{cutoff}, jadwal penerimaan pelanggan, serta label sumber. Identitas pelanggan telah dimasking. Berkas sumber dipertahankan dalam keadaan asli, sedangkan hasil pembersihan disimpan sebagai dataset analisis terpisah.
+
+% \subsection{Definisi \textit{Ground Truth}}
+
+% Label sumber tersimpan pada kolom \texttt{expert\_label}. Berdasarkan arah penelitian dan keterangan pemilik data, kolom tersebut diperlakukan sebagai keputusan admin perusahaan. Nilai HIGH dinormalisasi menjadi \textit{Urgent}, sedangkan NORMAL dinormalisasi menjadi \textit{Not Urgent}. Tidak ada data yang dilabeli ulang menggunakan keluaran \textit{Rule-Based}.
+
+% \begin{table}[htbp]
+%     \centering
+%     \caption{Normalisasi Label Sumber}
+%     \label{tab:normalisasi-label-admin}
+%     \renewcommand{\arraystretch}{1.2}
+%     \begin{tabular}{lll}
+%         \toprule
+%         \textbf{Kolom Sumber} & \textbf{Nilai Sumber} & \textbf{Kelas Penelitian} \\
+%         \midrule
+%         \texttt{expert\_label} & HIGH & \textit{Urgent} \\
+%         \texttt{expert\_label} & NORMAL & \textit{Not Urgent} \\
+%         \bottomrule
+%     \end{tabular}
+% \end{table}
+
+% Metodologi ini mensyaratkan label admin independen dari aturan SOP yang digunakan untuk membangun \textit{Rule-Based}. Namun, nama kolom pada \textit{workbook} tidak cukup untuk membuktikan provenance tersebut. Dokumen final harus menyertakan bukti perusahaan mengenai pihak yang memberi label, waktu pemberian label, dan prosedur pencatatannya.
+
+% % TODO: Tambahkan bukti tertulis dari perusahaan mengenai provenance expert_label.
+
+% Setelah pembersihan, dataset terdiri atas 30 \textit{invoice Urgent} dan 69 \textit{invoice Not Urgent}. Distribusi kelas dilaporkan secara rinci pada Bab IV karena merupakan hasil audit dataset.
+
+% \FloatBarrier
+
+\section{Persiapan Data}
+
+\subsection{Pembersihan Data}
+
+Pembersihan dilakukan sebelum pembentukan skenario eksperimen. Langkahnya meliputi normalisasi nilai kosong, pemeriksaan tipe tanggal, pemeriksaan label, penanganan duplikat, pemeriksaan aturan \textit{cutoff}, dan derivasi fitur pada waktu keputusan. Satu catatan dengan tanggal penerimaan paling awal dipertahankan untuk setiap \texttt{invoice\_no} yang berulang.
+
+Tiga nilai \texttt{cutoff\_value} bulanan yang tidak valid atau kosong diturunkan kembali dari \texttt{cutoff\_type}. Tiga catatan lain tidak memiliki \texttt{receive\_day\_code} yang memadai untuk menghitung jarak menuju jadwal penerimaan berikutnya. Nilai tersebut dipertahankan sebagai data hilang dan direpresentasikan dengan kategori atau nilai sentinel yang konsisten. Keputusan pembersihan ditunjukkan pada Tabel \ref{tab:prosedur-pembersihan-data}.
 
 \begin{table}[htbp]
     \centering
+    \caption{Prosedur Pembersihan Data}
+    \label{tab:prosedur-pembersihan-data}
     \small
-    \caption{Sumber pengetahuan operasional}
-    \label{tab:sumber_pengetahuan}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
-        \hline
-        \textbf{Sumber Pengetahuan} & \textbf{Bentuk Data} & \textbf{Peran dalam Penelitian} \\ \hline
-        Regulasi pelanggan & Aturan \textit{cut-off}, hari penerimaan, dan ketentuan penyerahan dokumen & Menjadi dasar identifikasi batas waktu dan jadwal penerimaan \textit{invoice}. \\ \hline
-        Data historis \textit{invoice} & Data pelanggan, tanggal penerimaan, tanggal pengiriman, dan informasi administratif \textit{invoice} & Menjadi dasar pembentukan dataset operasional dan ekstraksi atribut formal. \\ \hline
-        Pengetahuan operasional administrasi & Pertimbangan staf administrasi dalam menentukan urgensi pengiriman dokumen & Menjadi dasar penyusunan \textit{Operational Labeling Guideline} dan \textit{Guideline-Based Ground Truth}. \\ \hline
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.26\textwidth}p{0.30\textwidth}X}
+        \toprule
+        \textbf{Pemeriksaan} & \textbf{Tindakan} & \textbf{Tujuan} \\
+        \midrule
+        Nilai kosong dan spasi & Menyeragamkan nilai kosong dan format teks. & Mencegah kategori semu. \\
+        Tanggal & Mengubah \texttt{receive\_date} dan \texttt{sent\_date} ke format tanggal. & Memastikan derivasi waktu konsisten. \\
+        Label & Memeriksa kelengkapan dan membatasi nilai pada HIGH atau NORMAL sebelum normalisasi. & Menjaga validitas target. \\
+        Duplikat \textit{invoice} & Mempertahankan satu catatan paling awal per \texttt{invoice\_no}. & Mencegah kasus yang sama muncul lebih dari sekali. \\
+        Nilai \textit{cutoff} tidak valid & Menurunkan kembali tanggal efektif dari deskripsi \texttt{cutoff\_type}. & Mempertahankan informasi aturan pelanggan. \\
+        Jadwal penerimaan tidak lengkap & Menandai fitur turunan yang tidak dapat dihitung sebagai data hilang. & Menghindari nilai yang dibuat tanpa dasar. \\
+        \bottomrule
     \end{tabularx}
 \end{table}
 
-Tahap akuisisi diperlukan agar penelitian tidak memulai proses dari variabel data secara terpisah dari makna operasionalnya. Melalui tahap ini, konsep seperti kedekatan terhadap \textit{cutoff}, keterbatasan hari penerimaan, kondisi akhir bulan, dan risiko keterlambatan dipahami lebih dahulu sebagai pengetahuan domain. Pengetahuan tersebut kemudian menjadi dasar bagi tahap formalisasi sehingga atribut dataset, aturan operasional, dan label referensi berasal dari sumber makna yang sama.
+\subsection{Pembentukan Fitur}
 
-\section{\textit{Knowledge Formalization}}
+Fitur dibentuk berdasarkan informasi yang tersedia pada \textit{receive\_date}. Nilai \textit{days\_to\_cutoff} pada sumber tidak digunakan karena perhitungannya bergantung pada \textit{sent\_date}. Sebagai pengganti, penelitian menghitung \textit{days\_to\_cutoff\_decision\_time} dari tanggal penerimaan dan aturan pelanggan. Jarak menuju hari penerimaan berikutnya juga dihitung pada waktu keputusan.
 
-\textit{Knowledge Formalization} merupakan inti metodologis penelitian ini. Tahap ini mengubah pengetahuan yang diperoleh dari regulasi, data historis, dan praktik staf menjadi struktur yang dapat digunakan secara konsisten. Formalisasi dilakukan melalui dua cabang yang saling berkaitan, yaitu \textit{Attribute Formalization} dan \textit{Rule Formalization}. Keduanya berasal dari pengetahuan operasional yang sama, tetapi menghasilkan artefak yang berbeda.
-
-\subsection{\textit{Attribute Formalization}}
-
-\textit{Attribute Formalization} mengubah konsep operasional menjadi atribut yang dapat dihitung, disimpan, dan digunakan dalam dataset. Konsep seperti ``akhir bulan'', ``mendekati batas \textit{cutoff}'', ``hari penerimaan terbatas'', atau ``tanpa \textit{cutoff} khusus'' tidak langsung berbentuk data siap pakai. Konsep tersebut perlu diterjemahkan menjadi atribut seperti \texttt{cutoff\_rule}, \texttt{cutoff\_value\_feature}, \texttt{days\_to\_cutoff\_decision\_time}, \texttt{receive\_schedule}, \texttt{receive\_day\_code}, \texttt{next\_receive\_day\_gap\_feature}, dan \texttt{receive\_month\_end\_flag}.
-
-\[
-\begin{array}{c}
-\text{Konsep operasional}\\
-\downarrow\\
-\text{Atribut operasional}\\
-\downarrow\\
-\text{Transformasi atribut}\\
-\downarrow\\
-\text{Dataset operasional}
-\end{array}
-\]
-
-Dengan formalisasi atribut, data historis \textit{invoice} tidak lagi diperlakukan sebagai data mentah saja. Setiap atribut membawa makna operasional yang berasal dari pengetahuan domain. Misalnya, \texttt{days\_to\_cutoff\_decision\_time} merepresentasikan kedekatan dokumen terhadap batas administratif pada waktu keputusan dibuat, sedangkan \texttt{next\_receive\_day\_gap\_feature} merepresentasikan jarak terhadap kesempatan penerimaan dokumen berikutnya.
-
-\subsection{\textit{Rule Formalization}}
-
-\textit{Rule Formalization} mengubah pengetahuan operasional yang sama menjadi pedoman keputusan eksplisit. Cabang ini menghasilkan \textit{Operational Labeling Guideline} dan Rule Base. Jika \textit{Attribute Formalization} menjawab bagaimana pengetahuan menjadi atribut dataset, maka \textit{Rule Formalization} menjawab bagaimana kombinasi atribut tersebut menghasilkan prioritas HIGH, MEDIUM, atau NORMAL.
-
-\[
-\begin{array}{c}
-\text{Pengetahuan operasional}\\
-\downarrow\\
-\text{Kondisi keputusan}\\
-\downarrow\\
-\text{\textit{Operational Labeling Guideline}}\\
-\downarrow\\
-\text{Rule Base}
-\end{array}
-\]
-
-Hubungan antara kedua cabang ini penting bagi posisi ilmiah penelitian. Atribut operasional, pedoman pelabelan, dan Rule Base tidak dibangun dari sumber yang terpisah, melainkan dari pengetahuan operasional yang sama. Oleh karena itu, evaluasi pada tahap akhir tidak dimaksudkan sebagai pemeringkatan paradigma, tetapi untuk memeriksa apakah representasi eksplisit dan rekonstruksi berbasis data mempertahankan makna keputusan yang sama.
+Fitur kategorikal terdiri atas \textit{cutoff\_rule}, \textit{receive\_day\_code}, \textit{receive\_schedule}, \textit{receive\_date\_schedule\_status}, \textit{receive\_month\_end\_flag}, dan \textit{limited\_receive\_schedule\_flag}. Fitur numerik terdiri atas nilai \textit{cutoff}, jarak menuju \textit{cutoff}, jarak jadwal penerimaan berikutnya, kode hari, minggu dalam bulan, dan tanggal dalam bulan.
 
 \begin{table}[htbp]
     \centering
-    \small
-    \caption{Contoh formalisasi pengetahuan operasional}
-    \label{tab:formalisasi_pengetahuan}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
-        \hline
-        \textbf{Pengetahuan} & \textbf{Aturan Bisnis} & \textbf{Atribut Formal} \\ \hline
-        Akhir bulan & Dokumen pelanggan perlu memperhatikan periode penutupan administrasi bulanan. & \texttt{cutoff\_rule} = \texttt{END\_MONTH}; \texttt{receive\_month\_end\_flag}. \\ \hline
-        Selasa dan Kamis & Dokumen hanya dapat diterima pada hari penerimaan yang ditentukan pelanggan. & \texttt{receive\_schedule}; \texttt{receive\_day\_code}; \texttt{next\_receive\_day\_gap\_feature}. \\ \hline
-        Maksimal tanggal 10 & Dokumen diterima paling lambat tanggal 10 pada periode berjalan. & \texttt{cutoff\_rule} = \texttt{MONTHLY\_DATE}; \texttt{cutoff\_value\_feature} = 10. \\ \hline
-        Tanpa \textit{cut-off} & Pelanggan tidak memiliki batas tanggal administratif khusus untuk penerimaan dokumen. & \texttt{cutoff\_rule} = \texttt{NO\_CUTOFF}; \texttt{days\_to\_cutoff\_decision\_time} diberi nilai operasional khusus. \\ \hline
-    \end{tabularx}
-\end{table}
-
-\section{\textit{Dataset Construction}}
-
-\textit{Dataset Construction} dilakukan untuk membentuk dataset operasional dari data historis \textit{invoice} dan atribut hasil formalisasi. Masukan tahap ini adalah data pelanggan, data \textit{invoice}, regulasi \textit{cutoff}, jadwal penerimaan dokumen, dan definisi atribut operasional. Proses konstruksi dataset meliputi pemilihan atribut, transformasi atribut, pembersihan nilai yang tidak konsisten, pembentukan fitur berbasis waktu keputusan, dan penyiapan kolom \texttt{final\_label} sebagai implementasi dari \textit{Guideline-Based Ground Truth}.
-
-Pemilihan atribut diarahkan oleh pengetahuan operasional, bukan hanya oleh ketersediaan kolom data. Atribut yang dipilih harus menjelaskan faktor yang mempengaruhi prioritas pengiriman \textit{invoice}, seperti kedekatan terhadap batas \textit{cutoff}, jenis aturan pelanggan, jadwal penerimaan, jarak ke hari penerimaan berikutnya, status jadwal, dan kondisi akhir bulan. Transformasi atribut dilakukan agar informasi tersebut dapat digunakan secara konsisten, misalnya mengubah aturan tanggal menjadi \texttt{days\_to\_cutoff\_decision\_time} atau mengubah jadwal penerimaan menjadi \texttt{receive\_day\_code} dan \texttt{next\_receive\_day\_gap\_feature}.
-
-Fitur berbasis waktu keputusan digunakan karena prioritas \textit{invoice} bergantung pada kondisi saat keputusan operasional dibuat. Dengan demikian, dataset tidak hanya menyimpan apa yang terjadi pada dokumen, tetapi juga merepresentasikan keadaan administratif yang relevan pada saat prioritas ditentukan. Karena atribut dan labelnya berasal dari proses formalisasi pengetahuan, dataset ini diposisikan sebagai artefak pengetahuan operasional, bukan sekadar dataset untuk pemodelan komputasional.
-
-\begin{table}[htbp]
-    \centering
-    \small
-    \caption{Fitur pada dataset penelitian}
-    \label{tab:fitur_dataset}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|}
-        \hline
-        \textbf{Fitur} & \textbf{Tipe} & \textbf{Deskripsi} \\ \hline
-        \texttt{customer\_name\_masking} & Kategorikal & Identitas pelanggan yang telah disamarkan sebagai konteks aturan operasional pelanggan. \\ \hline
-        \texttt{cutoff\_rule} & Kategorikal & Bentuk aturan \textit{cutoff} pelanggan yang telah diformalkan dari regulasi penerimaan dokumen. \\ \hline
-        \texttt{cutoff\_value\_feature} & Numerik & Nilai tanggal atau batas administratif yang diperoleh dari aturan \textit{cutoff}. \\ \hline
-        \texttt{receive\_schedule} & Kategorikal & Deskripsi jadwal penerimaan dokumen, misalnya setiap hari atau hari tertentu. \\ \hline
-        \texttt{receive\_day\_code} & Kategorikal & Representasi kode hari penerimaan yang digunakan untuk memetakan jadwal operasional. \\ \hline
-        \texttt{days\_to\_cutoff\_decision\_time} & Numerik & Selisih hari antara waktu keputusan operasional dan batas \textit{cutoff} pelanggan. \\ \hline
-        \texttt{next\_receive\_day\_gap\_feature} & Numerik & Jarak hari menuju jadwal penerimaan dokumen berikutnya apabila aturan hari penerimaan tersedia. \\ \hline
-        \texttt{receive\_date\_schedule\_status} & Kategorikal & Status kesesuaian tanggal penerimaan terhadap jadwal penerimaan pelanggan. \\ \hline
-        \texttt{limited\_receive\_schedule\_flag} & Kategorikal & Indikator bahwa pelanggan memiliki jadwal penerimaan terbatas. \\ \hline
-        \texttt{receive\_month\_end\_flag} & Kategorikal & Indikator apakah dokumen berada pada kondisi akhir bulan yang relevan terhadap prioritas. \\ \hline
-        \texttt{final\_label} & Kategorikal & Label prioritas yang dihasilkan melalui \textit{Operational Labeling Guideline} sebagai \textit{Guideline-Based Ground Truth}. \\ \hline
-    \end{tabularx}
-\end{table}
-
-\section{\textit{Guideline-Based Labeling}}
-
-\textit{Guideline-Based Labeling} bertujuan menghasilkan \textit{Guideline-Based Ground Truth}, yaitu label referensi yang diturunkan dari \textit{Operational Labeling Guideline}. Label tersebut diimplementasikan pada dataset melalui kolom \texttt{final\_label}. Dengan posisi ini, label HIGH, MEDIUM, dan NORMAL tidak diperlakukan sebagai kebenaran eksternal yang muncul secara independen dari proses penelitian, melainkan sebagai keputusan referensi yang berasal dari pedoman operasional yang telah diformalkan.
-
-\textit{Operational Labeling Guideline} disusun dari regulasi pelanggan, risiko keterlambatan \textit{cutoff}, keterbatasan hari penerimaan, kondisi akhir bulan, dan konsekuensi administratif dari keterlambatan dokumen. Pedoman ini memastikan bahwa label diberikan secara konsisten terhadap atribut operasional yang sama. Konsistensi label penting karena label tersebut menjadi acuan bersama bagi representasi Rule-Based dan rekonstruksi Decision Tree C4.5 pada tahap evaluasi.
-
-Label HIGH menunjukkan dokumen yang perlu diprioritaskan karena memiliki risiko administratif tinggi. Label MEDIUM menunjukkan dokumen yang perlu dipantau karena mulai mendekati batas waktu operasional atau berada pada kondisi jadwal yang memerlukan perhatian. Label NORMAL menunjukkan dokumen yang belum menunjukkan risiko mendesak atau tidak memiliki batas \textit{cutoff} khusus. Kondisi pelabelan pada Tabel \ref{tab:pedoman_labeling} menggunakan kondisi yang telah didefinisikan dalam penelitian, yaitu kedekatan terhadap \textit{cutoff}, status jadwal penerimaan, kondisi akhir bulan, keterbatasan hari penerimaan, dan kondisi tanpa \textit{cutoff}.
-
-\begin{table}[htbp]
-    \centering
-    \small
-    \caption{Pedoman pelabelan prioritas berbasis operasional}
-    \label{tab:pedoman_labeling}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.2cm}|}
-        \hline
-        \textbf{Label} & \textbf{Kondisi Operasional} & \textbf{Alasan Label} \\ \hline
-        HIGH & Dokumen berada pada kondisi \texttt{CUTOFF\_TODAY}, \texttt{OVERDUE\_CUTOFF}, \texttt{CUTOFF\_NEAR}, jadwal penerimaan terbatas (\texttt{LIMITED\_RECEIVE\_DAY}), jadwal penerimaan terlewat, atau kondisi akhir bulan yang dekat dengan \textit{cut-off}. & Risiko keterlambatan tinggi dan perlu diprioritaskan. \\ \hline
-        MEDIUM & Dokumen belum memenuhi kondisi HIGH, tetapi berada pada rentang $2 <$ \texttt{days\_to\_cutoff} $\leq 10$ sesuai aturan prioritas yang diformalkan. & Perlu dipantau agar tidak berubah menjadi kondisi mendesak. \\ \hline
-        NORMAL & Dokumen memiliki waktu yang masih longgar terhadap \textit{cut-off} (\texttt{LONG\_TIME\_TO\_CUTOFF}) atau berada pada kondisi tanpa \textit{cut-off} khusus (\texttt{NO\_CUTOFF}) tanpa indikasi risiko jadwal penerimaan. & Risiko administratif rendah pada waktu observasi. \\ \hline
-    \end{tabularx}
-\end{table}
-
-Konsistensi pelabelan pada tahap ini juga merupakan konsistensi pengetahuan. Artinya, setiap label harus dapat ditelusuri kembali ke pedoman, atribut operasional, dan pengetahuan domain yang menjadi sumbernya. Dengan demikian, \textit{Guideline-Based Ground Truth} menjadi penghubung antara formalisasi pengetahuan dan evaluasi representasi pada bab hasil dan pembahasan.
-
-\section{\textit{Knowledge Representation}}
-
-\textit{Knowledge Representation} menjelaskan bagaimana pengetahuan operasional yang telah diformalkan dinyatakan dalam dua bentuk yang saling melengkapi. Bentuk pertama adalah \textit{Rule-Based Representation}, yaitu representasi eksplisit dari Rule Base. Bentuk kedua adalah \textit{Decision Tree Reconstruction}, yaitu rekonstruksi struktur pengetahuan dari atribut operasional dan \textit{Guideline-Based Ground Truth}. Kedua bentuk ini berasal dari sumber pengetahuan yang sama, tetapi memiliki fungsi metodologis yang berbeda.
-
-\subsection{\textit{Rule-Based Representation}}
-
-\textit{Rule-Based Representation} merepresentasikan pengetahuan operasional secara eksplisit melalui aturan IF-THEN. Dalam penelitian ini, Rule Base tidak diperlakukan sebagai sekadar kode program, melainkan sebagai artefak ilmiah yang menyimpan hasil \textit{Rule Formalization}. Masukan representasi ini adalah atribut operasional seperti \texttt{cutoff\_rule}, \texttt{days\_to\_cutoff}, \texttt{receive\_schedule}, \texttt{next\_receive\_day\_gap}, \texttt{missed\_receive\_schedule}, dan \texttt{month\_end\_flag}. Keluaran representasi ini adalah rekomendasi prioritas HIGH, MEDIUM, atau NORMAL yang dapat ditelusuri melalui Rule ID.
-
-Basis aturan disusun dalam bentuk aturan IF-THEN agar proses pengambilan keputusan dapat ditelusuri secara eksplisit. Setiap aturan memiliki kondisi, label prioritas, dan penjelasan operasional. Apabila lebih dari satu aturan terpenuhi pada data \textit{invoice} yang sama, aturan dengan tingkat prioritas tertinggi digunakan sebagai keputusan akhir dengan urutan HIGH, MEDIUM, kemudian NORMAL. Urutan tersebut digunakan karena risiko keterlambatan administratif pada kelas HIGH lebih kritis dibandingkan kebutuhan pemantauan pada kelas MEDIUM atau kondisi normal.
-
-\begin{table}[htbp]
-    \centering
+    \caption{Fitur Model dan Representasi Data Hilang}
+    \label{tab:fitur-model-komparatif}
     \scriptsize
-    \caption{Rule base penentuan prioritas pengiriman invoice}
-    \label{tab:rule_base_priority}
-    \renewcommand{\arraystretch}{1.35}
-    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{1.1cm}|>{\raggedright\arraybackslash}X|>{\centering\arraybackslash}p{1.8cm}|>{\raggedright\arraybackslash}X|}
-        \hline
-        \textbf{Rule ID} &
-        \textbf{Condition} &
-        \textbf{Priority} &
-        \textbf{Description} \\ \hline
-        R1 &
-        \textbf{IF} \texttt{missed\_receive\_schedule} = \textit{Yes} &
-        HIGH &
-        Jadwal penerimaan dokumen pelanggan telah terlewat, sehingga dokumen berisiko tidak dapat diproses pada periode administrasi berjalan. \\ \hline
-        R2 &
-        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
-        \textbf{AND} \texttt{days\_to\_cutoff} $< 0$ &
-        HIGH &
-        Dokumen telah melewati batas \textit{cut-off} pelanggan sehingga diperlukan prioritas tertinggi untuk mengurangi dampak keterlambatan. \\ \hline
-        R3 &
-        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
-        \textbf{AND} \texttt{days\_to\_cutoff} = 0 &
-        HIGH &
-        Tanggal observasi bertepatan dengan batas \textit{cut-off}; dokumen harus segera dikirim agar masih dapat diterima pada hari yang sama. \\ \hline
-        R4 &
-        \textbf{IF} \texttt{cutoff\_rule} $\in$ \{\texttt{END\_MONTH}, \texttt{MONTHLY\_DATE}, \texttt{MULTIPLE\_MONTHLY\_DATE}\} \newline
-        \textbf{AND} $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ &
-        HIGH &
-        Dokumen mendekati batas administratif bulanan atau tanggal bulanan tertentu, sehingga ruang koreksi operasional sangat terbatas. \\ \hline
-        R5 &
-        \textbf{IF} \texttt{cutoff\_rule} $\in$ \{\texttt{NEXT\_MONTH\_DATE}, \texttt{NEXT\_MONTH\_WORKDAY}, \texttt{NEXT\_MONTH\_FIRST\_WEEK}\} \newline
-        \textbf{AND} $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ &
-        HIGH &
-        Dokumen mendekati batas penerimaan pada awal bulan berikutnya atau batas hari kerja bulan berikutnya. \\ \hline
-        R6 &
-        \textbf{IF} \texttt{month\_end\_flag} = \textit{Yes} \newline
-        \textbf{AND} \texttt{days\_to\_cutoff} $\leq 4$ &
-        HIGH &
-        Dokumen berada pada periode akhir bulan yang sensitif terhadap penutupan administrasi, sehingga keterlambatan kecil dapat berdampak pada periode tagihan. \\ \hline
-        R7 &
-        \textbf{IF} \texttt{receive\_schedule} $\neq$ \textit{Everyday} \newline
-        \textbf{AND} \texttt{next\_receive\_day\_gap} $\leq 1$ &
-        HIGH &
-        Pelanggan hanya menerima dokumen pada hari tertentu dan kesempatan penerimaan berikutnya sangat dekat, sehingga dokumen perlu segera diprioritaskan. \\ \hline
-        R8 &
-        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
-        \textbf{AND} $2 <$ \texttt{days\_to\_cutoff} $\leq 10$ \newline
-        \textbf{AND} tidak memenuhi R1--R7 &
-        MEDIUM &
-        Dokumen belum berada pada kondisi kritis, tetapi mulai mendekati batas administratif sehingga perlu dipantau agar tidak berubah menjadi prioritas tinggi. \\ \hline
-        R9 &
-        \textbf{IF} \texttt{receive\_schedule} $\neq$ \textit{Everyday} \newline
-        \textbf{AND} \texttt{next\_receive\_day\_gap} $> 1$ \newline
-        \textbf{AND} tidak memenuhi R1--R7 &
-        MEDIUM &
-        Jadwal penerimaan pelanggan terbatas, tetapi masih terdapat kesempatan operasional sebelum dokumen masuk kategori mendesak. \\ \hline
-        R10 &
-        \textbf{IF} \texttt{cutoff\_rule} = \texttt{NO\_CUTOFF} \newline
-        \textbf{AND} \texttt{missed\_receive\_schedule} = \textit{No} \newline
-        \textbf{AND} tidak terdapat risiko jadwal penerimaan &
-        NORMAL &
-        Pelanggan tidak memiliki batas \textit{cut-off} khusus dan tidak terdapat indikasi risiko pada jadwal penerimaan dokumen. \\ \hline
-        R11 &
-        \textbf{IF} \texttt{cutoff\_rule} $\neq$ \texttt{NO\_CUTOFF} \newline
-        \textbf{AND} \texttt{days\_to\_cutoff} $> 10$ \newline
-        \textbf{AND} tidak memenuhi R1--R9 &
-        NORMAL &
-        Batas administratif masih relatif jauh sehingga dokumen belum memerlukan perlakuan prioritas khusus. \\ \hline
-        R12 &
-        \textbf{IF} tidak ada kondisi pada R1--R11 yang terpenuhi &
-        NORMAL &
-        Aturan penutup digunakan untuk menjaga setiap data \textit{invoice} tetap memperoleh label prioritas yang konsisten. \\ \hline
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.23\textwidth}X p{0.20\textwidth}}
+        \toprule
+        \textbf{Kelompok} & \textbf{Fitur} & \textbf{Representasi Data Hilang} \\
+        \midrule
+        Kategorikal & \texttt{cutoff\_rule}, \texttt{receive\_day\_code}, \texttt{receive\_schedule}, \texttt{receive\_date\_schedule\_status}, \texttt{receive\_month\_end\_flag}, \texttt{limited\_receive\_schedule\_flag} & Kategori \texttt{MISSING} \\
+        Numerik cutoff & \texttt{cutoff\_value\_feature} & $-1$ \\
+        Numerik waktu & \texttt{days\_to\_cutoff\_feature} & $-999$ \\
+        Numerik jadwal & \texttt{next\_receive\_day\_gap\_feature} & $-1$ \\
+        Numerik kalender & \texttt{receive\_weekday\_code}, \texttt{receive\_week\_of\_month}, \texttt{receive\_day\_of\_month} & $-1$ \\
+        \bottomrule
     \end{tabularx}
 \end{table}
 
-Tabel \ref{tab:rule_base_priority} menunjukkan bahwa basis aturan dibentuk dari tiga kelompok pengetahuan utama. Kelompok pertama adalah aturan \textit{cut-off}, yaitu aturan yang memeriksa kedekatan dokumen terhadap batas administratif pelanggan. Kelompok kedua adalah aturan jadwal penerimaan, yaitu aturan yang memeriksa apakah dokumen masih berada dalam jadwal penerimaan yang diperbolehkan. Kelompok ketiga adalah aturan kondisi khusus, seperti akhir bulan, yang dapat meningkatkan tingkat urgensi meskipun batas \textit{cut-off} belum benar-benar jatuh pada hari observasi.
+% \subsection{Pengendalian Kebocoran Data}
 
-\begin{figure}[htbp]
+% Pencegahan \textit{data leakage} dilakukan pada tingkat fitur dan proses pelatihan. Atribut \texttt{expert\_reason} dikeluarkan karena merupakan penjelasan langsung dari label. Atribut \texttt{sent\_date} dikeluarkan karena tersedia setelah keputusan prioritas. \texttt{invoice\_no}, identitas pelanggan, dan \texttt{Driver} tidak digunakan untuk mencegah memorisasi identitas dan penggunaan informasi penugasan.
+
+% \begin{table}[htbp]
+%     \centering
+%     \caption{Pengendalian Risiko \textit{Data Leakage}}
+%     \label{tab:kontrol-data-leakage}
+%     \small
+%     \renewcommand{\arraystretch}{1.2}
+%     \begin{tabularx}{\textwidth}{p{0.27\textwidth}p{0.20\textwidth}X}
+%         \toprule
+%         \textbf{Atribut atau Proses} & \textbf{Kebijakan} & \textbf{Alasan} \\
+%         \midrule
+%         \texttt{expert\_reason} & Dikeluarkan & Penjelasan label dapat mengungkap target secara langsung. \\
+%         \texttt{sent\_date} & Dikeluarkan & Merupakan informasi pascakeputusan. \\
+%         \texttt{days\_to\_cutoff} sumber & Diganti & Nilai sumber dihitung menggunakan \texttt{sent\_date}. \\
+%         Identifier dan identitas pelanggan & Dikeluarkan & Berisiko menyebabkan memorisasi kasus. \\
+%         \texttt{Driver} & Dikeluarkan & Penugasan bukan kondisi dasar urgensi. \\
+%         Encoding dan pemilihan parameter & Data latih saja & Mencegah informasi data uji memengaruhi model. \\
+%         Perubahan Rule Base & Dibekukan sebelum evaluasi & Mencegah penyesuaian aturan terhadap label uji. \\
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}
+
+\FloatBarrier
+
+\section{Pengembangan \textit{Rule-Based}}
+
+\subsection{Akuisisi dan Konstruksi Aturan}
+
+\textit{Knowledge Acquisition} dilakukan terhadap SOP perusahaan untuk mengidentifikasi kondisi keterlambatan, kedekatan terhadap \textit{cutoff}, jadwal penerimaan terbatas, kondisi akhir bulan, dan aturan default. Kondisi tersebut diubah menjadi aturan IF--THEN dengan keluaran biner.
+
+Basis aturan terdiri atas R1--R8. R1--R7 menghasilkan kelas \textit{Urgent} ketika sedikitnya satu kondisi terpenuhi. Jika beberapa aturan aktif, seluruh Rule ID disimpan sebagai jejak keputusan karena keluaran kelasnya sama. R8 hanya aktif ketika tidak ada kondisi R1--R7 yang terpenuhi dan menghasilkan \textit{Not Urgent}.
+
+\begin{table}[htbp]
     \centering
-    \begin{tikzpicture}[
-        block/.style={rectangle, draw=black, fill=blue!10, text width=5.2cm, minimum height=0.9cm, align=center, rounded corners},
-        decision/.style={rectangle, draw=black, fill=green!12, text width=5.2cm, minimum height=0.9cm, align=center, rounded corners},
-        arrow/.style={thick, ->, >=stealth}
-    ]
-        \node[block] (invoice) at (0,0) {Data \textit{invoice}};
-        \node[block] (cutofftype) at (0,-1.5) {Identifikasi jenis \textit{cut-off}};
-        \node[block] (daystocutoff) at (0,-3.0) {Periksa \texttt{days\_to\_cutoff}};
-        \node[block] (schedule) at (0,-4.5) {Periksa jadwal penerimaan};
-        \node[block] (special) at (0,-6.0) {Periksa kondisi khusus akhir bulan};
-        \node[decision] (priority) at (0,-7.5) {Penetapan prioritas};
+    \caption{Basis Aturan Klasifikasi Prioritas Invoice}
+    \label{tab:rule-base-biner}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.07\textwidth}X p{0.15\textwidth}p{0.22\textwidth}}
+        \toprule
+        \textbf{ID} & \textbf{Kondisi} & \textbf{Keluaran} & \textbf{Makna Operasional} \\
+        \midrule
+        R1 & \texttt{receive\_date\_schedule\_status = MISSED\_RECEIVE\_DAY} & \textit{Urgent} & Jadwal penerimaan telah terlewat. \\
+        R2 & Aturan bukan \texttt{NO\_CUTOFF} dan \texttt{days\_to\_cutoff} $< 0$ & \textit{Urgent} & Batas administrasi telah terlewat. \\
+        R3 & Aturan bukan \texttt{NO\_CUTOFF} dan \texttt{days\_to\_cutoff} $= 0$ & \textit{Urgent} & Batas administrasi jatuh pada hari keputusan. \\
+        R4 & Aturan \texttt{END\_MONTH}, \texttt{MONTHLY\_DATE}, atau \texttt{MULTIPLE\_MONTHLY\_DATE}, dengan $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ & \textit{Urgent} & Batas bulanan sudah dekat. \\
+        R5 & Aturan \texttt{NEXT\_MONTH\_DATE}, \texttt{NEXT\_MONTH\_WORKDAY}, atau \texttt{NEXT\_MONTH\_FIRST\_WEEK}, dengan $0 <$ \texttt{days\_to\_cutoff} $\leq 2$ & \textit{Urgent} & Batas awal bulan berikutnya sudah dekat. \\
+        R6 & \texttt{receive\_month\_end\_flag = Yes} dan \texttt{days\_to\_cutoff} $\leq 4$ & \textit{Urgent} & Kondisi akhir bulan meningkatkan urgensi. \\
+        R7 & \texttt{limited\_receive\_schedule\_flag = Yes} dan \texttt{next\_receive\_day\_gap} $\leq 1$ & \textit{Urgent} & Kesempatan penerimaan berikutnya sangat terbatas. \\
+        R8 & Tidak ada R1--R7 yang aktif & \textit{Not Urgent} & Kondisi default tanpa indikator urgensi eksplisit. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-        \draw[arrow] (invoice) -- (cutofftype);
-        \draw[arrow] (cutofftype) -- (daystocutoff);
-        \draw[arrow] (daystocutoff) -- (schedule);
-        \draw[arrow] (schedule) -- (special);
-        \draw[arrow] (special) -- (priority);
-    \end{tikzpicture}
-    \caption{Rule dependency diagram pada model berbasis aturan}
-    \label{fig:rule_dependency_diagram}
-\end{figure}
+\subsection{Validasi dan Pembekuan Aturan}
 
-Gambar \ref{fig:rule_dependency_diagram} menggambarkan ketergantungan antaraturan dalam proses penentuan prioritas. Pemeriksaan dimulai dari data \textit{invoice}, kemudian dilanjutkan dengan identifikasi jenis \textit{cut-off}, kedekatan terhadap batas waktu, jadwal penerimaan, serta kondisi khusus akhir bulan. Struktur ini menunjukkan bahwa keputusan prioritas tidak hanya ditentukan oleh satu atribut, tetapi oleh kombinasi pengetahuan administratif pelanggan dan kondisi operasional pada tanggal observasi.
+Validasi aturan mencakup pemeriksaan struktur kondisi, tipe keluaran, kemungkinan aktivasi bersama, perilaku default, dan keterlacakan ke SOP. Validasi teknis memastikan setiap \textit{invoice} memperoleh satu kelas akhir dan seluruh aturan aktif disimpan. Validasi domain harus dibuktikan melalui matriks keterlacakan antara klausul SOP, kondisi R1--R8, dan konfirmasi pihak perusahaan.
 
-\begin{figure}[htbp]
+% TODO: Tambahkan nomor klausul SOP dan bukti validasi perusahaan untuk R1--R8.
+
+Rule Base dibekukan sebelum hasil validasi akhir diperiksa. Label uji tidak digunakan untuk mengubah ambang atau menambah aturan. Setiap prediksi menyimpan kelas dan Rule ID agar dapat dianalisis pada tingkat kasus.
+
+\FloatBarrier
+
+\section{Pengembangan \textit{Decision Tree}}
+
+\subsection{Pipeline Model}
+
+\textit{Decision Tree} dilatih sebagai klasifikasi terawasi dengan label \textit{Urgent} dan \textit{Not Urgent}. Implementasi menggunakan \textit{Decision Tree Classifier} dengan kriteria \textit{entropy}. Istilah C4.5 tidak digunakan karena implementasi tidak menerapkan \textit{gain ratio} dan prosedur C4.5 secara khusus.
+
+Untuk himpunan data $S$ dengan kelas $c$, nilai \textit{entropy} dihitung sebagai berikut.
+
+\begin{equation}
+H(S)=-\sum_{i=1}^{c} p_i\log_2 p_i,
+\label{eq:entropy-dt}
+\end{equation}
+
+dengan $p_i$ sebagai proporsi observasi pada kelas ke-$i$. Pemisahan dipilih berdasarkan penurunan impurity yang dihasilkan oleh kandidat fitur dan ambang.
+
+Fitur kategorikal diubah melalui \textit{one-hot encoding} dengan penanganan kategori yang belum muncul pada data latih. Fitur numerik diteruskan tanpa penskalaan karena pemisahan pohon bergantung pada urutan dan ambang nilai. Seluruh transformasi disusun dalam satu \textit{pipeline} agar pemrosesan data latih dan uji konsisten.
+
+\subsection{Pemilihan Parameter}
+
+Kompleksitas pohon dikendalikan melalui \texttt{max\_depth} dan \texttt{min\_samples\_leaf}. Pemilihan parameter menggunakan \textit{grid search} dengan \textit{macro F1} sebagai fungsi penilaian. Validasi internal menggunakan 5-fold terstratifikasi selama jumlah kelas pada data latih mencukupi. Pengendalian kompleksitas diperlukan karena keterperiksaan \textit{Decision Tree} bergantung pada struktur yang cukup ringkas, bukan semata-mata pada nama algoritmanya \cite{RudinEtAl2022}.
+
+\begin{table}[htbp]
     \centering
-    \begin{tikzpicture}[
-        block/.style={rectangle, draw=black, fill=orange!15, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
-        process/.style={rectangle, draw=black, fill=blue!10, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
-        output/.style={rectangle, draw=black, fill=green!12, text width=4.8cm, minimum height=0.9cm, align=center, rounded corners},
-        arrow/.style={thick, ->, >=stealth}
-    ]
-        \node[block] (kb) at (0,0) {\textit{Knowledge Base}\\Basis aturan R1--R12};
-        \node[process] (engine) at (0,-1.6) {\textit{Inference Engine}\\Pemeriksaan fakta operasional};
-        \node[process] (matching) at (0,-3.2) {\textit{Rule Matching}\\Pencocokan IF-THEN};
-        \node[process] (conflict) at (0,-4.8) {Resolusi prioritas\\HIGH $>$ MEDIUM $>$ NORMAL};
-        \node[output] (priority) at (0,-6.4) {Label prioritas\\HIGH, MEDIUM, atau NORMAL};
+    \caption{Konfigurasi dan Ruang Pencarian Decision Tree}
+    \label{tab:parameter-decision-tree}
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.30\textwidth}p{0.27\textwidth}X}
+        \toprule
+        \textbf{Komponen} & \textbf{Nilai} & \textbf{Fungsi} \\
+        \midrule
+        Kriteria pemisahan & \textit{Entropy} & Mengukur impurity kelas pada setiap node. \\
+        \texttt{max\_depth} & 2, 3, 4, atau tanpa batas & Membatasi kedalaman pohon. \\
+        \texttt{min\_samples\_leaf} & 1, 2, atau 4 & Membatasi ukuran minimum daun. \\
+        Skor pemilihan & \textit{Macro F1} & Memberi bobot setara pada kedua kelas. \\
+        Validasi internal & \textit{Stratified 5-fold} & Memilih parameter hanya dari data latih. \\
+        \texttt{random\_state} & 42 ditambah indeks fold luar & Menjaga proses dapat direproduksi. \\
+        Penanganan kategori & \textit{One-hot encoding} & Mengubah fitur kategorikal menjadi nilai numerik. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-        \draw[arrow] (kb) -- (engine);
-        \draw[arrow] (engine) -- (matching);
-        \draw[arrow] (matching) -- (conflict);
-        \draw[arrow] (conflict) -- (priority);
-    \end{tikzpicture}
-    \caption{Rule inference flow pada model berbasis aturan}
-    \label{fig:rule_inference_flow}
-\end{figure}
+Pada setiap skenario luar, pencarian parameter dilakukan ulang menggunakan data latih pada skenario tersebut. Model kemudian memprediksi data validasi yang tidak digunakan dalam pemilihan parameter. Setelah evaluasi selesai, satu model interpretatif dilatih pada seluruh dataset untuk menampilkan struktur, kedalaman, jumlah daun, dan \textit{feature importance}. Model interpretatif tersebut tidak digunakan untuk menghitung performa validasi.
 
-Gambar \ref{fig:rule_inference_flow} menunjukkan alur inferensi pada representasi berbasis aturan. \textit{Knowledge base} menyediakan aturan eksplisit, sedangkan \textit{inference engine} menggunakan fakta operasional pada setiap data \textit{invoice} untuk melakukan pencocokan aturan. Hasil pencocokan kemudian diselesaikan melalui urutan prioritas sehingga keluaran akhir berupa label HIGH, MEDIUM, atau NORMAL. Dengan alur tersebut, setiap rekomendasi dapat dijelaskan kembali melalui aturan yang memicunya.
+\FloatBarrier
 
-\subsection{\textit{Decision Tree Reconstruction}}
+\section{Desain Eksperimen}
 
-Decision Tree C4.5 digunakan sebagai mekanisme \textit{Knowledge Reconstruction}. Rekonstruksi ini bertujuan memeriksa apakah struktur keputusan yang telah diformalkan dapat dibentuk kembali dari atribut operasional dan \textit{Guideline-Based Ground Truth}. C4.5 tidak menerima Rule Base R1--R12 sebagai masukan langsung. Masukan yang digunakan adalah dataset operasional, atribut hasil \textit{Attribute Formalization}, dan label referensi yang dihasilkan melalui \textit{Guideline-Based Labeling}.
+Empat skenario digunakan untuk mengurangi ketergantungan pada satu pembagian data. \textit{Rule-Based} diterapkan pada nomor \textit{invoice} validasi yang sama dengan \textit{Decision Tree}. Karena \textit{Rule-Based} tidak dilatih, data latih pada tabel hanya digunakan oleh \textit{Decision Tree}.
 
-Dalam penelitian ini, pembentukan struktur C4.5 menghasilkan jalur keputusan yang dapat diperiksa kembali terhadap Rule Base dan pedoman operasional. Oleh karena itu, keluaran C4.5 tidak diposisikan sebagai pengganti pedoman, tetapi sebagai artefak rekonstruksi yang memperlihatkan atribut mana yang dominan dan bagaimana batas keputusan terbentuk dari dataset operasional. Interpretasi terhadap C4.5 dilakukan melalui jalur pohon, dominasi atribut, dan kesesuaian makna jalur terhadap aturan operasional.
-
-Secara metodologis, data dibagi menjadi data latih dan data uji secara terstratifikasi agar setiap kategori prioritas tetap terwakili pada evaluasi. Fitur kategorikal dan numerik disiapkan sesuai kebutuhan pemrosesan C4.5, sedangkan \texttt{final\_label} digunakan sebagai \textit{Guideline-Based Ground Truth}. Penjelasan teori mengenai \textit{entropy} dan \textit{information gain} telah dibahas pada Bab II, sehingga bagian ini hanya menempatkan C4.5 sebagai alat rekonstruksi pengetahuan dalam kerangka penelitian.
-
-\section{\textit{Knowledge Representation Consistency Evaluation}}
-
-\textit{Knowledge Representation Consistency Evaluation} dilakukan untuk menilai apakah representasi Rule-Based dan rekonstruksi Decision Tree C4.5 mempertahankan makna operasional yang sama terhadap \textit{Guideline-Based Ground Truth}. Evaluasi ini tidak diarahkan untuk menyusun peringkat antarmetode, melainkan untuk mengukur kesesuaian keluaran dua representasi terhadap acuan keputusan yang berasal dari pedoman operasional yang sama.
-
-\[
-\begin{array}{c}
-\text{\textit{Guideline-Based Ground Truth}}\\
-\downarrow\\
-\text{\textit{Rule-Based Representation Output} dan \textit{Decision Tree Reconstruction Output}}\\
-\downarrow\\
-\text{\textit{Confusion Matrix}}\\
-\downarrow\\
-\text{\textit{Accuracy}, \textit{Precision}, \textit{Recall}, dan \textit{F1-score}}\\
-\downarrow\\
-\text{\textit{Representation Consistency Interpretation}}
-\end{array}
-\]
-
-\textit{Confusion matrix} digunakan untuk menunjukkan distribusi kesesuaian dan ketidaksesuaian keluaran pada kelas HIGH, MEDIUM, dan NORMAL. Dari matriks tersebut dihitung \textit{accuracy}, \textit{precision}, \textit{recall}, dan \textit{F1-score}. Dalam penelitian ini, metrik tersebut ditafsirkan sebagai indikator konsistensi representasi terhadap \textit{Guideline-Based Ground Truth}, bukan sebagai bukti kebenaran universal di luar konteks dataset dan pedoman yang digunakan.
-
-Selain metrik kuantitatif, evaluasi juga memperhatikan keterlacakan Rule ID, pemetaan jalur Decision Tree terhadap Rule Base, dominasi atribut pada rekonstruksi, serta keterbatasan validitas. Dengan cara ini, evaluasi mempertahankan hubungan antara angka evaluasi dan makna pengetahuan operasional. Hasil evaluasi dibahas pada Bab IV sebagai bukti apakah artefak pengetahuan yang sama dapat direpresentasikan secara eksplisit dan direkonstruksi secara statistik tanpa mengubah makna operasionalnya.
-
-\section{\textit{System Integration}}
-
-\textit{System Integration} menjelaskan bagaimana pengetahuan operasional yang telah dievaluasi ditempatkan dalam konteks sistem informasi. Sistem yang dirancang tidak hanya berfungsi untuk menyimpan data \textit{invoice}, tetapi juga untuk mendukung pelacakan status, penyimpanan POD, riwayat pengiriman, dan rekomendasi prioritas. Dengan demikian, artefak pengetahuan yang dihasilkan melalui kerangka penelitian dihubungkan kembali dengan kebutuhan operasional pengguna.
-
-Masukan tahap ini adalah kebutuhan pengguna, alur kerja administrasi \textit{invoice}, kebutuhan pengelolaan POD, dan hasil evaluasi representasi pengetahuan. Proses perancangan dilakukan melalui arsitektur sistem, Use Case Diagram, Activity Diagram, dan Entity Relationship Diagram (ERD). Keluaran tahap ini adalah rancangan sistem yang menunjukkan bagaimana rekomendasi prioritas dapat menjadi bagian dari proses pengambilan keputusan operasional, bukan hanya keluaran model yang berdiri sendiri.
-
-\noindent\textbf{Arsitektur sistem.}
-Sistem dirancang dengan pendekatan \textit{client-server}. Pengguna mengakses antarmuka web untuk mencatat \textit{invoice}, memperbarui status pengiriman, mengunggah POD, dan melihat rekomendasi prioritas. Server memproses permintaan pengguna, menjalankan logika bisnis, mengakses basis data, dan menyediakan rekomendasi prioritas. Basis data menyimpan data pelanggan, data \textit{invoice}, riwayat pelacakan, dokumen POD, dan catatan prioritas.
-
-\begin{figure}[htbp]
+\begin{table}[htbp]
     \centering
-    \includegraphics[width=0.95\textwidth]{\detokenize{diagram-blok-arsitektur-sistem.png}}
-    \caption{Arsitektur sistem pelacakan invoice dan POD}
-    \label{fig:arsitektur_sistem}
-\end{figure}
+    \caption{Skenario Eksperimen Komparatif}
+    \label{tab:skenario-eksperimen-bab-tiga}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.07\textwidth}p{0.25\textwidth}p{0.20\textwidth}X}
+        \toprule
+        \textbf{ID} & \textbf{Skenario} & \textbf{Pembagian} & \textbf{Prosedur} \\
+        \midrule
+        E1 & \textit{Stratified hold-out} 80:20 & 79 latih; 20 uji & Melatih pohon pada 79 data dan mengevaluasi kedua metode pada 20 data uji yang sama. \\
+        E2 & \textit{Stratified hold-out} 70:30 & 69 latih; 30 uji & Melatih pohon pada 69 data dan mengevaluasi kedua metode pada 30 data uji yang sama. \\
+        E3 & \textit{Stratified 5-fold cross-validation} & 79--80 latih; 19--20 validasi & Menggabungkan prediksi validasi dari lima fold menjadi 99 prediksi \textit{out-of-fold}. \\
+        E4 & \textit{Leave-one-out cross-validation} & 98 latih; 1 uji & Mengulang proses 99 kali dan menggabungkan seluruh prediksi uji. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-\noindent\textbf{Use Case Diagram.}
-Use Case Diagram menggambarkan interaksi aktor dengan sistem. Aktor utama adalah staf administrasi yang mengelola data pelanggan, mencatat \textit{invoice}, memperbarui status pengiriman, mengunggah POD, melihat riwayat pelacakan, dan melihat rekomendasi prioritas. Diagram ini digunakan untuk memastikan kebutuhan fungsional sistem sesuai dengan proses operasional.
+E1--E3 menggunakan stratifikasi agar proporsi kelas dipertahankan selama pembagian data. E1--E3 menggunakan seed utama 42. Pada E4, satu observasi ditahan pada setiap iterasi. Metrik E3 dan E4 dihitung dari gabungan prediksi \textit{out-of-fold}, bukan dari rata-rata metrik observasi tunggal. Fold E3 tidak diperlakukan sebagai replikasi independen dan tidak digunakan untuk membentuk estimasi varians atau \textit{confidence interval} konvensional karena prediksi antar-fold berasal dari himpunan data latih yang saling tumpang tindih \cite{BatesEtAl2024CV}.
 
-\begin{figure}[htbp]
+Prosedur setiap skenario adalah sebagai berikut.
+
+\begin{enumerate}
+    \item Menentukan nomor \textit{invoice} latih dan validasi.
+    \item Menerapkan Rule Base yang telah dibekukan pada bagian validasi.
+    \item Melakukan encoding dan pemilihan parameter pada bagian latih.
+    \item Melatih \textit{Decision Tree} dengan parameter terpilih.
+    \item Menghasilkan prediksi untuk bagian validasi.
+    \item Menyimpan \textit{ground truth}, kedua prediksi, Rule ID, probabilitas kelas \textit{Urgent}, dan ID daun.
+    \item Menggabungkan prediksi sesuai skenario dan menghitung metrik.
+\end{enumerate}
+
+\FloatBarrier
+
+\section{Prosedur Evaluasi}
+
+\subsection{Metrik Klasifikasi}
+
+Kelas \textit{Urgent} ditetapkan sebagai kelas positif. \textit{True positive} (TP) merupakan \textit{invoice Urgent} yang diprediksi \textit{Urgent}. \textit{False negative} (FN) merupakan \textit{invoice Urgent} yang diprediksi \textit{Not Urgent}. \textit{False positive} (FP) merupakan \textit{invoice Not Urgent} yang diprediksi \textit{Urgent}. \textit{True negative} (TN) merupakan \textit{invoice Not Urgent} yang diprediksi \textit{Not Urgent}.
+
+\begin{equation}
+\mathrm{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN},
+\label{eq:accuracy-komparatif}
+\end{equation}
+
+\begin{equation}
+\mathrm{Precision}_{Urgent}=\frac{TP}{TP+FP},
+\label{eq:precision-komparatif}
+\end{equation}
+
+\begin{equation}
+\mathrm{Recall}_{Urgent}=\frac{TP}{TP+FN},
+\label{eq:recall-komparatif}
+\end{equation}
+
+\begin{equation}
+\mathrm{F1}_{Urgent}=2\times\frac{\mathrm{Precision}_{Urgent}\times\mathrm{Recall}_{Urgent}}{\mathrm{Precision}_{Urgent}+\mathrm{Recall}_{Urgent}}.
+\label{eq:f1-komparatif}
+\end{equation}
+
+\textit{Macro F1} dihitung sebagai rata-rata F1 kedua kelas. Metrik ini digunakan untuk mengurangi dominasi kelas dengan jumlah observasi lebih besar. Seluruh metrik dilaporkan bersama matriks kebingungan agar perbedaan FP dan FN tetap terlihat, sesuai dengan anjuran untuk tidak menafsirkan satu metrik klasifikasi secara terpisah \cite{RainioEtAl2024}.
+
+\subsection{Evaluasi Berpasangan dan Uji Statistik}
+
+Prediksi dikelompokkan menjadi empat kondisi: kedua metode benar, hanya \textit{Rule-Based} benar, hanya \textit{Decision Tree} benar, dan kedua metode salah. Pengelompokan dilakukan pada nomor \textit{invoice} yang sama.
+
+Exact McNemar digunakan untuk menguji perbedaan proporsi kesalahan berpasangan pada unit observasi yang sama \cite{McNemar1947,RainioEtAl2024}. Nilai $b$ menyatakan jumlah kasus yang hanya benar pada \textit{Rule-Based}, sedangkan $c$ menyatakan jumlah kasus yang hanya benar pada \textit{Decision Tree}. Di bawah hipotesis nol, jumlah keberhasilan pada $b+c$ kasus discordant mengikuti distribusi binomial dengan probabilitas 0,5. Uji dilakukan dua sisi dengan taraf signifikansi $\alpha=0{,}05$.
+
+Hipotesis penelitian dirumuskan sebagai berikut.
+
+\begin{itemize}
+    \item $H_0$: tidak terdapat perbedaan proporsi kesalahan yang terdeteksi secara statistik antara kedua metode pada kasus yang sama.
+    \item $H_1$: terdapat perbedaan proporsi kesalahan yang terdeteksi secara statistik antara kedua metode pada kasus yang sama.
+\end{itemize}
+
+Nilai $p>0{,}05$ tidak ditafsirkan sebagai bukti bahwa kedua metode identik. Hasil tersebut hanya menunjukkan bahwa bukti pada sampel belum cukup untuk menolak $H_0$.
+
+\subsection{Analisis Kesalahan dan Karakteristik Metode}
+
+Analisis kesalahan memeriksa atribut keputusan, Rule ID, jalur pohon, jenis kesalahan, dan kestabilan kasus antar-skenario. Analisis ini digunakan untuk menjelaskan perbedaan yang tidak tampak dari metrik agregat.
+
+Karakteristik metode dibandingkan menggunakan indikator pada Tabel \ref{tab:indikator-karakteristik-metode}. Aspek yang tidak diuji melalui eksperimen khusus dinyatakan sebagai analisis prosedural atau konseptual.
+
+\begin{table}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{use-case-diagram.png}
-    \caption{Use Case Diagram Sistem Pelacakan Invoice dan POD}
-    \label{fig:use_case_diagram}
-\end{figure}
+    \caption{Indikator Analisis Karakteristik Metode}
+    \label{tab:indikator-karakteristik-metode}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.31\textwidth}X}
+        \toprule
+        \textbf{Aspek} & \textbf{Indikator} & \textbf{Bukti yang Digunakan} \\
+        \midrule
+        Explainability dan transparansi & Ketersediaan dan panjang jejak keputusan & Rule ID dan kondisi aktif; jalur pohon dan ambang. \\
+        Maintainability & Komponen, dependensi, konflik, dan langkah validasi & Jumlah aturan; pipeline, parameter, dan versi model. \\
+        Adaptability & Prosedur merespons perubahan SOP atau pola data & Alur revisi aturan dibandingkan alur pelabelan dan pelatihan ulang. \\
+        Scalability & Pertumbuhan kompleksitas saat aturan, data, atau fitur bertambah & Analisis konseptual karena tidak ada eksperimen skala khusus. \\
+        Biaya komputasi & Waktu training dan inference yang dipisahkan & Catatan waktu pada lingkungan eksekusi yang sama. \\
+        Kemudahan pembaruan & Langkah perubahan dan validasi ulang & Prosedur perubahan Rule Base dan retraining model. \\
+        Kepatuhan SOP & Keterlacakan keputusan ke kondisi SOP & Matriks rule-to-SOP; pemetaan jalur pohon hanya sebagai analisis sekunder. \\
+        Auditability & Artefak yang dapat disimpan dan direproduksi & Versi aturan, Rule ID, konfigurasi model, fitur, dan prediksi kasus. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-\noindent\textbf{Activity Diagram.}
-Activity Diagram memodelkan alur kerja unggah POD dan pembaruan status \textit{invoice}. Alur dimulai ketika pengguna memilih data \textit{invoice}, mengunggah bukti penerimaan, dan mengirimkan data ke sistem. Sistem kemudian memvalidasi masukan, menyimpan POD, memperbarui status, dan menambahkan catatan pada riwayat pelacakan.
+\FloatBarrier
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1\textwidth]{activity-diagram.png}
-    \caption{Activity Diagram Sistem Pelacakan dan POD}
-    \label{fig:activity_pod}
-\end{figure}
+% \section{Reproduksibilitas dan Kontrol Validitas}
 
-\noindent\textbf{Entity Relationship Diagram.}
-ERD menggambarkan struktur data yang mendukung sistem. Entitas utama meliputi pelanggan, \textit{invoice}, pengiriman atau pelacakan, pengguna, dan catatan prioritas. Relasi antarentitas memastikan setiap \textit{invoice} dapat ditelusuri terhadap pelanggan, status pengiriman, bukti penerimaan, dan rekomendasi prioritas yang terkait.
+% Reproduksibilitas dijaga melalui seed, konfigurasi eksperimen, dataset analisis, dan prediksi tingkat kasus. Berkas sumber tidak ditimpa. Dataset bersih, laporan duplikat, masalah kualitas data, konfigurasi, metrik, matriks kebingungan, Rule ID, dan prediksi \textit{out-of-fold} disimpan sebagai artefak terpisah.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.8\textwidth]{ERD.png}
-    \caption{ERD sistem pelacakan invoice dan POD}
-    \label{fig:erd}
-\end{figure}
+% \begin{table}[htbp]
+%     \centering
+%     \caption{Artefak Reproduksibilitas Eksperimen}
+%     \label{tab:artefak-reproduksibilitas}
+%     \small
+%     \renewcommand{\arraystretch}{1.2}
+%     \begin{tabularx}{\textwidth}{p{0.34\textwidth}X}
+%         \toprule
+%         \textbf{Artefak} & \textbf{Lokasi atau Isi} \\
+%         \midrule
+%         Pipeline eksperimen & \texttt{run\_comparative\_experiment.py} \\
+%         Konfigurasi & \texttt{comparative\_experiment/experiment\_config.json} \\
+%         Dataset bersih & \texttt{comparative\_experiment/data/cleaned\_analysis\_dataset.csv} \\
+%         Prediksi kasus & \texttt{comparative\_experiment/predictions/all\_scenario\_predictions.csv} \\
+%         Metrik dan matriks kebingungan & Direktori \texttt{comparative\_experiment/tables} \\
+%         Model interpretatif & Direktori \texttt{comparative\_experiment/models} \\
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}
+
+% Kontrol validitas mencakup penghapusan fitur bocor, penanganan duplikat sebelum pembagian data, pemilihan parameter pada data latih, penggunaan kasus validasi yang sama, dan agregasi prediksi \textit{out-of-fold}. Identitas pelanggan tetap dimasking.
+
+% Validitas tetap dibatasi oleh 99 \textit{invoice}, satu konteks perusahaan, potensi subjektivitas label, perubahan SOP, dan belum adanya validasi temporal atau eksternal. Bukti provenance label serta matriks keterlacakan SOP terhadap R1--R8 harus dilengkapi sebelum naskah dinyatakan final.
+
+% \FloatBarrier

@@ -1,213 +1,385 @@
 # Research Framework Blueprint
 
+## Framework Identity
+
+**Primary figure message:** Comparative Analysis of Rule-Based and Decision Tree Methods for Invoice Urgency Classification.
+
+**Ground truth:** Company Administrator Decision.
+
+**Target classes:** `Urgent` and `Not Urgent`.
+
+**Supporting Knowledge Engineering role:** Knowledge Acquisition and Rule Construction for the Rule-Based branch.
+
+This document specifies the conceptual structure of the revised research framework. It does not draw the figure. The final figure must be prepared professionally using the corresponding prompt in `Figure-Prompts.md`.
+
 ## 1. Scientific Objective of the Figure
 
-The figure must communicate that the thesis contribution is the Operational Knowledge Formalization Framework for invoice delivery priority. Its primary message is that operational knowledge is acquired, structured, formalized into attributes and rules, represented explicitly through Rule-Based Representation, reconstructed statistically through Decision Tree C4.5, evaluated through Knowledge Representation Consistency Evaluation, and embedded into an Invoice Tracking and POD System that produces Priority Recommendation.
+The figure must communicate that this thesis performs an independent comparative evaluation of two interpretable classification methods. Rule-Based classification is constructed from company SOP through Knowledge Acquisition and Rule Construction. Decision Tree classification is trained from historical invoice attributes and administrator labels. Both methods are evaluated against the same administrator ground truth and analyzed through multiple validation scenarios, performance metrics, error patterns, and operational characteristics.
 
-The figure must not visually suggest that Rule-Based and Decision Tree are competing methods. They must appear as two complementary representations of the same formalized operational knowledge. A reader should understand within 10 seconds that the central contribution is the knowledge-engineering framework, not an algorithm comparison.
+Within ten seconds, a reader must understand:
+
+1. The target is binary invoice urgency: `Urgent` or `Not Urgent`.
+2. Administrator decisions are the shared ground truth.
+3. Rule-Based and Decision Tree are two methods being compared.
+4. Knowledge Engineering supports only the Rule-Based construction process.
+5. Comparative Analysis is the core scientific contribution.
+6. The invoice tracking and POD system is the deployment context.
+
+The figure must not imply that guideline-derived labels are ground truth, that Decision Tree reconstructs Rule-Based knowledge, or that the Operational Knowledge Formalization Framework remains the primary contribution.
 
 ## 2. Conceptual Flow
 
-1. Operational Knowledge is the starting point.
-2. Knowledge Acquisition extracts relevant operational concepts from customer regulations, historical invoice data, and expert operational knowledge.
-3. Knowledge Structuring organizes the acquired knowledge into decision-relevant categories.
-4. Knowledge Formalization converts structured knowledge into formal artifacts.
-5. Knowledge Formalization splits into two coordinated branches: Attribute Formalization and Rule Formalization.
-6. Attribute Formalization produces Operational Attributes and the Operational Dataset.
-7. Rule Formalization produces the Operational Labeling Guideline and Rule Base.
-8. Operational Dataset and Operational Labeling Guideline converge to produce Guideline-Based Ground Truth.
-9. Rule Base and Operational Dataset support Rule-Based Representation.
-10. Operational Dataset and Guideline-Based Ground Truth support Decision Tree Reconstruction.
-11. Rule-Based Representation and Decision Tree Reconstruction converge as complementary knowledge representations.
-12. Knowledge Representation Consistency Evaluation evaluates whether both representations preserve the same operational meaning against Guideline-Based Ground Truth.
-13. Evaluated operational knowledge is embedded into the Invoice Tracking and POD System.
-14. The system produces Priority Recommendation as decision support for invoice delivery handling.
+The final figure should present the following sequence step by step:
+
+1. Historical Invoice Data and Company SOP are shown as two distinct input sources.
+2. Historical Invoice Data enters Data Collection and Administrator Ground-Truth Verification.
+3. Verified invoice data proceeds through Data Cleaning and Feature Engineering.
+4. The prepared dataset and verified administrator labels enter Experimental Scenario Construction.
+5. Company SOP enters Knowledge Acquisition, Rule Construction, and Rule Validation.
+6. The validated Rule Base produces Rule-Based Classification for each required validation case.
+7. Training data and administrator labels produce Decision Tree Training and Pruning.
+8. The trained Decision Tree produces Decision Tree Prediction for the same validation cases.
+9. Rule-Based and Decision Tree outputs are each compared with Administrator Ground Truth.
+10. Results from both methods enter Comparative Performance Evaluation.
+11. Case-level predictions enter Error and Misclassification Analysis.
+12. Method artifacts and procedures enter Comparative Characteristics Analysis.
+13. All comparative evidence converges in Comparative Analysis.
+14. The comparative conclusion informs Invoice Tracking and POD System Implementation.
+15. The system presents an Urgency Recommendation while retaining administrator authority.
+
+The visual flow must show one data-preparation path, one SOP-based Rule-Based branch, one supervised Decision Tree branch, and one shared comparative-analysis convergence.
 
 ## 3. Box Specifications
 
-| Box | Title | Purpose | Inputs | Outputs |
-| --- | --- | --- | --- | --- |
-| B1 | Operational Knowledge | Establish the domain knowledge source before any modeling step. | Customer regulations, invoice administration routines, receiving schedules, cut-off rules, POD workflow, staff prioritization practice. | Initial operational decision concepts and constraints. |
-| B2 | Knowledge Acquisition | Collect and extract operational knowledge from explicit and tacit sources. | Operational Knowledge. | Acquired knowledge about cut-off timing, receiving windows, schedule limitations, month-end conditions, and urgency handling. |
-| B3 | Knowledge Structuring | Organize acquired knowledge into categories that can be formalized. | Acquired operational concepts and constraints. | Structured knowledge categories such as cut-off rules, receiving schedule rules, administrative timing, and priority conditions. |
-| B4 | Knowledge Formalization | Act as the central transformation stage of the framework. | Structured knowledge categories. | Two coordinated formalization branches: Attribute Formalization and Rule Formalization. |
-| B5 | Attribute Formalization | Convert operational concepts into computable attributes. | Structured knowledge categories, invoice records, customer rules. | Operational Attributes such as `days_to_cutoff_decision_time`, `receive_day_code`, `receive_schedule`, and `next_receive_day_gap_feature`. |
-| B6 | Rule Formalization | Convert operational decision logic into explicit rule structures and labeling procedure. | Structured knowledge categories and formalized attributes. | Operational Labeling Guideline and Rule Base. |
-| B7 | Operational Dataset | Store formalized invoice cases as an operational knowledge artifact. | Historical invoice data and Operational Attributes. | Structured dataset containing operational attributes and the `final_label` field for Guideline-Based Ground Truth. |
-| B8 | Operational Labeling Guideline | Define how priority labels are generated from formalized operational conditions. | Rule Formalization, operational attributes, priority conditions. | Labeling procedure for HIGH, MEDIUM, and NORMAL. |
-| B9 | Rule Base | Represent formalized operational rules in explicit IF-THEN form. | Rule Formalization and Operational Labeling Guideline. | Rule set R1-R12 used by Rule-Based Representation. |
-| B10 | Guideline-Based Ground Truth | Provide the reference decision label generated from the formalized guideline. | Operational Dataset and Operational Labeling Guideline. | Reference priority labels implemented as `final_label`. |
-| B11 | Rule-Based Representation | Explicitly represent the formalized operational knowledge through the Rule Base. | Rule Base and Operational Dataset. | Rule-Based output, activated Rule ID evidence, and traceable priority recommendation logic. |
-| B12 | Decision Tree Reconstruction | Reconstruct the same formalized operational knowledge from attributes and guideline-based labels. | Operational Dataset and Guideline-Based Ground Truth. | Decision tree paths, feature dominance structure, and reconstruction output. |
-| B13 | Complementary Knowledge Representations | Visually show that Rule-Based and Decision Tree are parallel representations of the same knowledge. | Rule-Based Representation and Decision Tree Reconstruction. | Two interpretable representation outputs ready for consistency evaluation. |
-| B14 | Knowledge Representation Consistency Evaluation | Evaluate whether both representations preserve the same operational meaning. | Rule-Based output, Decision Tree reconstruction output, Guideline-Based Ground Truth, rule-path mapping, feature importance, consistency metrics. | Consistency interpretation, evaluation report, limitations, and evaluated operational knowledge. |
-| B15 | Invoice Tracking and POD System | Embed evaluated operational knowledge into the information-system context. | Evaluated operational knowledge, invoice tracking requirements, POD workflow, system design artifacts. | Integrated decision-support functionality in the invoice tracking and POD workflow. |
-| B16 | Priority Recommendation | Show the final operational decision-support output. | Invoice Tracking and POD System with embedded evaluated knowledge. | HIGH, MEDIUM, or NORMAL priority recommendation for invoice delivery handling. |
+### Box 1: Historical Invoice Data
+
+- **Title:** Historical Invoice Data
+- **Purpose:** Provide the empirical invoice cases and predictor attributes used by the revised study.
+- **Inputs:** Historical company invoice records.
+- **Outputs:** Candidate invoice records for verification and cleaning.
+
+### Box 2: Company SOP
+
+- **Title:** Company SOP
+- **Purpose:** Provide the authoritative operational source for constructing Rule-Based urgency logic.
+- **Inputs:** Company procedures, documented urgency conditions, thresholds, exceptions, and rule precedence.
+- **Outputs:** Source knowledge for Knowledge Acquisition.
+
+### Box 3: Data Collection
+
+- **Title:** Data Collection
+- **Purpose:** Select the intended historical invoice cases and collect the attributes and administrator decisions required by the study.
+- **Inputs:** Historical Invoice Data.
+- **Outputs:** Collected invoice dataset with candidate features and labels.
+
+### Box 4: Administrator Ground-Truth Verification
+
+- **Title:** Administrator Ground-Truth Verification
+- **Purpose:** Confirm that each included invoice has an original administrator decision and that labels use only `Urgent` and `Not Urgent`.
+- **Inputs:** Collected invoice records and recorded administrator decisions.
+- **Outputs:** Verified Administrator Ground Truth and a label-quality audit.
+
+### Box 5: Data Cleaning
+
+- **Title:** Data Cleaning
+- **Purpose:** Resolve documented data-quality issues without changing the substantive meaning of administrator decisions.
+- **Inputs:** Collected invoice dataset and label-quality audit.
+- **Outputs:** Cleaned invoice dataset, duplicate report, missing-value report, and retained-case list.
+
+### Box 6: Feature Engineering
+
+- **Title:** Feature Engineering
+- **Purpose:** Transform operational invoice attributes into model-ready predictors available at decision time.
+- **Inputs:** Cleaned invoice dataset.
+- **Outputs:** Analysis-ready feature matrix and feature-definition table.
+
+### Box 7: Experimental Scenario Construction
+
+- **Title:** Experimental Scenario Construction
+- **Purpose:** Create reproducible and shared validation cases for both methods.
+- **Inputs:** Feature matrix, Administrator Ground Truth, fixed seeds, and validation specifications.
+- **Outputs:** E1 80:20 split, E2 70:30 split, E3 5-fold partitions, E4 LOOCV partitions, and case identifiers.
+
+### Box 8: Knowledge Acquisition
+
+- **Title:** Knowledge Acquisition from SOP
+- **Purpose:** Extract explicit urgency conditions, thresholds, exceptions, and precedence from the company SOP.
+- **Inputs:** Company SOP.
+- **Outputs:** Structured urgency knowledge and source traceability.
+
+### Box 9: Rule Construction
+
+- **Title:** Rule Construction
+- **Purpose:** Transform acquired SOP knowledge into executable binary IF-THEN rules.
+- **Inputs:** Structured urgency knowledge and model-ready operational attributes.
+- **Outputs:** Draft Rule Base with `Urgent` or `Not Urgent` consequences.
+
+### Box 10: Rule Validation
+
+- **Title:** Rule Validation
+- **Purpose:** Verify rule wording, SOP traceability, precedence, conflict handling, default behavior, and coverage before final evaluation.
+- **Inputs:** Draft Rule Base and SOP traceability records.
+- **Outputs:** Frozen and validated Rule Base.
+
+### Box 11: Rule-Based Classification
+
+- **Title:** Rule-Based Classification
+- **Purpose:** Apply the frozen Rule Base to each validation invoice and produce a traceable binary classification.
+- **Inputs:** Validation-case features and validated Rule Base.
+- **Outputs:** Rule-Based prediction, activated Rule ID, and decision explanation.
+
+### Box 12: Decision Tree Training and Pruning
+
+- **Title:** Decision Tree Training and Pruning
+- **Purpose:** Learn a supervised binary classifier from each training partition while controlling overfitting.
+- **Inputs:** Training-case features, training-case administrator labels, and train-only parameter-selection procedure.
+- **Outputs:** Trained and pruned Decision Tree for each experimental iteration.
+
+### Box 13: Decision Tree Prediction
+
+- **Title:** Decision Tree Prediction
+- **Purpose:** Generate binary predictions for validation cases not used as final test labels during model fitting.
+- **Inputs:** Trained Decision Tree and validation-case features.
+- **Outputs:** Decision Tree prediction, decision path, and model interpretation evidence.
+
+### Box 14: Administrator Ground Truth
+
+- **Title:** Administrator Ground Truth
+- **Purpose:** Serve as the shared empirical reference for evaluating both methods.
+- **Inputs:** Verified historical administrator decisions.
+- **Outputs:** Reference label for each evaluated invoice.
+
+### Box 15: Comparative Performance Evaluation
+
+- **Title:** Comparative Performance Evaluation
+- **Purpose:** Compare both methods quantitatively on identical validation cases.
+- **Inputs:** Rule-Based predictions, Decision Tree predictions, Administrator Ground Truth, and experiment identifiers.
+- **Outputs:** Confusion matrices, accuracy, precision, recall, F1-score, false-positive counts, false-negative counts, and scenario-level stability evidence.
+
+### Box 16: Error and Misclassification Analysis
+
+- **Title:** Error and Misclassification Analysis
+- **Purpose:** Explain where the methods agree, disagree, or fail and identify operational error patterns.
+- **Inputs:** Case-level predictions, ground truth, rule traces, tree paths, and invoice attributes.
+- **Outputs:** Error groups, misclassification case studies, and operational interpretations.
+
+### Box 17: Comparative Characteristics Analysis
+
+- **Title:** Comparative Characteristics Analysis
+- **Purpose:** Compare non-metric properties using documented evidence rather than unsupported assertions.
+- **Inputs:** Rule Base, Decision Tree artifacts, maintenance procedures, runtime measurements where available, and SOP traceability.
+- **Outputs:** Comparison of explainability, adaptability, maintainability, scalability, computational cost, ease of updating, and SOP compliance.
+
+### Box 18: Comparative Analysis
+
+- **Title:** Comparative Analysis
+- **Purpose:** Integrate performance, stability, error, and operational-characteristic evidence into the thesis's main scientific findings.
+- **Inputs:** Comparative Performance Evaluation, Error and Misclassification Analysis, and Comparative Characteristics Analysis.
+- **Outputs:** Evidence-based comparative findings, bounded conclusions, and implementation considerations.
+
+### Box 19: Invoice Tracking and POD System
+
+- **Title:** Invoice Tracking and POD System
+- **Purpose:** Provide the operational context in which the selected or justified classification approach supports invoice handling.
+- **Inputs:** Comparative findings, system requirements, invoice workflow, and POD workflow.
+- **Outputs:** System-integrated urgency support and traceable decision information.
+
+### Box 20: Urgency Recommendation
+
+- **Title:** Urgency Recommendation
+- **Purpose:** Present `Urgent` or `Not Urgent` as decision support without replacing administrator responsibility.
+- **Inputs:** Implemented classification logic and current invoice attributes.
+- **Outputs:** User-facing urgency recommendation and explanation.
 
 ## 4. Arrow Specifications
 
-| Arrow | Connection | Explanation |
-| --- | --- | --- |
-| A1 | Operational Knowledge to Knowledge Acquisition | The framework begins from operational knowledge because customer rules, receiving schedules, POD procedures, and staff practices exist before any formal model is built. |
-| A2 | Knowledge Acquisition to Knowledge Structuring | Acquired knowledge must be organized before it can be transformed into formal attributes or rules. |
-| A3 | Knowledge Structuring to Knowledge Formalization | Structured knowledge provides the categories needed for formal transformation into computable and rule-based artifacts. |
-| A4 | Knowledge Formalization to Attribute Formalization | One branch of formalization converts operational concepts into attributes suitable for dataset construction and reconstruction analysis. |
-| A5 | Knowledge Formalization to Rule Formalization | The other branch converts operational decision logic into explicit rules and a labeling guideline. |
-| A6 | Attribute Formalization to Operational Dataset | Formal attributes are applied to historical invoice records to construct the operational dataset. |
-| A7 | Rule Formalization to Operational Labeling Guideline | Formalized decision conditions define the procedure for assigning HIGH, MEDIUM, and NORMAL labels. |
-| A8 | Rule Formalization to Rule Base | The same formalized rule logic is expressed as explicit IF-THEN operational rules. |
-| A9 | Operational Dataset to Guideline-Based Ground Truth | The dataset provides the invoice cases that receive reference labels. |
-| A10 | Operational Labeling Guideline to Guideline-Based Ground Truth | The guideline provides the decision procedure that generates the reference labels. |
-| A11 | Rule Base to Rule-Based Representation | Rule-Based Representation applies the explicit rules as the knowledge-driven representation of operational priority logic. |
-| A12 | Operational Dataset to Rule-Based Representation | Each invoice case supplies the facts that are matched against the Rule Base. |
-| A13 | Operational Dataset to Decision Tree Reconstruction | The dataset supplies formalized attributes from which C4.5 reconstructs decision paths. |
-| A14 | Guideline-Based Ground Truth to Decision Tree Reconstruction | Guideline-based labels provide the reference decisions from which C4.5 learns the reconstructed structure. |
-| A15 | Rule-Based Representation to Complementary Knowledge Representations | Rule-Based contributes the explicit, traceable representation of formalized operational knowledge. |
-| A16 | Decision Tree Reconstruction to Complementary Knowledge Representations | Decision Tree contributes the interpretable statistical reconstruction of the same formalized knowledge. |
-| A17 | Complementary Knowledge Representations to Knowledge Representation Consistency Evaluation | The evaluation compares representational consistency, not competitive superiority. |
-| A18 | Guideline-Based Ground Truth to Knowledge Representation Consistency Evaluation | Guideline-Based Ground Truth is the shared reference used to interpret accuracy, precision, recall, and F1-score as consistency indicators. |
-| A19 | Knowledge Representation Consistency Evaluation to Invoice Tracking and POD System | Only evaluated operational knowledge should be embedded into the information-system workflow. |
-| A20 | Invoice Tracking and POD System to Priority Recommendation | The system operationalizes the evaluated knowledge as a HIGH, MEDIUM, or NORMAL recommendation for invoice delivery. |
+| Origin | Destination | Why the connection exists |
+|---|---|---|
+| Historical Invoice Data | Data Collection | Historical records supply the empirical cases selected for the study. |
+| Data Collection | Administrator Ground-Truth Verification | Collected records must be checked for valid and traceable administrator decisions before modeling. |
+| Data Collection | Data Cleaning | Collected predictor data must be checked for missingness, duplication, invalid values, and formatting problems. |
+| Administrator Ground-Truth Verification | Administrator Ground Truth | Verification produces the final independent reference labels used in evaluation. |
+| Administrator Ground-Truth Verification | Data Cleaning | Label-quality findings determine whether cases must be retained, corrected through documented normalization, or excluded. |
+| Data Cleaning | Feature Engineering | Only cleaned records should be transformed into model-ready predictors. |
+| Feature Engineering | Experimental Scenario Construction | Validation partitions must be constructed from the finalized analysis features and case identifiers. |
+| Administrator Ground Truth | Experimental Scenario Construction | Stratification and train-test labels require the verified binary reference. |
+| Company SOP | Knowledge Acquisition from SOP | The SOP is the source of explicit operational urgency knowledge. |
+| Knowledge Acquisition from SOP | Rule Construction | Acquired conditions and exceptions must be converted into executable rules. |
+| Feature Engineering | Rule Construction | Rules require feature definitions that can operationalize SOP conditions. |
+| Rule Construction | Rule Validation | Draft rules must be checked before being frozen for evaluation. |
+| Rule Validation | Rule-Based Classification | The classifier must apply only the validated and frozen Rule Base. |
+| Experimental Scenario Construction | Rule-Based Classification | Rule-Based predictions must be restricted to the same validation invoices used for Decision Tree evaluation. |
+| Experimental Scenario Construction | Decision Tree Training and Pruning | Each scenario determines which invoices may be used for training and validation. |
+| Administrator Ground Truth | Decision Tree Training and Pruning | Only labels belonging to the training portion may guide supervised learning. |
+| Decision Tree Training and Pruning | Decision Tree Prediction | Each trained tree is applied to its corresponding held-out validation cases. |
+| Rule-Based Classification | Comparative Performance Evaluation | Rule-Based outputs must be compared with the shared ground truth. |
+| Decision Tree Prediction | Comparative Performance Evaluation | Decision Tree outputs must be compared with the same shared ground truth. |
+| Administrator Ground Truth | Comparative Performance Evaluation | The admin label anchors all confusion matrices and performance metrics. |
+| Rule-Based Classification | Error and Misclassification Analysis | Activated rules help explain correct and incorrect Rule-Based decisions. |
+| Decision Tree Prediction | Error and Misclassification Analysis | Decision paths help explain correct and incorrect Decision Tree decisions. |
+| Administrator Ground Truth | Error and Misclassification Analysis | Error type is determined by comparison with the reference decision. |
+| Rule Validation | Comparative Characteristics Analysis | Rule structure, traceability, conflicts, and update procedure provide Rule-Based evidence. |
+| Decision Tree Training and Pruning | Comparative Characteristics Analysis | Tree complexity, training procedure, feature use, and update procedure provide Decision Tree evidence. |
+| Comparative Performance Evaluation | Comparative Analysis | Quantitative differences and stability are part of the central comparison. |
+| Error and Misclassification Analysis | Comparative Analysis | Aggregate metrics require case-level explanation to become scientifically meaningful. |
+| Comparative Characteristics Analysis | Comparative Analysis | Operational differences complement predictive performance evidence. |
+| Comparative Analysis | Invoice Tracking and POD System | The deployment decision must follow the completed comparison. |
+| Invoice Tracking and POD System | Urgency Recommendation | The system presents the method output as operational decision support. |
 
 ## 5. Hierarchy of Components
 
 ### Core Contribution
 
-- Operational Knowledge Formalization Framework.
-- Knowledge Formalization as the central transformation stage.
-- Attribute Formalization and Rule Formalization as the two core branches.
-- Guideline-Based Ground Truth as the reference label artifact.
-- Rule-Based Representation and Decision Tree Reconstruction as complementary representations.
-- Knowledge Representation Consistency Evaluation as the validation logic for preserved operational meaning.
+The central and most visually emphasized component is **Comparative Analysis**. It integrates quantitative performance, stability, error behavior, and operational-characteristic evidence. It must be visually more prominent than either individual method.
 
-### Supporting Process
+### Supporting Processes
 
-- Operational Knowledge.
-- Knowledge Acquisition.
-- Knowledge Structuring.
-- Operational Dataset.
-- Operational Labeling Guideline.
-- Rule Base.
+Supporting processes prepare valid inputs and construct both methods:
 
-These components support the contribution by providing the knowledge sources, structured categories, formal attributes, explicit rules, and reference labels needed by the framework.
+- Historical Invoice Data;
+- Company SOP;
+- Data Collection;
+- Administrator Ground-Truth Verification;
+- Data Cleaning;
+- Feature Engineering;
+- Knowledge Acquisition from SOP;
+- Rule Construction;
+- Rule Validation; and
+- Experimental Scenario Construction.
 
-### Evaluation Process
+Knowledge Engineering belongs in this supporting layer.
 
-- Rule-Based Representation.
-- Decision Tree Reconstruction.
-- Complementary Knowledge Representations.
-- Knowledge Representation Consistency Evaluation.
+### Modeling Processes
 
-This part must be visually shown as convergence, not competition. The evaluation asks whether both representations preserve the same operational meaning.
+The two modeling branches are:
 
-### Deployment Process
+- Rule-Based Classification; and
+- Decision Tree Training, Pruning, and Prediction.
 
-- Invoice Tracking and POD System.
-- Priority Recommendation.
+They should have equal visual weight because the framework evaluates both methods fairly.
 
-These components show the information-system and decision-support context. They are important, but they must appear downstream from the framework rather than as the main scientific contribution.
+### Evaluation Processes
+
+The evaluation layer consists of:
+
+- Administrator Ground Truth;
+- Comparative Performance Evaluation;
+- Error and Misclassification Analysis; and
+- Comparative Characteristics Analysis.
+
+This layer must clearly show that both outputs use the same reference cases and labels.
+
+### Deployment Processes
+
+The deployment layer consists of:
+
+- Invoice Tracking and POD System; and
+- Urgency Recommendation.
+
+Deployment should appear after the scientific comparison and should not dominate the framework.
 
 ## 6. Visual Layout Recommendation
 
-### Overall Shape
+### Top
 
-Use a vertical top-to-bottom framework with one clearly labeled central spine and a two-branch middle section. The central title above the figure should be "Operational Knowledge Formalization Framework" so the contribution is immediately visible.
+Place the figure title at the top center: **Comparative Research Framework for Invoice Urgency Classification**.
 
-### Top Area
+Below the title, place two source boxes at equal height:
 
-Place "Operational Knowledge" at the top center. Directly below it, place "Knowledge Acquisition" and then "Knowledge Structuring" in the center. This makes the figure start from domain knowledge rather than from methods or models.
+- Historical Invoice Data on the upper left.
+- Company SOP on the upper right.
 
 ### Upper Middle
 
-Place "Knowledge Formalization" at the center as a larger or visually emphasized box. This box is the conceptual pivot of the figure.
+Under Historical Invoice Data, arrange Data Collection, Administrator Ground-Truth Verification, Data Cleaning, and Feature Engineering in a compact vertical sequence.
 
-### Middle Branches
+Under Company SOP, arrange Knowledge Acquisition from SOP, Rule Construction, and Rule Validation in a compact vertical sequence.
 
-From "Knowledge Formalization", split into two parallel branches:
+Administrator Ground Truth should appear near the center rather than buried in one branch. It must be visually identifiable as the shared reference for both methods.
 
-- Left branch: "Attribute Formalization" leading to "Operational Dataset".
-- Right branch: "Rule Formalization" leading to "Operational Labeling Guideline" and "Rule Base".
+### Middle
 
-The branches should be balanced visually. Do not make one branch look more important than the other.
+Place Experimental Scenario Construction centrally above the two modeling branches.
 
-### Convergence Point
+Create two equal-width sibling branches:
 
-Place "Guideline-Based Ground Truth" below the two branches and centered between them. It should receive input from both "Operational Dataset" and "Operational Labeling Guideline".
+- Left branch: Rule-Based Classification.
+- Right branch: Decision Tree Training and Pruning, followed by Decision Tree Prediction.
 
-### Representation Layer
+Use equal box sizes and balanced spacing. Do not visually suggest that one method is the default or winner.
 
-Below "Guideline-Based Ground Truth", place two boxes side by side:
+### Lower Middle
 
-- Left: "Rule-Based Representation".
-- Right: "Decision Tree Reconstruction".
+Place three analysis boxes in one balanced row:
 
-Use equal size, equal color intensity, and equal vertical alignment. Do not use "vs", "comparison", opposing arrows, scoreboards, or any visual separator that implies competition.
+- Comparative Performance Evaluation on the left.
+- Error and Misclassification Analysis in the center.
+- Comparative Characteristics Analysis on the right.
 
-The Rule-Based box should also receive a visible input from "Rule Base". The Decision Tree box should receive visible input from "Operational Dataset" and "Guideline-Based Ground Truth".
+Connect both method outputs and Administrator Ground Truth to the relevant analysis boxes.
 
-### Evaluation Layer
+### Center Emphasis
 
-Place "Knowledge Representation Consistency Evaluation" below the two representation boxes and centered. Both representation boxes should feed downward into this evaluation box. Guideline-Based Ground Truth should also connect to this box as the reference for consistency evaluation.
+Place Comparative Analysis centered below the three analysis boxes. It should be the most prominent box through a slightly stronger border or subtle academic fill, not through decorative styling.
 
-### Bottom Area
+### Bottom
 
-Place "Invoice Tracking and POD System" below the evaluation box. Place "Priority Recommendation" at the bottom center as the final applied output.
+Place Invoice Tracking and POD System below Comparative Analysis. Place Urgency Recommendation at the bottom center.
 
-### Visual Emphasis
-
-The most visually prominent label should be "Operational Knowledge Formalization Framework", followed by "Knowledge Formalization" and "Knowledge Representation Consistency Evaluation". Rule-Based and Decision Tree should be visibly secondary to the framework title and should appear as sibling boxes.
+The bottom layer must remain visually secondary to the comparative-analysis layer.
 
 ## 7. Caption Recommendations
 
-1. "Operational Knowledge Formalization Framework for Invoice Delivery Priority Recommendation."
-2. "Conceptual Framework for Representing, Reconstructing, and Evaluating Operational Invoice-Priority Knowledge."
-3. "Transformation of Operational Knowledge into Complementary Rule-Based and Decision Tree Representations for Invoice Tracking and POD Decision Support."
+1. **Comparative research framework for evaluating Rule-Based and Decision Tree methods for invoice urgency classification using administrator decisions as ground truth.**
 
-## 8. Chapter III Narrative Paragraph
+2. **Methodological framework for the comparative evaluation of SOP-driven Rule-Based classification and data-driven Decision Tree classification in invoice urgency assessment.**
 
-Figure X illustrates the Operational Knowledge Formalization Framework used in this research. The framework begins with operational knowledge derived from customer regulations, historical invoice data, receiving schedules, cut-off constraints, POD workflow, and expert administrative practice. This knowledge is acquired, structured, and formalized through two coordinated branches: Attribute Formalization, which produces the Operational Dataset, and Rule Formalization, which produces the Operational Labeling Guideline and Rule Base. The Operational Dataset and Operational Labeling Guideline then generate the Guideline-Based Ground Truth, which becomes the reference for two complementary representations of the same formalized knowledge: Rule-Based Representation and Decision Tree Reconstruction. Both representations are evaluated through Knowledge Representation Consistency Evaluation to determine whether they preserve the same operational meaning. The evaluated knowledge is then embedded into the Invoice Tracking and POD System to support Priority Recommendation for invoice delivery handling.
+3. **Research framework integrating administrator-labeled historical data, SOP-based rule construction, multiple validation scenarios, and comparative analysis for invoice urgency classification.**
+
+## 8. Chapter III Narrative
+
+The research framework begins with two independent sources: historical invoice data containing administrator decisions and the company SOP containing explicit operational procedures. Historical data are collected, verified to ensure that the ground-truth labels consist of `Urgent` and `Not Urgent`, cleaned, and transformed into decision-time features. In parallel, Knowledge Acquisition is conducted on the company SOP to construct and validate a frozen Rule Base. Four experimental scenarios define identical validation cases for the Rule-Based and Decision Tree methods. The Rule-Based method applies the validated rules, while the Decision Tree is trained and pruned using only the training portion of each scenario before generating held-out predictions. Both outputs are evaluated against the same administrator ground truth through performance metrics, error and misclassification analysis, and comparison of operational characteristics. The integrated Comparative Analysis forms the central scientific contribution and provides the evidence used to interpret implementation within the invoice tracking and POD system.
 
 ## 9. Consistency Check
 
-| Source | Consistency Status | Verification |
-| --- | --- | --- |
-| Research-Positioning-Statement.md | Fully consistent | The blueprint centers the Operational Knowledge Formalization Framework and treats Rule-Based as explicit representation and Decision Tree as reconstruction. |
-| Research-Positioning-Statement.md | Fully consistent | The blueprint includes Knowledge Acquisition, Knowledge Structuring, Attribute Formalization, Rule Formalization, Operational Labeling Guideline, Knowledge Representation, Knowledge Reconstruction, and Knowledge Representation Consistency Evaluation. |
-| Narrative-Revision-Plan.md | Fully consistent | The blueprint follows the shift from machine-learning prediction toward knowledge engineering, representation, reconstruction, and evaluation. |
-| Narrative-Revision-Plan.md | Fully consistent | The blueprint prevents Rule-Based and Decision Tree from appearing as an algorithm-superiority contest. |
-| Chapter III | Fully consistent | The blueprint matches the revised Chapter III sections: Proposed Method, Knowledge Acquisition, Knowledge Formalization, Dataset Construction, Guideline-Based Labeling, Knowledge Representation, Knowledge Representation Consistency Evaluation, and System Integration. |
-| Chapter III | Fully consistent | The blueprint operationalizes the LaTeX comment in Chapter III that the current figure should be replaced by a two-branch formalization framework. |
-| Chapter IV | Fully consistent | The blueprint supports Chapter IV's interpretation of the dataset as an operational knowledge artifact and metrics as representation consistency. |
-| Chapter IV | Fully consistent | The blueprint supports the Chapter IV analysis that Rule-Based is explicit representation, C4.5 is reconstruction, and feature importance reflects reconstruction attribute dominance. |
+| Reference | Consistency status | Required interpretation |
+|---|---|---|
+| `Research-Positioning-Statement.md` | Consistent | Comparative Analysis is primary; administrator labels are ground truth; Knowledge Engineering supports Rule-Based construction. |
+| `Narrative-Revision-Plan.md` | Consistent | The flow includes the data-readiness gate, four experiments, error analysis, and Chapter IV as the scientific center. |
+| Current Chapter III (`Metodologi.tex`) | Not yet consistent | It still describes the legacy method and must be rewritten from the verified E1-E4 protocol. |
+| Current Chapter IV (`Hasil-dan-Pembahasan.tex`) | Not yet consistent | It reports legacy three-class results and must be replaced with the completed comparative evidence. |
+| Chapter I and Abstract | Not yet consistent | They still contain the old framework and labels and must later be revised against completed comparative evidence. |
+| Chapter V | Not yet consistent | Legacy conclusions must be replaced with answers to the comparative research questions. |
 
-## 10. Implementation Checklist
+The framework is consistent with the revised planning documents and completed experiment. The active LaTeX thesis remains inconsistent until Chapters III and IV are rewritten.
 
-Use this checklist when manually redrawing the final figure.
+## 10. Manual Redraw Checklist
 
-- [ ] The title or top label clearly says "Operational Knowledge Formalization Framework".
-- [ ] The figure begins with "Operational Knowledge", not Rule-Based or Decision Tree.
-- [ ] "Knowledge Acquisition" appears before "Knowledge Structuring".
-- [ ] "Knowledge Structuring" appears before "Knowledge Formalization".
-- [ ] "Knowledge Formalization" is visually central and prominent.
-- [ ] "Knowledge Formalization" splits into exactly two coordinated branches: Attribute Formalization and Rule Formalization.
-- [ ] Attribute Formalization leads to Operational Dataset.
-- [ ] Rule Formalization leads to Operational Labeling Guideline.
-- [ ] Rule Formalization also leads to Rule Base.
-- [ ] Operational Dataset and Operational Labeling Guideline converge into Guideline-Based Ground Truth.
-- [ ] Rule Base feeds Rule-Based Representation.
-- [ ] Operational Dataset and Guideline-Based Ground Truth feed Decision Tree Reconstruction.
-- [ ] Rule-Based Representation and Decision Tree Reconstruction are shown as equal sibling boxes.
-- [ ] No "VS", "comparative evaluation", ranking symbol, trophy symbol, or opposing visual metaphor appears between Rule-Based and Decision Tree.
-- [ ] Knowledge Representation Consistency Evaluation is placed below the two representation boxes.
-- [ ] Rule-Based Representation feeds Knowledge Representation Consistency Evaluation.
-- [ ] Decision Tree Reconstruction feeds Knowledge Representation Consistency Evaluation.
-- [ ] Guideline-Based Ground Truth also feeds Knowledge Representation Consistency Evaluation as the shared reference.
-- [ ] Knowledge Representation Consistency Evaluation leads to Invoice Tracking and POD System.
-- [ ] Invoice Tracking and POD System leads to Priority Recommendation.
-- [ ] Priority Recommendation is shown as the applied system output, not as the main scientific contribution.
-- [ ] The core framework remains readable within 10 seconds.
-- [ ] The visual hierarchy makes the framework more prominent than the individual Rule-Based and Decision Tree components.
-- [ ] The figure caption uses the terms "Operational Knowledge", "Formalization", "Representation", "Reconstruction", or "Consistency Evaluation".
-- [ ] The figure does not imply predictive superiority, model competition, or universal generalization.
-- [ ] The figure does not add new datasets, new experiments, new algorithms, or new evaluation results.
-- [ ] The final drawing preserves the same scientific meaning as this blueprint.
+- [ ] Use the exact figure title: `Comparative Research Framework for Invoice Urgency Classification`.
+- [ ] Show Historical Invoice Data and Company SOP as distinct sources.
+- [ ] Show Administrator Ground-Truth Verification before modeling.
+- [ ] Use exactly `Administrator Ground Truth` for the shared reference box.
+- [ ] Show only `Urgent` and `Not Urgent` as target classes where classes are displayed.
+- [ ] Keep Knowledge Acquisition from SOP, Rule Construction, and Rule Validation in the Rule-Based branch.
+- [ ] Do not use Operational Knowledge Formalization Framework as the title or central contribution.
+- [ ] Do not include Guideline-Based Ground Truth or Operational Labeling Guideline as a label source.
+- [ ] Show Experimental Scenario Construction before the two method outputs.
+- [ ] Present Rule-Based and Decision Tree branches with equal visual weight.
+- [ ] Connect both methods to the same validation cases.
+- [ ] Connect Administrator Ground Truth to Decision Tree training only through training partitions.
+- [ ] Connect Administrator Ground Truth to the shared evaluation layer.
+- [ ] Include Comparative Performance Evaluation.
+- [ ] Include Error and Misclassification Analysis.
+- [ ] Include Comparative Characteristics Analysis.
+- [ ] Make Comparative Analysis the most visually prominent scientific box.
+- [ ] Place Invoice Tracking and POD System after Comparative Analysis.
+- [ ] Place Urgency Recommendation at the bottom.
+- [ ] Avoid wording that claims one method is superior before results are available.
+- [ ] Use professional academic typography and sufficient spacing for grayscale printing.
+- [ ] Use no icons, gradients, shadows, decorative illustrations, or unnecessary colors.
+- [ ] Verify every arrow against the arrow specification in Section 4.
+- [ ] Verify that the figure can be understood within ten seconds without reading the chapter text.
+
+## Final Scientific Meaning
+
+The final figure must communicate an independent and reproducible comparative study. The SOP-based Rule-Based method and the admin-label-trained Decision Tree method are evaluated fairly against the same administrator decisions. Knowledge Engineering remains visible because it explains how the Rule-Based classifier is built, but Comparative Analysis is unmistakably the thesis's central contribution.

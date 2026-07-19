@@ -1,0 +1,10 @@
+|--- cat__limited_receive_schedule_flag_No <= 0.50
+|   |--- num__cutoff_value_feature <= 3.50
+|   |   |--- class: Urgent
+|   |--- num__cutoff_value_feature >  3.50
+|   |   |--- class: Urgent
+|--- cat__limited_receive_schedule_flag_No >  0.50
+|   |--- num__days_to_cutoff_feature <= 3.50
+|   |   |--- class: Urgent
+|   |--- num__days_to_cutoff_feature >  3.50
+|   |   |--- class: Not Urgent

@@ -1,227 +1,262 @@
 \chapter{KAJIAN PUSTAKA}
-\usetikzlibrary{positioning, arrows.meta, shapes, matrix}
 
-\section{Tinjauan Pustaka}
+\section{\textit{Invoice Tracking}}
 
-Bagian ini menguraikan ringkasan hasil kajian literatur dari penelitian-penelitian terdahulu yang relevan dengan topik pelacakan dokumen, \textit{Proof of Delivery} (POD), dan penerapan model klasifikasi keputusan. Tinjauan ini digunakan untuk mengidentifikasi posisi penelitian dan merumuskan celah penelitian (\textit{research gap}) yang akan diselesaikan melalui perancangan sistem pelacakan \textit{invoice} dengan komparasi algoritma prioritas. Perbandingan penelitian terdahulu secara ringkas disajikan pada Tabel \ref{tab:penelitian_terdahulu}.
+\textit{Invoice tracking} adalah pemantauan dokumen \textit{invoice} berdasarkan identitas, status, waktu, dan riwayat perpindahannya. Dokumen diperlakukan sebagai objek proses yang berubah dari satu tahapan ke tahapan berikutnya. Pencatatan tersebut membentuk \textit{audit trail} yang menunjukkan posisi dokumen, waktu perubahan status, dan tindakan yang telah dilakukan. Teknologi pelacakan dokumen mendukung transparansi aliran dokumen dan pengendalian proses administrasi \cite{10.1007/978-3-642-55032-4_33}.
+
+Dalam konteks penagihan, informasi pelacakan membantu pengguna mengetahui \textit{invoice} yang telah diterima, sedang diproses, atau memerlukan tindak lanjut. Analisis data \textit{invoice} juga dapat digunakan untuk mendukung prioritisasi sumber daya administrasi \cite{SchoonbeeEtAl2022}. Literatur klasik menempatkan sistem pendukung keputusan sebagai sarana yang membantu proses keputusan \cite{ShimEtAl2002}. Literatur kontemporer memperluas posisi tersebut dengan menekankan pembagian peran manusia dan kecerdasan artifisial dalam sistem sosio-teknis \cite{StoreyEtAl2024}. Oleh karena itu, rekomendasi prioritas dalam penelitian ini menjadi informasi pendukung bagi admin, bukan keputusan otomatis yang menggantikan kewenangan pengguna.
+
+\section{\textit{Proof of Delivery}}
+
+\textit{Proof of Delivery} (POD) merupakan bukti bahwa barang atau dokumen telah diterima oleh pihak tujuan. POD dapat berbentuk dokumen fisik atau rekaman digital yang memuat informasi penerima, waktu penerimaan, dan konfirmasi serah terima. Dalam proses logistik, keandalan POD diperlukan untuk memperjelas penyelesaian pengiriman dan mengurangi ketidakpastian status layanan \cite{gunadhya_rajawali_logistik_2021}.
+
+POD melengkapi informasi pelacakan karena status pengiriman menunjukkan tahapan proses, sedangkan POD mengonfirmasi bahwa penerimaan telah terjadi. Perkembangan POD digital mencakup pemindaian dokumen, dukungan pengenalan dokumen, dan integrasi dengan infrastruktur digital lain \cite{LinEtAl2026POD}. Dalam penelitian ini, POD menjadi bagian dari riwayat pengiriman \textit{invoice} dan konteks penerapan hasil klasifikasi, bukan atribut yang membentuk \textit{ground truth}.
+
+\section{\textit{Rule-Based System}}
+
+\textit{Rule-Based System} merepresentasikan pengetahuan dalam sekumpulan aturan yang umumnya berbentuk IF--THEN. Sistem ini terdiri atas fakta masukan, basis aturan, dan mekanisme inferensi yang mencocokkan fakta dengan kondisi aturan untuk menghasilkan keluaran \cite{BuchananShortliffe1984,LiuEtAl2016RuleBased}. Aturan dapat berasal dari pengetahuan ahli, dokumen kebijakan, atau prosedur operasional yang telah dinyatakan secara eksplisit.
+
+Keterlacakan menjadi karakteristik penting ketika setiap keluaran dapat dihubungkan dengan aturan yang aktif. Sifat tersebut mendukung pemeriksaan alasan keputusan dan kesesuaian dengan kebijakan operasional. Namun, basis aturan yang besar dapat mengandung redundansi dan menjadi sulit dipelihara, sehingga efektivitas setiap aturan perlu diperiksa \cite{BenDavid2008}. Literatur interpretabilitas menegaskan bahwa transparansi harus dibuktikan melalui representasi dan jejak keputusan yang benar-benar dapat diperiksa, bukan diasumsikan hanya karena model menggunakan aturan \cite{Rudin2019,RudinEtAl2022}.
+
+\section{\textit{Knowledge Acquisition}}
+
+\textit{Knowledge Acquisition} adalah proses memperoleh pengetahuan domain dari sumber yang relevan untuk membangun sistem berbasis pengetahuan. Sumber tersebut dapat berupa ahli, SOP, dokumen kebijakan, observasi proses, dan catatan historis. Rekayasa pengetahuan memandang proses ini sebagai kegiatan pemodelan pengetahuan domain, bukan sekadar memindahkan informasi ke dalam program \cite{StuderEtAl1998}.
+
+Hasil akuisisi perlu dinyatakan sebagai konsep, kondisi, batas, pengecualian, dan hubungan yang dapat diperiksa. Pada sistem berbasis aturan, hasil tersebut menjadi bahan untuk menyusun basis aturan dan mekanisme penjelasan \cite{BuchananShortliffe1984}. Dalam penelitian ini, \textit{Knowledge Acquisition} digunakan untuk memperoleh ketentuan SOP yang diperlukan oleh \textit{Rule-Based}. Proses tersebut tidak digunakan untuk membentuk label admin atau mengubah \texttt{expert\_label}.
+
+\section{\textit{Rule Construction}}
+
+\textit{Rule Construction} mengubah hasil akuisisi pengetahuan menjadi aturan yang memiliki kondisi, keluaran, dan urutan penerapan yang jelas. Konstruksi aturan mencakup penetapan atribut yang diperiksa, operator logika, ambang, aturan \textit{default}, serta penanganan ketika beberapa aturan aktif. Setiap aturan perlu memiliki makna operasional dan sumber yang dapat ditelusuri agar hubungan antara SOP dan basis aturan tetap dapat diperiksa \cite{StuderEtAl1998}.
+
+Pemeriksaan aturan mencakup konsistensi keluaran, ketercakupan kondisi, konflik, tumpang tindih, dan redundansi. Verifikasi menilai apakah aturan dibangun sesuai spesifikasi, sedangkan validasi menilai apakah aturan memadai untuk tujuan domain \cite{Meseguer1992}. Redundansi juga perlu dinilai dari kontribusi aturan terhadap perilaku keseluruhan sistem dan kemudahan pemeliharaan \cite{BenDavid2008}. Basis aturan harus dibekukan sebelum evaluasi terhadap data uji agar label uji tidak memengaruhi konstruksi aturan.
+
+\section{\textit{Decision Tree}}
+
+\textit{Decision Tree} adalah model klasifikasi yang membagi ruang fitur secara rekursif. Setiap simpul internal memuat pengujian terhadap fitur, setiap cabang menunjukkan hasil pengujian, dan setiap daun memberikan kelas prediksi. Pemisahan dipilih untuk membentuk kelompok yang semakin homogen terhadap kelas target \cite{Quinlan1986,JamesEtAl2023}. Kedalaman pohon dan ukuran minimum daun dapat dibatasi untuk mengendalikan kompleksitas dan risiko \textit{overfitting}. Walaupun pohon termasuk model yang secara intrinsik dapat diperiksa, keterperiksaan praktis tetap bergantung pada kompleksitas struktur dan kejelasan jalur keputusannya \cite{RudinEtAl2022}.
+
+CART membentuk pohon melalui pemisahan biner dan dapat digunakan untuk klasifikasi maupun regresi \cite{BreimanEtAl1984}. Scikit-learn menyediakan implementasi pohon keputusan dengan pendekatan CART yang dioptimalkan dan pemisahan biner \cite{PedregosaEtAl2011,ScikitLearnTreeGuide}. Penelitian ini menggunakan \texttt{DecisionTreeClassifier} dengan \texttt{criterion="entropy"}. Kriteria tersebut menentukan ukuran ketidakmurnian, tetapi tidak mengubah implementasi menjadi C4.5. Oleh karena itu, istilah yang digunakan adalah \textit{Decision Tree} berbasis \textit{entropy}, bukan algoritma C4.5.
+
+\section{\textit{Entropy}}
+
+\textit{Entropy} mengukur ketidakmurnian distribusi kelas pada suatu himpunan data. Untuk himpunan $S$ dengan $c$ kelas, \textit{entropy} dirumuskan sebagai berikut \cite{Quinlan1986,JamesEtAl2023}.
+
+\begin{equation}
+H(S)=-\sum_{i=1}^{c}p_i\log_2 p_i,
+\label{eq:entropy-bab-dua}
+\end{equation}
+
+dengan $p_i$ sebagai proporsi observasi pada kelas ke-$i$. Nilai \textit{entropy} sama dengan nol ketika seluruh observasi berada pada satu kelas. Nilainya meningkat ketika distribusi kelas menjadi lebih beragam.
+
+Kualitas kandidat pemisahan dapat dilihat dari penurunan ketidakmurnian setelah data dibagi ke dalam $m$ simpul anak. Penurunan \textit{entropy} dirumuskan sebagai berikut.
+
+\begin{equation}
+\Delta H=H(S)-\sum_{j=1}^{m}\frac{|S_j|}{|S|}H(S_j),
+\label{eq:penurunan-entropy}
+\end{equation}
+
+dengan $S_j$ sebagai himpunan observasi pada simpul anak ke-$j$. Kandidat dengan penurunan ketidakmurnian lebih besar lebih disukai, dengan tetap memperhatikan batas kompleksitas model. Pada scikit-learn, \textit{entropy} merupakan salah satu kriteria pemisahan dalam implementasi CART biner \cite{ScikitLearnTreeGuide}.
+
+\section{Perbedaan ID3, C4.5, dan CART}
+
+ID3, C4.5, dan CART merupakan keluarga algoritma pohon keputusan yang memiliki prosedur berbeda. Perbedaannya perlu dijelaskan agar kriteria \textit{entropy} tidak disamakan dengan implementasi C4.5. Ringkasan perbedaannya disajikan pada Tabel \ref{tab:perbandingan-algoritma-pohon}.
 
 \begin{table}[htbp]
     \centering
-    \caption{Perbandingan Penelitian Terdahulu}
-    \label{tab:penelitian_terdahulu}
-    \renewcommand{\arraystretch}{1.25}
+    \caption{Perbedaan ID3, C4.5, CART, dan Implementasi Penelitian}
+    \label{tab:perbandingan-algoritma-pohon}
     \small
-    \begin{tabularx}{\textwidth}{|c|X|X|X|X|}
-        \hline
-        \textbf{No} & \textbf{Peneliti \& Tahun} & \textbf{Fokus Penelitian} & \textbf{Metode/Algoritma} & \textbf{Keterbatasan} \\
-        \hline
-        1 & Sunindyo dkk. (2014) \cite{10.1007/978-3-642-55032-4_33} & Pelacakan dokumen administrasi e-government. & Model \textit{document tracking}. & Belum membahas prioritas dokumen dan komparasi model keputusan. \\
-        \hline
-        2 & Acedo dkk. (2025) \cite{gemma} & Pelacakan dokumen berbasis web. & Aplikasi web dan QR-Code. & Belum mendukung keputusan prioritas berbasis pengetahuan operasional. \\
-        \hline
-        3 & Marysheva dkk. (2024) \cite{marrysheva} & Pemodelan aliran dokumen. & Struktur pohon keputusan. & Belum spesifik pada \textit{invoice}, POD, dan komparasi \textit{Rule-Based}-C4.5. \\
-        \hline
-        4 & Gunadhya (2021) \cite{gunadhya_rajawali_logistik_2021} & Perbaikan sistem POD logistik. & Analisis sistem POD. & Belum menghubungkan POD dengan prioritas pengiriman \textit{invoice}. \\
-        \hline
-        5 & Siahaan dan Doni (2025) \cite{Siahaan_Doni_2025} & Faktor keterlambatan pengiriman paket. & Algoritma C4.5. & Tidak membahas perubahan aturan bisnis dan pembanding berbasis pengetahuan. \\
-        \hline
-        6 & Firmansyah dan Yulianto (2021) \cite{firmansyah} & Prediksi pembayaran \textit{invoice}. & \textit{Decision Tree}. & Tidak membahas pelacakan pengiriman, POD, dan prioritas operasional. \\
-        \hline
-        7 & Utami dan Arifyanto (2025) \cite{dyahikbal} & Prediksi keterlambatan penagihan. & \textit{Machine learning}. & Belum membahas formalisasi aturan pengiriman dan validasi POD. \\
-        \hline
-        8 & Diwandari dkk. (2023) \cite{Diwandari_Sela_Syahputra_Parama_Septiarini_2023} & Klasifikasi data operasional. & \textit{Decision Tree}/C4.5. & Belum dibandingkan dengan model \textit{Rule-Based} berbasis aturan eksplisit. \\
-        \hline
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{p{0.15\textwidth}p{0.18\textwidth}p{0.20\textwidth}X}
+        \toprule
+        \textbf{Metode} & \textbf{Bentuk Pemisahan} & \textbf{Kriteria Utama} & \textbf{Karakteristik} \\
+        \midrule
+        ID3 & Umumnya multi-cabang pada fitur kategorikal & \textit{Information gain} berbasis \textit{entropy} & Algoritma induksi pohon awal; tidak menjadi implementasi penelitian. \\
+        C4.5 & Mendukung fitur kategorikal dan numerik & \textit{Gain ratio} & Pengembangan ID3 dengan penanganan nilai kontinu, data hilang, dan pemangkasan. \\
+        CART & Pemisahan biner & Penurunan impurity; lazimnya Gini untuk klasifikasi & Mendukung klasifikasi dan regresi serta pemangkasan berbasis kompleksitas. \\
+        Implementasi penelitian & Pemisahan biner scikit-learn & \texttt{criterion="entropy"} & Menggunakan CART yang dioptimalkan dengan kriteria \textit{entropy}; bukan C4.5. \\
+        \bottomrule
     \end{tabularx}
 \end{table}
 
-Berdasarkan Tabel \ref{tab:penelitian_terdahulu}, terlihat bahwa penelitian mengenai pelacakan dokumen cenderung berfokus pada peningkatan transparansi aliran dokumen, pencarian status, dan efisiensi proses administrasi. Sementara itu, penelitian mengenai POD menekankan pentingnya bukti penerimaan sebagai validasi pengiriman, sedangkan penelitian berbasis C4.5 atau \textit{Decision Tree} umumnya menonjolkan kemampuan model dalam mengekstrak pola dari data historis dan menghasilkan aturan keputusan yang dapat diinterpretasikan. Tren tersebut menunjukkan bahwa masing-masing pendekatan memiliki kontribusi yang kuat, tetapi masih banyak penelitian yang membahasnya secara terpisah. Pelacakan dokumen belum selalu dikaitkan dengan pengambilan keputusan prioritas, sedangkan model klasifikasi belum selalu mempertimbangkan aturan bisnis yang kaku dan spesifik pada tiap pelanggan.
+ID3 dijelaskan oleh Quinlan melalui induksi pohon dan \textit{information gain} \cite{Quinlan1986}. C4.5 mengembangkan pendekatan tersebut dengan \textit{gain ratio} dan prosedur tambahan \cite{Quinlan1993C45}. CART dikembangkan sebagai kerangka pohon klasifikasi dan regresi dengan pemisahan biner \cite{BreimanEtAl1984}. Dokumentasi scikit-learn menegaskan bahwa implementasinya menggunakan versi CART yang dioptimalkan \cite{ScikitLearnTreeGuide}.
 
-Posisi penelitian ini berada pada integrasi ketiga aspek tersebut, yaitu pelacakan \textit{invoice}, dokumentasi POD, dan evaluasi model keputusan prioritas. Celah utama yang diangkat adalah keterbatasan model \textit{data-driven} seperti C4.5 yang bergantung pada pola data historis dan berpotensi rentan ketika aturan pelanggan berubah atau ketika aturan tertentu jarang muncul dalam data. Untuk menutupi kelemahan tersebut, penelitian ini mengomparasikan C4.5 dengan model \textit{knowledge-driven} berbasis \textit{Rule-Based} yang merepresentasikan aturan operasional pelanggan secara eksplisit. Komparasi tersebut ditempatkan dalam satu arsitektur sistem web pelacakan \textit{invoice} yang terintegrasi dengan POD, sehingga penelitian ini tidak hanya menghasilkan model klasifikasi, tetapi juga kerangka sistem yang mendukung pencatatan, validasi, dan pengambilan keputusan prioritas secara lebih konsisten.
+\FloatBarrier
 
-\section{Landasan Teori}
+\section{\textit{Supervised Classification}}
 
-\subsection{Manajemen Invoice dalam Ekosistem B2B}
+\textit{Supervised classification} mempelajari fungsi pemetaan dari fitur ke kelas menggunakan observasi yang telah berlabel. Data latih digunakan untuk membentuk model, sedangkan data yang tidak digunakan dalam pelatihan diperlukan untuk memperkirakan kemampuan prediksi pada kasus baru \cite{JamesEtAl2023}. Dalam klasifikasi biner penelitian ini, label target terdiri atas \textit{Urgent} dan \textit{Not Urgent}.
 
-Dalam ekosistem \textit{business-to-business} (B2B), \textit{invoice} tidak hanya berfungsi sebagai dokumen penagihan, tetapi juga sebagai simpul administrasi yang menghubungkan proses penjualan, pengiriman, verifikasi pelanggan, pencatatan piutang, dan penerimaan pembayaran. Berbeda dengan transaksi ritel yang umumnya selesai pada saat pembayaran, transaksi B2B memiliki siklus yang lebih panjang karena pembayaran sering bergantung pada kelengkapan dokumen dan pemenuhan prosedur administratif pelanggan. Oleh sebab itu, keterlambatan pengiriman \textit{invoice} dapat berdampak langsung terhadap keterlambatan verifikasi, tertundanya proses pembayaran, dan terganggunya proyeksi arus kas perusahaan.
+Pemisahan data harus diterapkan pada seluruh proses yang belajar dari data. Transformasi, pemilihan parameter, dan keputusan pemodelan tidak boleh menggunakan informasi data uji. Penggunaan informasi tersebut menimbulkan \textit{data leakage} dan dapat menghasilkan estimasi performa yang terlalu optimistis \cite{KapoorNarayanan2023}. Label historis admin pada \texttt{expert\_label} menjadi \textit{ground truth} bersama, sedangkan \textit{Rule-Based} dan \textit{Decision Tree} menghasilkan prediksi yang dibandingkan terhadap label tersebut.
 
-Manajemen \textit{invoice} yang baik menuntut adanya ketertelusuran status dokumen sejak \textit{invoice} diterbitkan, dikirimkan, diterima oleh pelanggan, hingga siap diproses untuk pembayaran. Ketertelusuran tersebut penting karena setiap pelanggan dapat memiliki aturan administratif yang berbeda, misalnya batas \textit{cut-off}, jadwal penerimaan dokumen, hari operasional penerimaan, serta persyaratan dokumen pendukung. Apabila aturan tersebut tidak dikendalikan secara sistematis, staf administrasi harus mengandalkan ingatan, pengalaman, dan catatan manual untuk menentukan dokumen mana yang perlu diprioritaskan. Dalam konteks ini, sistem informasi administrasi dibutuhkan bukan hanya untuk menyimpan data \textit{invoice}, melainkan juga untuk memastikan bahwa status, riwayat, dan bukti pengiriman dapat diakses secara cepat dan konsisten.
+\section{\textit{Confusion Matrix}}
 
-\begin{figure}[htbp]
+\textit{Confusion matrix} membandingkan kelas prediksi dengan \textit{ground truth}. Pada klasifikasi biner, matriks ini terdiri atas \textit{true positive} (TP), \textit{true negative} (TN), \textit{false positive} (FP), dan \textit{false negative} (FN). Definisi tersebut berasal dari landasan evaluasi klasifikasi yang telah mapan \cite{SokolovaLapalme2009} dan tetap menjadi dasar panduan evaluasi \textit{machine learning} kontemporer \cite{RainioEtAl2024}. Struktur matriks yang digunakan ditunjukkan pada Tabel \ref{tab:confusion-matrix-biner}.
+
+\begin{table}[htbp]
     \centering
-    \begin{tikzpicture}[
-        invoiceflow/.style={rectangle, draw=black, rounded corners, align=center, text width=2.2cm, minimum height=0.9cm, fill=blue!10, font=\small},
-        flowarrow/.style={-{Stealth[length=2.5mm]}, thick}
-    ]
-        \node[invoiceflow] (issue) {Penerbitan\\Invoice};
-        \node[invoiceflow, right=0.35cm of issue] (delivery) {Pengiriman};
-        \node[invoiceflow, right=0.35cm of delivery] (pod) {Penerimaan\\(POD)};
-        \node[invoiceflow, right=0.35cm of pod] (verify) {Verifikasi};
-        \node[invoiceflow, right=0.35cm of verify] (payment) {Pembayaran};
+    \caption{\textit{Confusion Matrix} untuk Klasifikasi Prioritas Invoice}
+    \label{tab:confusion-matrix-biner}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+        \toprule
+        & \multicolumn{2}{c}{\textbf{Prediksi}} \\
+        \cmidrule(lr){2-3}
+        \textbf{Ground Truth} & \textbf{Urgent} & \textbf{Not Urgent} \\
+        \midrule
+        \textit{Urgent} & TP & FN \\
+        \textit{Not Urgent} & FP & TN \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-        \draw[flowarrow] (issue) -- (delivery);
-        \draw[flowarrow] (delivery) -- (pod);
-        \draw[flowarrow] (pod) -- (verify);
-        \draw[flowarrow] (verify) -- (payment);
-    \end{tikzpicture}
-    \caption{Ilustrasi Siklus Manajemen Invoice dan POD dalam Transaksi B2B}
-    \label{fig:siklus_invoice_pod_b2b}
-\end{figure}
+Kelas \textit{Urgent} ditetapkan sebagai kelas positif. TP adalah \textit{invoice Urgent} yang diprediksi \textit{Urgent}; FN adalah \textit{invoice Urgent} yang diprediksi \textit{Not Urgent}. FP adalah \textit{invoice Not Urgent} yang diprediksi \textit{Urgent}; TN adalah \textit{invoice Not Urgent} yang diprediksi \textit{Not Urgent}. Keempat komponen tersebut menjadi dasar perhitungan metrik dan analisis pola kesalahan.
 
-\subsection{Sistem Pelacakan Dokumen Berbasis Web}
+\FloatBarrier
 
-Sistem pelacakan dokumen atau \textit{document tracking system} merupakan sistem informasi yang dirancang untuk memantau aliran dokumen pada suatu proses bisnis. Mekanisme dasarnya adalah merekam identitas dokumen, aktor yang menangani dokumen, waktu perubahan status, lokasi atau tahapan proses, serta aktivitas yang dilakukan terhadap dokumen tersebut. Dengan mekanisme ini, dokumen tidak lagi diperlakukan sebagai arsip pasif, tetapi sebagai objek proses yang memiliki riwayat pergerakan dan dapat diaudit. Sunindyo dkk. menekankan bahwa teknologi pelacakan dokumen dapat meningkatkan efisiensi proses administrasi karena sistem mampu memperjelas alur kerja, mendukung pengukuran proses, dan mengurangi ketidakpastian posisi dokumen dalam organisasi \cite{10.1007/978-3-642-55032-4_33}.
+\section{\textit{Accuracy}}
 
-Pada implementasi berbasis web, pelacakan dokumen memperoleh keunggulan tambahan karena informasi dapat diakses oleh banyak pengguna sesuai hak aksesnya tanpa bergantung pada perangkat atau lokasi tertentu. Acedo dkk. menunjukkan bahwa sistem pelacakan dokumen berbasis web yang memanfaatkan teknologi identifikasi seperti QR-Code dapat mempercepat pencarian dokumen, memperkuat transparansi status, dan mendukung kepatuhan terhadap standar layanan administrasi \cite{gemma}. Dalam sudut pandang proses bisnis, sistem berbasis web juga memudahkan pembaruan status secara real-time atau hampir real-time, sehingga setiap perubahan pada dokumen dapat diketahui oleh pihak yang berkepentingan.
+\textit{Accuracy} mengukur proporsi seluruh prediksi yang benar terhadap jumlah observasi. Rumusnya adalah sebagai berikut \cite{SokolovaLapalme2009,RainioEtAl2024}.
 
-Selain berfungsi sebagai alat pemantauan, sistem pelacakan dokumen juga dapat menjadi dasar pengambilan keputusan. Marysheva dkk. membahas implementasi aliran dokumen dengan pendekatan pohon keputusan, yang menunjukkan bahwa aliran dokumen dapat dianalisis berdasarkan aturan dan kondisi tertentu agar proses penanganannya lebih terstruktur \cite{marrysheva}. Hal ini relevan dengan pelacakan \textit{invoice} karena status dokumen saja belum cukup untuk menyelesaikan masalah operasional. Sistem juga perlu membantu menentukan tindakan berikutnya, misalnya apakah \textit{invoice} harus segera dikirim, menunggu kelengkapan POD, atau mengikuti jadwal penerimaan pelanggan tertentu.
+\begin{equation}
+\mathrm{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN}.
+\label{eq:accuracy-bab-dua}
+\end{equation}
 
-\subsection{Konsep Proof of Delivery (POD)}
+Metrik ini memberikan ringkasan performa umum, tetapi tidak menunjukkan jenis kesalahan. Pada distribusi kelas yang tidak seimbang, nilai yang tinggi dapat didominasi oleh kelas mayoritas. Oleh karena itu, \textit{accuracy} perlu dibaca bersama \textit{precision}, \textit{recall}, F1, serta jumlah FP dan FN \cite{RainioEtAl2024}.
 
-\textit{Proof of Delivery} (POD) merupakan bukti bahwa barang atau dokumen telah diterima oleh pihak tujuan. Dalam proses administrasi penagihan, POD memiliki fungsi validasi fisik karena membuktikan bahwa pengiriman benar-benar terjadi dan diterima oleh pelanggan atau pihak yang berwenang. Gunadhya menunjukkan bahwa perbaikan sistem POD penting untuk meningkatkan keandalan layanan, memperjelas bukti penyelesaian pengiriman, dan mengurangi ketidakpastian dalam proses operasional \cite{gunadhya_rajawali_logistik_2021}. Dengan demikian, POD tidak hanya bernilai sebagai lampiran administratif, tetapi juga sebagai bukti yang menghubungkan aktivitas pengiriman dengan proses verifikasi tagihan.
+\section{\textit{Precision}}
 
-Integrasi POD dengan sistem pelacakan \textit{invoice} menjadi penting karena status \textit{invoice} dan bukti penerimaannya saling melengkapi. Status pengiriman menjelaskan posisi atau tahapan dokumen, sedangkan POD memvalidasi bahwa tahapan penerimaan telah terjadi. Jika POD disimpan terpisah dari sistem pelacakan, staf administrasi harus melakukan penelusuran tambahan untuk membuktikan bahwa dokumen telah diterima. Kondisi tersebut dapat memperlambat respons terhadap pertanyaan pelanggan, melemahkan audit internal, dan menghambat proses eskalasi ketika terjadi sengketa dokumen. Oleh karena itu, sistem yang baik perlu mengaitkan data \textit{invoice}, status pengiriman, dan POD dalam satu riwayat yang konsisten.
+\textit{Precision} mengukur proporsi prediksi \textit{Urgent} yang benar-benar memiliki \textit{ground truth Urgent}. Rumusnya adalah sebagai berikut \cite{SokolovaLapalme2009,RainioEtAl2024}.
 
-\subsection{Akuisisi dan Formalisasi Pengetahuan}
+\begin{equation}
+\mathrm{Precision}_{Urgent}=\frac{TP}{TP+FP}.
+\label{eq:precision-bab-dua}
+\end{equation}
 
-Rekayasa pengetahuan atau \textit{knowledge engineering} merupakan proses memperoleh, menyusun, dan merepresentasikan pengetahuan agar dapat digunakan oleh sistem komputer. Dalam konteks operasional administrasi, pengetahuan sering tidak sepenuhnya terdokumentasi dalam prosedur formal. Sebagian pengetahuan berada dalam bentuk \textit{tacit knowledge}, yaitu pemahaman tersirat yang diperoleh staf melalui pengalaman menangani pelanggan, menghadapi pengecualian proses, atau menafsirkan aturan administrasi yang berubah-ubah. Contohnya adalah kebiasaan staf dalam menentukan prioritas pengiriman \textit{invoice} berdasarkan kombinasi antara tanggal \textit{invoice}, batas \textit{cut-off}, jadwal penerimaan pelanggan, dan risiko keterlambatan pembayaran.
+Nilai \textit{precision} menurun ketika jumlah FP meningkat. Dalam konteks operasional, FP menunjukkan \textit{invoice Not Urgent} yang memperoleh rekomendasi \textit{Urgent}. Metrik ini menjelaskan ketepatan pemberian rekomendasi positif, bukan kemampuan menemukan seluruh kasus \textit{Urgent}.
 
-Akuisisi pengetahuan bertujuan mengumpulkan pengetahuan tersebut dari berbagai sumber, seperti regulasi pelanggan, data historis \textit{invoice}, dokumen operasional, dan wawancara dengan staf berpengalaman. Setelah pengetahuan dikumpulkan, proses formalisasi dilakukan untuk mengubah pengetahuan tersirat menjadi \textit{explicit knowledge} yang dapat diperiksa, dijelaskan, dan diterapkan oleh sistem. Bentuk formalisasi dapat berupa atribut keputusan, aturan operasional, pedoman pelabelan, atau struktur logika yang menghubungkan kondisi dengan keputusan. Tahapan ini penting karena sistem tidak dapat mengolah intuisi staf secara langsung; sistem membutuhkan representasi yang eksplisit, konsisten, dan dapat diuji.
+\section{\textit{Recall}}
 
-Dalam penelitian ini, formalisasi pengetahuan menjadi landasan untuk menyusun aturan prioritas dan \textit{ground truth} pada proses evaluasi. Dengan kata lain, pengalaman staf tidak hanya dijadikan informasi pendukung, tetapi diterjemahkan menjadi aturan dan label yang dapat dibandingkan dengan hasil model klasifikasi. Pendekatan ini penting karena keputusan operasional pada pengiriman \textit{invoice} sering dipengaruhi oleh aturan pelanggan yang kaku, tetapi penerapannya di lapangan dapat bervariasi antarstaf apabila tidak diformalkan.
+\textit{Recall} mengukur proporsi \textit{invoice} dengan \textit{ground truth Urgent} yang berhasil diprediksi \textit{Urgent}. Rumusnya adalah sebagai berikut \cite{SokolovaLapalme2009,RainioEtAl2024}.
 
-\subsection{Pendekatan Rule-Based System}
+\begin{equation}
+\mathrm{Recall}_{Urgent}=\frac{TP}{TP+FN}.
+\label{eq:recall-bab-dua}
+\end{equation}
 
-\textit{Rule-Based System} merupakan pendekatan berbasis pengetahuan atau \textit{knowledge-driven} yang merepresentasikan keputusan dalam bentuk aturan eksplisit. Arsitektur dasarnya terdiri atas basis pengetahuan, mesin inferensi, dan fakta atau data masukan. Basis pengetahuan menyimpan aturan bisnis dalam bentuk logika \textit{IF-THEN}. Mesin inferensi membaca fakta yang tersedia, mencocokkannya dengan kondisi pada aturan, kemudian menghasilkan keputusan sesuai konsekuensi aturan yang terpenuhi. Dalam konteks prioritas pengiriman \textit{invoice}, fakta dapat berupa jenis pelanggan, tanggal penerimaan \textit{invoice}, jadwal penerimaan dokumen, nilai \textit{cut-off}, status POD, dan hari operasional pelanggan.
+Nilai \textit{recall} menurun ketika FN meningkat. FN merupakan kasus \textit{Urgent} yang diprediksi \textit{Not Urgent}, sehingga metrik ini digunakan untuk menilai kemampuan metode menemukan kasus yang memerlukan prioritas. Interpretasinya perlu dipisahkan dari \textit{precision} karena kedua metrik menilai pola kesalahan yang berbeda.
 
-Keunggulan utama pendekatan \textit{Rule-Based} adalah transparansi. Setiap keputusan dapat ditelusuri kembali ke aturan yang digunakan, sehingga staf administrasi dan pengambil keputusan dapat memahami mengapa suatu \textit{invoice} diklasifikasikan sebagai prioritas tertentu. Transparansi ini penting untuk mengamankan \textit{business rules} pelanggan yang bersifat kaku dan spesifik. Misalnya, apabila pelanggan hanya menerima dokumen pada hari tertentu atau memiliki batas \textit{cut-off} yang tidak boleh dilanggar, aturan tersebut dapat ditulis secara eksplisit sehingga sistem tidak bergantung pada pola historis semata. Dengan demikian, pendekatan \textit{Rule-Based} sesuai untuk domain yang memiliki regulasi operasional jelas, membutuhkan jejak keputusan, dan menuntut konsistensi penerapan aturan.
+\section{\textit{F1-score}}
 
-Namun, pendekatan \textit{Rule-Based} juga memiliki keterbatasan. Kualitas keputusan sangat bergantung pada kelengkapan aturan yang diformalkan. Jika terdapat kondisi operasional baru yang belum masuk ke basis pengetahuan, sistem dapat gagal memberikan keputusan yang sesuai. Oleh karena itu, \textit{Rule-Based System} perlu dibandingkan dengan pendekatan berbasis data untuk melihat sejauh mana aturan eksplisit mampu merepresentasikan pola keputusan yang muncul pada data historis.
+\textit{F1-score} merupakan rata-rata harmonik \textit{precision} dan \textit{recall}. Rumus F1 untuk kelas \textit{Urgent} adalah sebagai berikut \cite{SokolovaLapalme2009,RainioEtAl2024}.
 
-\begin{figure}[htbp]
+\begin{equation}
+\mathrm{F1}_{Urgent}=2\times\frac{\mathrm{Precision}_{Urgent}\times\mathrm{Recall}_{Urgent}}{\mathrm{Precision}_{Urgent}+\mathrm{Recall}_{Urgent}}.
+\label{eq:f1-bab-dua}
+\end{equation}
+
+F1 kelas \textit{Urgent} berfokus pada keseimbangan kesalahan untuk kelas positif. Sementara itu, \textit{macro F1} menghitung rata-rata F1 kedua kelas dengan bobot yang sama.
+
+\begin{equation}
+\mathrm{Macro\ F1}=\frac{\mathrm{F1}_{Urgent}+\mathrm{F1}_{Not\ Urgent}}{2}.
+\label{eq:macro-f1-bab-dua}
+\end{equation}
+
+\textit{Macro F1} berguna ketika kedua kelas perlu mendapat perhatian yang setara. Metrik ini tetap tidak menggantikan analisis FP, FN, dan konsekuensi operasional setiap kesalahan.
+
+\section{\textit{Hold-out Validation}}
+
+\textit{Hold-out validation} membagi dataset menjadi data latih dan data uji yang tidak tumpang tindih. Model dibangun menggunakan data latih dan dievaluasi sekali pada data uji \cite{JamesEtAl2023}. Pada klasifikasi dengan distribusi kelas tidak seimbang, stratifikasi digunakan agar proporsi kelas pada kedua bagian tetap mendekati dataset asal.
+
+Kelebihan \textit{hold-out} adalah prosedurnya sederhana dan biaya komputasinya rendah. Keterbatasannya adalah hasil dapat dipengaruhi oleh satu pembagian data, terutama pada dataset kecil \cite{Kohavi1995}. Metode ini menjadi dasar teoritis bagi skenario E1 dan E2, yang menggunakan proporsi data latih dan uji berbeda untuk memeriksa sensitivitas hasil terhadap pembagian data.
+
+\section{\textit{Cross Validation}}
+
+Pada K-fold \textit{cross-validation}, dataset dibagi menjadi $K$ bagian. Setiap bagian digunakan satu kali sebagai data validasi, sedangkan bagian lain digunakan sebagai data latih. Prediksi dari seluruh fold dapat digabungkan menjadi prediksi \textit{out-of-fold} sehingga setiap observasi dinilai ketika tidak menjadi bagian dari data latih \cite{ArlotCelisse2010}. Kajian mutakhir menjelaskan bahwa \textit{cross-validation} mengestimasi rata-rata galat prediksi lintas himpunan pelatihan dan bahwa hasil antar-fold tidak bersifat independen \cite{BatesEtAl2024CV}. Karena itu, variasi antar-fold tidak boleh langsung diperlakukan sebagai replikasi independen atau estimasi ketidakpastian konvensional.
+
+\textit{Stratified cross-validation} mempertahankan proporsi kelas pada setiap fold dan dapat mengurangi distorsi akibat pembagian kelas yang tidak seimbang \cite{Kohavi1995}. Pemilihan parameter harus dilakukan hanya dari data latih pada fold terkait. Prinsip ini mendukung E3, sedangkan hasilnya tetap harus dipahami sebagai estimasi dari data yang tersedia, bukan bukti generalisasi lintas perusahaan.
+
+\section{\textit{Leave-One-Out Cross Validation} (LOOCV)}
+
+LOOCV merupakan bentuk \textit{cross-validation} dengan jumlah fold sama dengan jumlah observasi. Pada setiap iterasi, satu observasi digunakan sebagai data uji dan seluruh observasi lainnya menjadi data latih. Proses diulang hingga setiap observasi memperoleh satu prediksi \textit{out-of-sample} \cite{ArlotCelisse2010}.
+
+LOOCV menggunakan hampir seluruh data untuk pelatihan pada setiap iterasi, tetapi memerlukan pelatihan berulang dan dapat memiliki variasi estimasi yang tinggi \cite{Kohavi1995}. Prosedur ini mendukung E4 sebagai skenario evaluasi tambahan pada dataset kecil. LOOCV tidak otomatis menjadi prosedur terbaik; hasilnya perlu dibaca bersama skenario validasi lain.
+
+\section{\textit{McNemar Test}}
+
+Uji McNemar membandingkan dua keluaran berpasangan pada kasus yang sama \cite{McNemar1947}. Penggunaannya dalam perbandingan \textit{classifier} telah dibahas dalam landasan evaluasi klasik \cite{Dietterich1998}, sedangkan panduan kontemporer tetap menempatkannya sebagai uji untuk dua prediksi berpasangan pada unit observasi yang sama \cite{RainioEtAl2024}. Setiap kasus dinyatakan benar atau salah untuk kedua metode. Susunan kasus berpasangan ditunjukkan pada Tabel \ref{tab:mcnemar-berpasangan}.
+
+\begin{table}[htbp]
     \centering
-    \begin{tikzpicture}[
-        rbblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.9cm, minimum height=1cm, fill=green!10, font=\small},
-        inputblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.9cm, minimum height=1cm, fill=blue!10, font=\small},
-        engineblock/.style={rectangle, draw=black, rounded corners, align=center, text width=3.4cm, minimum height=1.1cm, fill=orange!15, font=\small},
-        outputblock/.style={rectangle, draw=black, rounded corners, align=center, text width=2.4cm, minimum height=1cm, fill=yellow!20, font=\small},
-        rbarrow/.style={-{Stealth[length=2.5mm]}, thick}
-    ]
-        \node[rbblock] (knowledge) {Basis Pengetahuan\\(Aturan)};
-        \node[inputblock, below=1.1cm of knowledge] (facts) {Fakta/Data Input};
-        \node[engineblock, right=1.2cm of knowledge, yshift=-0.55cm] (engine) {Mesin Inferensi\\(\textit{Inference Engine})};
-        \node[outputblock, right=1.2cm of engine] (decision) {Keputusan};
+    \caption{Tabel Kontingensi untuk Uji McNemar Berpasangan}
+    \label{tab:mcnemar-berpasangan}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+        \toprule
+        & \multicolumn{2}{c}{\textbf{Decision Tree}} \\
+        \cmidrule(lr){2-3}
+        \textbf{Rule-Based} & \textbf{Benar} & \textbf{Salah} \\
+        \midrule
+        Benar & $n_{11}$ & $b$ \\
+        Salah & $c$ & $n_{00}$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
-        \draw[rbarrow] (knowledge.east) -- (engine.west);
-        \draw[rbarrow] (facts.east) -- (engine.west);
-        \draw[rbarrow] (engine.east) -- (decision.west);
-    \end{tikzpicture}
-    \caption{Arsitektur Umum Sistem Berbasis Aturan (Rule-Based System)}
-    \label{fig:arsitektur_rule_based}
-\end{figure}
+Nilai $b$ menyatakan kasus yang hanya benar pada \textit{Rule-Based}, sedangkan $c$ menyatakan kasus yang hanya benar pada \textit{Decision Tree}. Kasus $n_{11}$ dan $n_{00}$ bersifat \textit{concordant}; uji ditentukan oleh $b$ dan $c$ yang bersifat \textit{discordant}. Hipotesis nol menyatakan bahwa kedua metode memiliki proporsi kesalahan marginal yang sama.
 
-\subsection{Konsep Dasar Klasifikasi Data-Driven}
-
-Klasifikasi berbasis data atau \textit{data-driven classification} merupakan pendekatan yang mempelajari hubungan antara atribut masukan dan kelas keluaran berdasarkan data historis yang telah memiliki label. Dalam paradigma \textit{supervised learning}, setiap data latih terdiri atas pasangan atribut dan label. Algoritma kemudian mencari pola yang dapat membedakan satu kelas dari kelas lainnya, sehingga pola tersebut dapat digunakan untuk memprediksi kelas pada data baru. Berbeda dengan pendekatan \textit{Rule-Based} yang memulai proses dari aturan operasional yang telah diformalkan, pendekatan \textit{data-driven} memulai proses dari data dan membangun model berdasarkan keteraturan yang ditemukan pada data tersebut.
-
-Dalam konteks prioritas pengiriman \textit{invoice}, data historis dapat memuat atribut seperti pelanggan, tanggal penerimaan \textit{invoice}, jadwal penerimaan dokumen, jenis \textit{cut-off}, status POD, dan label prioritas. Algoritma klasifikasi mempelajari kombinasi atribut yang sering mengarah pada prioritas tertentu. Pendekatan ini penting karena data historis dapat menyimpan pola yang tidak selalu mudah dijelaskan secara manual. Akan tetapi, model berbasis data juga memiliki risiko, terutama apabila data historis tidak lengkap, tidak seimbang, atau tidak lagi sesuai dengan perubahan aturan pelanggan. Oleh sebab itu, hasil model data-driven perlu dievaluasi dan dibandingkan dengan pendekatan berbasis pengetahuan.
-
-\subsection{Mekanisme Algoritma C4.5}
-
-\textit{Decision Tree} C4.5 merupakan algoritma klasifikasi yang membangun pohon keputusan secara bertahap dengan memilih atribut yang paling informatif sebagai node pemisah. Setiap node merepresentasikan pengujian terhadap suatu atribut, setiap cabang merepresentasikan nilai atau rentang atribut, dan setiap daun merepresentasikan kelas keputusan. Rim dan Nazifah menjelaskan bahwa C4.5 digunakan karena mampu menghasilkan model yang interpretatif dan menggunakan ukuran pemilihan atribut yang mempertimbangkan kualitas pemisahan data \cite{Rim2020,nazifah_2023}. Mekanisme ini menjadikan C4.5 sesuai untuk domain operasional yang membutuhkan hasil klasifikasi sekaligus penjelasan logis terhadap keputusan.
-
-Tahap awal dalam C4.5 adalah menghitung ketidakmurnian data menggunakan \textit{entropy}. Entropy mengukur tingkat ketidakpastian kelas dalam suatu himpunan data. Jika seluruh data berada pada satu kelas, nilai entropy menjadi rendah. Sebaliknya, jika data tersebar merata pada banyak kelas, nilai entropy menjadi tinggi. Untuk himpunan data $S$ dengan $c$ kelas, entropy didefinisikan sebagai berikut.
+Untuk jumlah kasus \textit{discordant} yang kecil, \textit{exact McNemar} dua sisi dapat dihitung berdasarkan distribusi binomial sebagai berikut.
 
 \begin{equation}
-    Entropy(S) = - \sum_{i=1}^{c} p_i \log_2(p_i)
+p_{exact}=\min\left(1,2\sum_{k=0}^{\min(b,c)}\binom{b+c}{k}(0.5)^{b+c}\right).
+\label{eq:exact-mcnemar}
 \end{equation}
 
-Keterangan $p_i$ menyatakan proporsi data pada kelas ke-$i$ terhadap keseluruhan data dalam himpunan $S$. Setelah entropy awal diketahui, algoritma menghitung \textit{Information Gain} untuk setiap atribut. Information Gain menunjukkan seberapa besar penurunan ketidakpastian setelah data dipisahkan berdasarkan atribut tertentu. Untuk atribut $A$ dengan himpunan nilai $Values(A)$, Information Gain dirumuskan sebagai berikut.
+Nilai $p$ di atas taraf signifikansi menunjukkan bahwa bukti belum cukup untuk menolak hipotesis nol. Interpretasi tersebut tidak membuktikan bahwa kedua metode identik dan tidak menghapus kebutuhan untuk membahas perbedaan deskriptif serta pola kesalahan.
 
-\begin{equation}
-    Gain(S,A) = Entropy(S) - \sum_{v \in Values(A)} \frac{|S_v|}{|S|} Entropy(S_v)
-\end{equation}
+\FloatBarrier
 
-Keterangan $S_v$ menyatakan subset data pada $S$ yang memiliki nilai $v$ untuk atribut $A$. Atribut dengan nilai Information Gain tinggi dianggap mampu memisahkan kelas dengan baik. Namun, penggunaan Information Gain saja dapat menimbulkan bias terhadap atribut yang memiliki kardinalitas tinggi, yaitu atribut dengan banyak nilai unik. Atribut seperti nomor dokumen atau identitas unik dapat menghasilkan pemisahan yang tampak sangat baik, tetapi tidak selalu memiliki kemampuan generalisasi. Untuk mengatasi bias tersebut, C4.5 menggunakan \textit{Split Information} dan \textit{Gain Ratio}.
+% \section{Penelitian Terdahulu}
 
-\begin{equation}
-    SplitInfo(S,A) = - \sum_{v \in Values(A)} \frac{|S_v|}{|S|} \log_2 \left( \frac{|S_v|}{|S|} \right)
-\end{equation}
+% Penelitian terdahulu dipetakan berdasarkan domain, metode, target, sumber acuan, prosedur validasi, serta relevansinya terhadap penelitian ini. Pemetaan tersebut disajikan pada Tabel \ref{tab:penelitian_terdahulu}.
 
-\begin{equation}
-    GainRatio(S,A) = \frac{Gain(S,A)}{SplitInfo(S,A)}
-\end{equation}
+% \begin{table}[htbp]
+%     \centering
+%     \caption{Perbandingan Penelitian Terdahulu}
+%     \label{tab:penelitian_terdahulu}
+%     \scriptsize
+%     \setlength{\tabcolsep}{2pt}
+%     \renewcommand{\arraystretch}{1.15}
+%     \begin{tabularx}{\textwidth}{p{0.095\textwidth}p{0.075\textwidth}p{0.085\textwidth}p{0.075\textwidth}p{0.09\textwidth}p{0.085\textwidth}p{0.115\textwidth}p{0.115\textwidth}X}
+%         \toprule
+%         \textbf{Peneliti/Tahun} & \textbf{Domain} & \textbf{Metode} & \textbf{Target} & \textbf{Ground Truth/Data Acuan} & \textbf{Validasi} & \textbf{Temuan Utama} & \textbf{Keterbatasan} & \textbf{Relevansi} \\
+%         \midrule
+%         Buchanan dan Shortliffe (1984) \cite{BuchananShortliffe1984} & Sistem pakar klinis & \textit{Rule-Based} MYCIN & Rekomendasi klinis & Pengetahuan ahli dan kasus klinis & Evaluasi sistem pakar & Aturan mendukung inferensi dan penjelasan keputusan. & Domain klinis; bukan klasifikasi invoice. & Dasar sistem pakar, akuisisi pengetahuan, dan aturan. \\
+%         Sunindyo dkk. (2014) \cite{10.1007/978-3-642-55032-4_33} & Administrasi pemerintah & \textit{Document tracking} & Status dokumen & Rekaman proses dokumen & Evaluasi penerapan teknologi & Pelacakan mendukung transparansi alur administrasi. & Tidak mengevaluasi classifier prioritas. & Dasar konteks \textit{invoice tracking}. \\
+%         Ben-David (2008) \cite{BenDavid2008} & \textit{Credit scoring} & Sistem berbasis aturan & Efektivitas aturan & Kasus \textit{credit scoring} nyata & Kontribusi aturan terhadap akurasi & Redundansi dapat dianalisis untuk merampingkan basis aturan. & Satu domain dan satu basis aturan. & Dasar validasi, redundansi, dan pemeliharaan aturan. \\
+%         Berhane dkk. (2018) \cite{BerhaneEtAl2018} & Pemetaan lahan basah & DT, RB, dan RF & Kelas lahan basah & Data referensi lapangan & Data \textit{hold-out} dan interval kepercayaan & Membandingkan beberapa classifier pada data uji yang sama. & RB merupakan ruleset turunan model, bukan SOP operasional. & Bukti studi komparatif; domain berbeda. \\
+%         Lin dkk. (2026) \cite{LinEtAl2026POD} & Logistik jarak akhir & LCA empat konfigurasi POD & Dampak konfigurasi POD & Data transaksi dan inventori LCA & Perbandingan konfigurasi & POD digital menjadi bagian transformasi proses logistik. & Tidak melakukan klasifikasi prioritas. & Dasar POD digital dan konteks logistik. \\
+%         Schoonbee dkk. (2022) \cite{SchoonbeeEtAl2022} & Penagihan invoice & Kandidat metode ML dalam DSS & Interval keterlambatan pembayaran & Data invoice industri & Evaluasi kandidat model & Prediksi invoice digunakan untuk memprioritaskan sumber daya penagihan. & Target pembayaran, bukan pengiriman; tanpa pembanding RB berbasis SOP. & Konteks invoice, ML, dan DSS. \\
+%         Firmansyah dan Yulianto (2021) \cite{firmansyah} & Pembayaran invoice & C5.0 & Ketepatan pembayaran & Data historis invoice & Evaluasi klasifikasi & Pohon keputusan diterapkan pada prediksi pembayaran invoice. & Target dan varian algoritma berbeda; tanpa RB. & Studi invoice Indonesia. \\
+%         Utami dan Arifyanto (2025) \cite{dyahikbal} & Penagihan listrik & Random Forest & Keterlambatan pembayaran & Data pelanggan historis & K-fold dan \textit{rolling window} & Prediksi mendukung prioritas distribusi tagihan. & Bukan DT versus RB dan bukan prioritas pengiriman. & Konteks prioritas dan validasi multi-skenario. \\
+%         Diwandari dkk. (2023) \cite{Diwandari_Sela_Syahputra_Parama_Septiarini_2023} & Bantuan sosial & DT dan AHP & Kelayakan dan prioritas & Data calon penerima & Evaluasi klasifikasi dan pemeringkatan & Klasifikasi dan prioritas dapat menjalankan fungsi berbeda dalam DSS. & Domain berbeda; tidak membandingkan DT dengan RB. & Konteks DSS dan prioritas operasional. \\
+%         Shim dkk. (2002) \cite{ShimEtAl2002} & Sistem pendukung keputusan & Kajian teknologi DSS & Dukungan keputusan & Literatur perkembangan DSS & Sintesis konseptual & DSS berkembang sebagai dukungan analitis bagi pengambil keputusan. & Tidak menyediakan eksperimen klasifikasi. & Menetapkan sistem sebagai konteks dukungan keputusan. \\
+%         \bottomrule
+%     \end{tabularx}
+% \end{table}
 
-\textit{Split Information} mengukur seberapa luas dan seimbang pembagian data yang dihasilkan oleh suatu atribut, sedangkan \textit{Gain Ratio} menormalisasi Information Gain terhadap nilai Split Information. Dengan normalisasi tersebut, C4.5 tidak semata-mata memilih atribut yang memecah data menjadi banyak bagian kecil, tetapi memilih atribut yang memberikan pemisahan kelas yang informatif dan lebih proporsional. Alasan inilah yang membuat Gain Ratio penting dalam penelitian yang memiliki atribut operasional beragam, karena beberapa atribut dapat memiliki jumlah kategori yang berbeda dan berpotensi memengaruhi objektivitas pemilihan node.
+% Studi pelacakan dokumen dan POD menjelaskan pencatatan status, riwayat proses, dan bukti penerimaan, tetapi tidak mengevaluasi classifier prioritas \cite{10.1007/978-3-642-55032-4_33,LinEtAl2026POD}. Studi sistem pakar dan basis aturan memberikan dasar bagi representasi pengetahuan, validasi, dan pemeliharaan aturan \cite{BuchananShortliffe1984,BenDavid2008}. Keduanya mendukung bagian yang berbeda dari penelitian ini dan tidak dapat diperlakukan sebagai bukti evaluasi klasifikasi invoice.
 
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[
-        treenode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3cm, minimum height=0.9cm, fill=blue!10},
-        leafnode/.style={rectangle, draw=black, rounded corners, align=center, minimum width=3cm, minimum height=0.9cm, fill=green!20},
-        treeedge/.style={-{Stealth[length=2.5mm]}, thick}
-    ]
-        \node[treenode] (root) {Atribut Akar};
-        \node[treenode, below left=1cm and 0.2cm of root] (internal) {Atribut Internal};
-        \node[leafnode, below right=1cm and 1cm of root] (leaf1) {Daun Keputusan\\(Kelas)};
-        \node[leafnode, below left=1cm and 0cm of internal] (leaf2) {Daun Keputusan\\(Kelas)};
-        \node[leafnode, below right=1cm and 0cm of internal] (leaf3) {Daun Keputusan\\(Kelas)};
+% Studi komparatif Berhane dkk. membandingkan \textit{Decision Tree}, \textit{Rule-Based}, dan Random Forest pada kasus validasi yang sama, tetapi aturan yang digunakan merupakan ruleset dalam domain citra lahan basah \cite{BerhaneEtAl2018}. Kondisi tersebut berbeda dari \textit{Rule-Based} yang dibangun langsung dari SOP perusahaan. Perbedaan sumber aturan memengaruhi makna transparansi, kepatuhan terhadap SOP, dan prosedur pembaruan.
 
-        \draw[treeedge] (root) -- node[above left] {Nilai 1} (internal);
-        \draw[treeedge] (root) -- node[above right] {Nilai 2} (leaf1);
-        \draw[treeedge] (internal) -- node[above left] {Nilai 1} (leaf2);
-        \draw[treeedge] (internal) -- node[above right] {Nilai 2} (leaf3);
-    \end{tikzpicture}
-    \caption{Struktur Dasar Pohon Keputusan}
-    \label{fig:struktur_dasar_pohon_keputusan}
-\end{figure}
+% Studi invoice yang ditinjau berfokus pada pembayaran atau keterlambatan penagihan \cite{SchoonbeeEtAl2022,firmansyah,dyahikbal}. Studi DSS lain membahas kelayakan dan prioritas pada bantuan sosial \cite{Diwandari_Sela_Syahputra_Parama_Septiarini_2023}. Literatur tersebut menunjukkan relevansi klasifikasi dan prioritisasi, tetapi target, sumber \textit{ground truth}, serta metode pembandingnya tidak sama dengan klasifikasi prioritas pengiriman \textit{invoice}.
 
-\subsection{Metrik Evaluasi Performa}
+% \FloatBarrier
 
-Evaluasi performa model klasifikasi dilakukan untuk mengetahui seberapa baik model memprediksi kelas yang benar. Salah satu bentuk evaluasi dasar adalah \textit{confusion matrix}, yaitu tabel yang membandingkan hasil prediksi model dengan label aktual. Untuk klasifikasi biner, komponen utama \textit{confusion matrix} terdiri atas \textit{True Positive} (TP), \textit{True Negative} (TN), \textit{False Positive} (FP), dan \textit{False Negative} (FN). TP menunjukkan data positif yang diprediksi positif, TN menunjukkan data negatif yang diprediksi negatif, FP menunjukkan data negatif yang keliru diprediksi positif, sedangkan FN menunjukkan data positif yang keliru diprediksi negatif.
+% \section{\textit{Research Gap}}
 
-\textit{Accuracy} mengukur proporsi seluruh prediksi yang benar terhadap total data. Metrik ini berguna untuk melihat performa umum model, tetapi dapat menyesatkan jika distribusi kelas tidak seimbang.
+% Kumpulan penelitian yang ditinjau menunjukkan tiga kelompok pengetahuan. Pertama, pelacakan dokumen dan POD mendukung pemantauan proses serta verifikasi penerimaan. Kedua, sistem berbasis aturan mendukung representasi SOP yang dapat ditelusuri. Ketiga, metode machine learning dan DSS mendukung klasifikasi serta prioritisasi berdasarkan data historis.
 
-\begin{equation}
-    Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
-\end{equation}
+% Meskipun demikian, kumpulan penelitian tersebut belum memberikan bukti komparatif langsung mengenai performa, pola kesalahan, dan karakteristik operasional \textit{Rule-Based} berbasis SOP dan \textit{Decision Tree} berbasis data historis admin untuk klasifikasi prioritas pengiriman \textit{invoice}. Studi invoice berfokus pada pembayaran, studi pelacakan dan POD tidak membandingkan classifier, sedangkan studi komparatif \textit{Rule-Based} dan \textit{Decision Tree} menggunakan domain serta sumber aturan yang berbeda.
 
-\textit{Precision} mengukur ketepatan model ketika memberikan prediksi positif. Dalam konteks prioritas pengiriman, precision penting karena menunjukkan seberapa banyak dokumen yang diprediksi sebagai prioritas benar-benar termasuk kelas prioritas tersebut.
-
-\begin{equation}
-    Precision = \frac{TP}{TP + FP}
-\end{equation}
-
-\textit{Recall} mengukur kemampuan model menemukan seluruh data positif yang seharusnya dikenali. Recall penting ketika kesalahan melewatkan dokumen prioritas berpotensi menimbulkan keterlambatan administrasi.
-
-\begin{equation}
-    Recall = \frac{TP}{TP + FN}
-\end{equation}
-
-\textit{F1-Score} merupakan rata-rata harmonik antara precision dan recall. Metrik ini digunakan ketika evaluasi perlu mempertimbangkan keseimbangan antara ketepatan prediksi positif dan kemampuan menemukan seluruh data positif.
-
-\begin{equation}
-    F1\text{-}Score = 2 \times \frac{Precision \times Recall}{Precision + Recall}
-\end{equation}
-
-Penggunaan beberapa metrik secara bersamaan penting karena satu metrik saja tidak selalu cukup untuk menggambarkan kualitas model. Pada kasus prioritas pengiriman \textit{invoice}, model tidak hanya perlu akurat secara umum, tetapi juga harus mampu menghindari kesalahan yang berdampak pada keterlambatan pengiriman dokumen penting.
-
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[
-        every node/.style={font=\small},
-        cmcell/.style={draw=black, minimum width=3.2cm, minimum height=1.05cm, align=center},
-        cmgood/.style={cmcell, fill=green!18},
-        cmbad/.style={cmcell, fill=red!12},
-        cmhead/.style={cmcell, fill=gray!15, font=\small\bfseries}
-    ]
-        \matrix (cm) [matrix of nodes, row sep=-\pgflinewidth, column sep=-\pgflinewidth] {
-            |[cmhead]| {} & |[cmhead]| Prediksi Positif & |[cmhead]| Prediksi Negatif \\
-            |[cmhead]| Aktual Positif & |[cmgood]| True Positive (TP) & |[cmbad]| False Negative (FN) \\
-            |[cmhead]| Aktual Negatif & |[cmbad]| False Positive (FP) & |[cmgood]| True Negative (TN) \\
-        };
-        \node[font=\bfseries, above=0.35cm of cm-1-2] {Prediksi};
-        \node[font=\bfseries, rotate=90, left=0.35cm of cm-2-1] {Aktual};
-    \end{tikzpicture}
-    \caption{Matriks Kebingungan (Confusion Matrix) untuk Klasifikasi Biner}
-    \label{fig:confusion_matrix_biner}
-\end{figure}
+% Penelitian ini menempatkan label historis admin sebagai \textit{ground truth} bersama. \textit{Rule-Based} dibangun melalui \textit{Knowledge Acquisition}, \textit{Rule Construction}, dan \textit{Rule Validation}, sedangkan \textit{Decision Tree} berbasis \textit{entropy} dilatih dari data historis. Keduanya dibandingkan pada kasus validasi yang sama melalui evaluasi multi-skenario, analisis kesalahan per \textit{invoice}, uji statistik berpasangan, dan analisis karakteristik operasional. Sistem pelacakan \textit{invoice} dan POD tetap ditempatkan sebagai konteks penerapan rekomendasi prioritas.

@@ -2,36 +2,46 @@
 
 \section{Kesimpulan}
 
-Penelitian ini berangkat dari permasalahan pelacakan \textit{invoice} dan \textit{Proof of Delivery} (POD) yang masih dilakukan secara semi-manual, sehingga status dokumen, bukti penerimaan, dan prioritas pengiriman belum terdokumentasi secara terintegrasi. Selain itu, penentuan prioritas pengiriman \textit{invoice} masih bergantung pada pengetahuan operasional yang belum sepenuhnya diformalkan, terutama terkait aturan \textit{cut-off}, jadwal penerimaan pelanggan, dan risiko keterlambatan administratif.
+Kesimpulan penelitian disusun sesuai dengan urutan tujuan penelitian sebagai berikut.
 
-Pendekatan yang digunakan dalam penelitian ini menempatkan pengetahuan operasional sebagai dasar utama pembentukan model keputusan. Melalui tahap \textit{Knowledge Acquisition}, pengetahuan diperoleh dari regulasi pelanggan, data historis \textit{invoice}, dan praktik administrasi yang relevan. Pengetahuan tersebut kemudian diproses melalui \textit{Knowledge Formalization} sehingga dapat direpresentasikan menjadi atribut operasional, \textit{Operational Labeling Guideline}, dan Rule Base yang eksplisit.
+\begin{enumerate}
+    \item \textit{Rule-Based} telah dibangun dari SOP perusahaan melalui \textit{Knowledge Acquisition}, \textit{Rule Construction}, dan \textit{Rule Validation}. Setiap prediksi dapat ditelusuri melalui Rule ID yang aktif. \textit{Decision Tree} berbasis \textit{entropy} telah dilatih menggunakan data historis dengan \texttt{expert\_label} sebagai label admin. Kedua metode menghasilkan klasifikasi \textit{Urgent} dan \textit{Not Urgent} terhadap \textit{ground truth} admin yang sama.
 
-Hasil formalisasi pengetahuan digunakan dalam dua paradigma keputusan. Pertama, pendekatan \textit{Rule-Based} merepresentasikan pengetahuan operasional secara langsung melalui aturan IF-THEN R1 sampai R12. Kedua, pendekatan \textit{Decision Tree} C4.5 menggunakan atribut operasional dan label akhir untuk merekonstruksi pola keputusan secara data-driven. Dengan demikian, kedua model tidak ditempatkan sebagai pendekatan yang saling menggantikan, melainkan sebagai dua cara berbeda dalam merepresentasikan pengetahuan operasional yang sama.
+    \item Hasil E1--E4 menunjukkan perbedaan performa dan pola kesalahan kedua metode. Pada LOOCV, \textit{Rule-Based} memperoleh \textit{accuracy} 93,94\% dengan enam FN dan tanpa FP, sedangkan \textit{Decision Tree} memperoleh \textit{accuracy} 97,98\% dengan satu FN dan satu FP. Dengan demikian, \textit{Decision Tree} menunjukkan performa deskriptif lebih tinggi. Namun, Exact McNemar menghasilkan \(p = 0{,}2891\), sehingga tidak terdapat bukti yang cukup untuk menyatakan adanya perbedaan performa yang signifikan secara statistik.
 
-Berdasarkan eksperimen akhir, model \textit{Rule-Based} menghasilkan keputusan yang konsisten dengan \textit{Operational Labeling Guideline}. Hal ini menunjukkan bahwa aturan yang diformalkan mampu merepresentasikan pedoman keputusan prioritas secara eksplisit dan dapat ditelusuri. Sementara itu, \textit{Decision Tree} C4.5 membentuk jalur keputusan yang sejalan dengan Rule Base, terutama melalui fitur operasional seperti jarak menuju \textit{cut-off}, kode hari penerimaan, jarak menuju hari penerimaan berikutnya, dan jadwal penerimaan. Temuan ini menunjukkan bahwa \textit{Decision Tree} C4.5 merekonstruksi pengetahuan operasional yang telah diformalkan, bukan menemukan pengetahuan operasional baru yang terpisah dari pedoman.
+    \item Kedua metode memiliki karakteristik operasional yang berbeda. \textit{Rule-Based} menyediakan hubungan langsung antara SOP, kondisi aturan, dan keluaran sehingga mudah ditelusuri melalui Rule ID serta tidak memerlukan pelatihan model. Pemeliharaannya memerlukan pemeriksaan ulang ketika SOP berubah. \textit{Decision Tree} dapat ditelusuri melalui simpul, ambang, dan daun, tetapi pola keputusannya berasal dari data historis dan pembaruannya memerlukan data berlabel, pelatihan, serta validasi ulang. Analisis \textit{adaptability} dan \textit{scalability} pada penelitian ini bersifat prosedural karena tidak diuji melalui eksperimen khusus.
+\end{enumerate}
 
-Kontribusi ilmiah utama dari penelitian ini adalah menunjukkan bahwa pengetahuan operasional administrasi \textit{invoice} dapat diakuisisi, diformalkan, dan direpresentasikan dalam bentuk aturan eksplisit, serta dapat direkonstruksi kembali oleh model data-driven. Dengan demikian, penelitian ini memperlihatkan hubungan antara \textit{Knowledge Acquisition}, \textit{Knowledge Formalization}, \textit{Operational Labeling Guideline}, representasi \textit{Rule-Based}, dan rekonstruksi \textit{Decision Tree} C4.5 dalam konteks sistem pendukung keputusan prioritas pengiriman \textit{invoice}.
+\section{Keterbatasan Penelitian}
 
-\section{Keterbatasan}
+Penelitian ini memiliki keterbatasan sebagai berikut.
 
-Penelitian ini memiliki beberapa keterbatasan yang perlu diperhatikan. Pertama, dataset final yang digunakan masih berukuran relatif kecil, sehingga variasi pola operasional yang tercakup belum dapat merepresentasikan seluruh kemungkinan kondisi administrasi \textit{invoice}. Ukuran dataset tersebut memadai untuk menunjukkan konsistensi antara pedoman operasional, Rule Base, dan rekonstruksi model, tetapi belum cukup untuk menarik generalisasi yang luas.
+\begin{enumerate}
+    \item Dataset berasal dari satu perusahaan sehingga hasil masih terikat pada karakteristik operasional dan aturan pelanggan dalam perusahaan tersebut.
+    \item Evaluasi hanya menggunakan 99 \textit{invoice} unik. Ukuran ini membatasi kekuatan bukti statistik dan kestabilan estimasi performa.
+    \item \texttt{expert\_label} berasal dari satu sumber label historis admin. Variasi keputusan antar-admin tidak dapat diukur.
+    \item Validasi eksternal pada perusahaan, unit operasional, atau dataset independen lain belum dilakukan.
+    \item Validasi temporal belum dilakukan sehingga performa pada periode data yang berbeda belum diketahui.
+    \item \textit{Rule-Based} bergantung pada SOP yang berlaku pada periode penelitian. Perubahan SOP dapat mengubah relevansi aturan dan memerlukan validasi ulang.
+\end{enumerate}
 
-Kedua, dataset berasal dari konteks satu perusahaan. Oleh karena itu, aturan \textit{cut-off}, jadwal penerimaan, dan pola prioritas yang digunakan sangat dipengaruhi oleh karakteristik pelanggan dan proses administrasi pada lingkungan tersebut. Hasil penelitian tidak dapat langsung digeneralisasi ke perusahaan lain tanpa penyesuaian terhadap regulasi pelanggan dan proses operasional yang berbeda.
+\section{Saran}
 
-Ketiga, label akhir pada eksperimen dibentuk melalui \textit{Guideline-Based Labeling} berdasarkan \textit{Operational Labeling Guideline}. Pendekatan ini sesuai dengan tujuan penelitian, yaitu membandingkan representasi eksplisit dan rekonstruksi data-driven dari pengetahuan operasional yang sama. Namun, label tersebut tidak dapat ditafsirkan sebagai validasi eksternal yang selalu identik dengan keputusan manusia pada seluruh situasi nyata.
+\subsection{Untuk Penelitian Selanjutnya}
 
-Keempat, validasi eksternal terhadap data baru belum dilakukan secara luas. Dengan demikian, kemampuan model untuk mempertahankan pola keputusan pada periode waktu lain, pelanggan baru, atau perubahan regulasi administratif masih perlu diuji lebih lanjut. Perubahan aturan pelanggan juga dapat memengaruhi relevansi Rule Base dan struktur pohon keputusan yang telah terbentuk.
+\begin{enumerate}
+    \item Menggunakan dataset yang lebih besar agar variasi kasus dan kestabilan estimasi performa dapat dievaluasi dengan lebih baik.
+    \item Melakukan pengujian pada beberapa perusahaan untuk menilai validitas eksternal pada konteks operasional yang berbeda.
+    \item Melibatkan beberapa admin sebagai pemberi label agar konsistensi antar-anotator dapat diukur.
+    \item Melakukan validasi temporal untuk menilai kestabilan performa ketika pola data dan keputusan admin berubah dari waktu ke waktu.
+    \item Membandingkan \textit{Rule-Based} dan \textit{Decision Tree} dengan metode klasifikasi lain menggunakan \textit{ground truth} dan skenario validasi yang sama.
+\end{enumerate}
 
-\section{Saran Penelitian Selanjutnya}
+\subsection{Untuk Implementasi Perusahaan}
 
-Penelitian selanjutnya dapat memperluas cakupan data dengan menggunakan dataset yang lebih besar dan berasal dari periode waktu yang lebih panjang. Penambahan jumlah data dapat membantu menguji stabilitas pola keputusan dan meningkatkan pemahaman terhadap variasi kondisi administrasi \textit{invoice}.
-
-Validasi pada lebih dari satu perusahaan juga perlu dilakukan agar generalisasi pendekatan dapat diuji pada konteks operasional yang berbeda. Setiap perusahaan dapat memiliki aturan \textit{cut-off}, jadwal penerimaan, dan prosedur verifikasi yang berbeda, sehingga pengujian lintas organisasi dapat memperkuat validitas eksternal penelitian.
-
-Selain itu, penelitian selanjutnya dapat melibatkan lebih banyak sumber pengetahuan operasional, termasuk beberapa staf administrasi atau pihak yang memahami regulasi pelanggan. Pendekatan ini dapat memperkaya \textit{Operational Labeling Guideline} dan mengurangi ketergantungan pada satu sumber interpretasi operasional.
-
-Dari sisi pemodelan, penelitian berikutnya dapat mengeksplorasi pendekatan hibrida antara \textit{Rule-Based System} dan \textit{Machine Learning}. Model berbasis aturan dapat digunakan untuk menjaga kepatuhan terhadap regulasi pelanggan, sedangkan model pembelajaran mesin dapat digunakan untuk mendeteksi pola baru atau memberikan peringatan ketika data operasional mulai menyimpang dari pedoman.
-
-Pengujian terhadap algoritma klasifikasi lain yang tetap dapat dijelaskan, seperti \textit{Random Forest} dengan analisis fitur, \textit{Gradient Boosting} yang dilengkapi interpretasi, atau model berbasis aturan yang diekstraksi dari data, juga dapat dilakukan. Namun, penggunaan model yang lebih kompleks perlu tetap mempertimbangkan kebutuhan transparansi dan keterlacakan keputusan dalam konteks administrasi.
-
-Pada tahap implementasi sistem, penelitian selanjutnya dapat mengintegrasikan rekomendasi prioritas dengan sistem ERP atau sistem administrasi perusahaan secara langsung. Integrasi tersebut dapat mendukung rekomendasi operasional secara real-time, pembaruan status \textit{invoice}, penyimpanan POD, serta pemantauan perubahan regulasi pelanggan. Selain itu, pendekatan \textit{online learning} dapat dipertimbangkan apabila data operasional baru terus tersedia dan proses bisnis mengalami perubahan secara berkala.
+\begin{enumerate}
+    \item Meninjau SOP secara berkala agar aturan klasifikasi tetap sesuai dengan kebijakan operasional yang berlaku.
+    \item Memvalidasi ulang \textit{Rule-Based} setiap kali terdapat perubahan SOP, aturan \textit{cutoff}, atau jadwal penerimaan pelanggan.
+    \item Memantau performa model terhadap data baru dan melakukan pelatihan serta validasi ulang ketika terjadi perubahan pola keputusan.
+    \item Mengaudit label admin secara berkala untuk menjaga konsistensi \texttt{expert\_label} sebagai acuan evaluasi dan pembaruan model.
+\end{enumerate}

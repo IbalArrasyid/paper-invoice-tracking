@@ -1,0 +1,31 @@
+{
+  "source": "D:\\Semester 8\\Tugas Akhir\\farah\\paper-2\\paper-invoice-tracking\\dataset_invoice.xlsx",
+  "target": "admin_ground_truth",
+  "label_mapping": {
+    "HIGH": "Urgent",
+    "NORMAL": "Not Urgent"
+  },
+  "features": [
+    "cutoff_rule",
+    "receive_day_code",
+    "receive_schedule",
+    "receive_date_schedule_status",
+    "receive_month_end_flag",
+    "limited_receive_schedule_flag",
+    "cutoff_value_feature",
+    "days_to_cutoff_feature",
+    "next_receive_day_gap_feature",
+    "receive_weekday_code",
+    "receive_week_of_month",
+    "receive_day_of_month"
+  ],
+  "criterion": "entropy",
+  "best_params": {
+    "tree__max_depth": 2,
+    "tree__min_samples_leaf": 4
+  },
+  "tree_depth": 2,
+  "tree_leaves": 4,
+  "training_seconds": 2.0969576999996207,
+  "note": "Final full-data tree is interpretive and is not used for reported test metrics."
+}
